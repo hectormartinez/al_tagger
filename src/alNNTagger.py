@@ -65,12 +65,25 @@ def string2index(word,dictindex,update=True,max_dict_size=0):
         else:
             return len(dictindex.keys())+1
 
+def read_lexicon(infile, lowercase=False):
+    # TODO: read lex in, for each word index, generate a list of binaries size |Traits|
+    # TODO: expand input of the NN to accept lexicon entry
+    return None
+
+
+def read_embeddings(infile):
+    # TODO: read embeddings
+    return None
+
+
 def main():
     parser = argparse.ArgumentParser(description="""toy LSTM""")
     parser.add_argument("--train",default="corpus/pos_ud_en_dev.2col")
     parser.add_argument("--test",default="corpus/pos_ud_en_test.2col")
     parser.add_argument("--dev",default="corpus/pos_ud_en_dev.2col")
     parser.add_argument("--lexicon",default="lex/pos_ud_en_dev.conll")
+    parser.add_argument("--max_features",default=2000, )
+
 
 
     args = parser.parse_args()
@@ -119,11 +132,7 @@ def main():
     
     print ("model building done")
     
-    model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
-                  metrics=['accuracy'],
-                  sample_weight_mode='temporal')
-
+    model.compile(loss='categorical_crossentropy',optimizer='sgd',metrics=['accuracy'],sample_weight_mode='temporal')
     print ("about to fit")
     model.fit(train_X, train_Y,batch_size=batch_size, nb_epoch=epochs, validation_data=(test_X, test_Y))
 
