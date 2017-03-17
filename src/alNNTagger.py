@@ -153,6 +153,8 @@ def main():
     If mask_zero is set to True, as a consequence, index 0 cannot be used in the vocabulary
     (input_dim should equal |vocabulary| + 2)."""
 
+    print (embedding_matrix.shape)
+    
     if args.embeddings:
         embedded = Embedding(input_dim=observed_n_feats, output_dim=args.embedding_dim,
                          input_length=args.max_sequence_length, weights=embedding_matrix,mask_zero=False)(sequence)
