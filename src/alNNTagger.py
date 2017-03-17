@@ -157,8 +157,6 @@ def main():
     print ("data reading done")
 
     sequence = Input(shape=(args.max_sequence_length,),dtype='int32')
-    if lexicon:
-        lexclasssequence = Input(shape=(args.max_sequence_length,),dtype='int32')
 
     #TODO review masked zero!
     """ mask_zero: Whether or not the input value 0 is a special "padding" value that should be masked out.
@@ -175,7 +173,7 @@ def main():
                             mask_zero=False)(sequence)
     if lexicon:
 #        lexclassed = TimeDistributed(Dense(input_dim=nb_lexclasses,output_dim=nb_lexclasses))(lexclasssequence)
-        lexclassed = TimeDistributed(Input(shape=(nb_lexclasses,)))(lexclasssequence)
+        lexclassed = TimeDistributed(Input(shape=(nb_lexclasses,),dtype='int32'))
         lstminput = merge([embedded, lexclassed], mode='concat', concat_axis=-1)
     else:
         lstminput = embedded
