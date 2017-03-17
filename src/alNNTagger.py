@@ -87,13 +87,13 @@ def read_lexicon(infile):
     return L
 
 
-def read_annotated_file(infile,w2i_dict,l2i_dict,max_features,max_sequence_length,update_l2i=False):
+def read_annotated_file(infile,w2i_dict,l2i_dict,max_features,max_sequence_length,update_w2i=False,update_l2i=False):
     test_X = []
     test_Y = []
     nb_tags = len(l2i_dict.keys())
 
     for wordseq, labelseq in read_tab_sep(infile):
-        test_x = [string2index(w, w2i_dict, update_l2i,max_dict_size=max_features) for w in wordseq]
+        test_x = [string2index(w, w2i_dict, update_w2i,max_dict_size=max_features) for w in wordseq]
         test_y = [string2index(w, l2i_dict, update_l2i) for w in labelseq]
         test_X.append(test_x)
         test_Y.append(test_y)
@@ -127,8 +127,8 @@ def main():
         [string2index(w,l2i_dict) for w in labelseq]
     nb_tags = len(l2i_dict.keys())
 
-    train_X,train_Y=read_annotated_file(trainfile,w2i_dict,l2i_dict,args.max_features,args.max_sequence_length)
-    test_X,test_Y=read_annotated_file(testfile,w2i_dict,l2i_dict,args.max_features,args.max_sequence_length,update_l2i=False)
+    train_X,train_Y=read_annotated_file(trainfile,w2i_dict,l2i_dict,args.max_features,args.max_sequence_length,update_w2i=True,update_l2i=True)
+    test_X,test_Y=read_annotated_file(testfile,w2i_dict,l2i_dict,args.max_features,args.max_sequence_length)
 
 
     observed_n_feats = args.max_features + 1
