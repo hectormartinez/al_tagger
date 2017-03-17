@@ -173,7 +173,7 @@ def main():
                             weights=embedding_matrix, # =None if no embeddings provided
                             mask_zero=False)(sequence)
     if lexicon:
-        lexclassed = Input(shape=(args.max_sequence_length,),dtype='int32')
+        lexclassed = Input(shape=(args.max_sequence_length,nb_lexclasses),dtype='int32')
         lstminput = merge([embedded, lexclassed], mode='concat', concat_axis=-1)
     else:
         lstminput = embedded
