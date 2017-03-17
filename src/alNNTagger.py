@@ -140,7 +140,6 @@ def main():
     train_X,train_Y=read_annotated_file(trainfile,w2i_dict,l2i_dict,args.max_features,args.max_sequence_length,update_w2i=True,update_l2i=True)
     test_X,test_Y=read_annotated_file(testfile,w2i_dict,l2i_dict,args.max_features,args.max_sequence_length)
 
-
     observed_n_feats = args.max_features + 1
 
     embedding_matrix = None
