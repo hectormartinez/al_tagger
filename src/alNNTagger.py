@@ -110,7 +110,7 @@ def create_lexicon_matrix(X,lex,max_sequence_length,lextag_nb):
         for j,word in enumerate(sentence):
             if word in lex:
                 Xlexcl[i][j] = lex[word]
-    return [Xlexcl]
+    return Xlexcl
 
 def main():
     parser = argparse.ArgumentParser(description="""toy LSTM""")
