@@ -1,8 +1,9 @@
 # bidirectional model
 # https://github.com/fchollet/keras/issues/1629
 from keras.models import Sequential, Model
-from keras.layers import Dense, Activation, Embedding, LSTM, Input, TimeDistributed, Dropout, TimeDistributedDense, merge
-from keras.layers.recurrent import Recurrent
+from keras.layers import Dense, Activation, Embedding, LSTM, Input, TimeDistributed, Dropout, merge
+#from keras.layers.recurrent import Recurrent
+from keras.layers.merge import concatenate
 from keras.preprocessing import sequence
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import np_utils
@@ -61,7 +62,9 @@ def read_tab_sep(file_name):
 
 
 
-def string2index(word,dictindex,update=True,max_dict_size=0):
+def string2index(word,dictindex,update=False,max_dict_size=0):
+    if update:
+        dictindex[""] = 0
     if word in dictindex:
         return dictindex[word]
     elif update:
@@ -112,6 +115,19 @@ def create_lexicon_matrix(X,lex,max_sequence_length,lextag_nb):
                 Xlexcl[i][j] = lex[word]
     return Xlexcl
 
+def create_cemb_matrix(X,i2w_dict,c2i_dict,max_sequence_length,max_token_length):
+    # prepare cemb matrix, aligned word-wise
+
+    Xcemb = np.zeros((X.shape[0],max_sequence_length,max_token_length))
+    for i,sentence in enumerate(X):
+        for j,word in enumerate(sentence):
+            for k,char in enumerate(i2w_dict[word]):
+                if k < max_token_length:
+                    Xcemb[i][j][k] = c2i_dict[char]
+                else:
+                    break
+    return Xcemb
+
 def main():
     parser = argparse.ArgumentParser(description="""toy LSTM""")
     parser.add_argument("--train",default="corpus/pos_ud_en_dev.2col")
@@ -119,10 +135,12 @@ def main():
     parser.add_argument("--dev",default="corpus/pos_ud_en_dev.2col")
     parser.add_argument("--lexicon",default="lex/en_lexicon_short.ftl")
     parser.add_argument("--embeddings",default=None)
+    parser.add_argument("--cemb_layer_size",type=int,default=64) # 0 = do not use character embeddings
     parser.add_argument("--max_features",type=int,default=5000 )
     parser.add_argument("--max_sequence_length",type=int,default=50 )
+    parser.add_argument("--max_token_length",type=int,default=25 )
     parser.add_argument("--embedding_dim",type=int,default=64)
-    parser.add_argument("--epochs",type=int,default=2 )
+    parser.add_argument("--epochs",type=int,default=2)
     parser.add_argument("--batch_size",type=int,default=128)
 
     args = parser.parse_args()
@@ -132,14 +150,16 @@ def main():
 
     w2i_dict = dict()  # default value for unknown words
     l2i_dict = dict()
+    c2i_dict = dict()
 
+    # initialisation of the label (i.e. tag) dictionary
     for wordseq, labelseq in list(read_tab_sep(trainfile)):
-        [string2index(w,l2i_dict) for w in labelseq]
+        [string2index(w,l2i_dict,update=True) for w in labelseq]
     nb_tags = len(l2i_dict.keys())
 
     train_X,train_Y=read_annotated_file(trainfile,w2i_dict,l2i_dict,args.max_features,args.max_sequence_length,update_w2i=True,update_l2i=True)
     test_X,test_Y=read_annotated_file(testfile,w2i_dict,l2i_dict,args.max_features,args.max_sequence_length)
-
+    
     observed_n_feats = args.max_features + 1
 
     embedding_matrix = None
@@ -154,6 +174,15 @@ def main():
         train_Xlexcl = create_lexicon_matrix(train_X,lexicon,args.max_sequence_length,nb_lexclasses)
         test_Xlexcl = create_lexicon_matrix(test_X,lexicon,args.max_sequence_length,nb_lexclasses)
 
+    if args.cemb_layer_size > 0:
+        # initialisation of the character dictionary (for character embeddings)
+        [string2index(char,c2i_dict,update=True) for char in sorted(set("".join(list(w2i_dict.keys()))))]
+        # creating character embedding data
+        i2w_dict = dict([(i,w) for (w,i) in w2i_dict.items()])
+        i2w_dict[len(w2i_dict.keys())+1] = "" # unknown word
+        train_Xcemb = create_cemb_matrix(train_X,i2w_dict,c2i_dict,args.max_sequence_length,args.max_token_length)
+        test_Xcemb = create_cemb_matrix(test_X,i2w_dict,c2i_dict,args.max_sequence_length,args.max_token_length)
+        
     print ("data reading done")
 
     sequence = Input(shape=(args.max_sequence_length,),dtype='int32')
@@ -164,36 +193,66 @@ def main():
     If this is True then all subsequent layers in the model need to support masking or an exception will be raised.
     If mask_zero is set to True, as a consequence, index 0 cannot be used in the vocabulary
     (input_dim should equal |vocabulary| + 2)."""
-
-    print(np.array(train_X).shape)
-    print(np.array(train_Xlexcl).shape)
     
     embedded = Embedding(input_dim=observed_n_feats, output_dim=args.embedding_dim,
                             input_length=args.max_sequence_length,
                             weights=embedding_matrix, # =None if no embeddings provided
                             mask_zero=False)(sequence)
-    if lexicon:
-        lexclassed = Input(shape=(args.max_sequence_length,nb_lexclasses),dtype='int32')
-        lstminput = merge([embedded, lexclassed], mode='concat', concat_axis=-1)
-    else:
-        lstminput = embedded
 
-    fwd_lstm = LSTM(output_dim=args.embedding_dim, return_sequences=True)(lstminput)
-    bwd_lstm = LSTM(output_dim=args.embedding_dim, go_backwards=True, return_sequences=True)(lstminput)
-    merged = merge([fwd_lstm, bwd_lstm], mode='concat', concat_axis=-1)
+    to_be_concatenated = [embedded]
+    inputs = [sequence]
+    train_data = [train_X]
+    test_data = [test_X]
+    lstminput_width = args.embedding_dim
+
+    if lexicon:
+        lexclassed = Input(shape=(args.max_sequence_length,nb_lexclasses),dtype='float32',name="charmodelinput")
+        to_be_concatenated.append(lexclassed)
+        inputs.append(lexclassed)
+        train_data.append(train_Xlexcl)
+        test_data.append(test_Xlexcl)
+        lstminput_width += nb_lexclasses
+
+    if args.cemb_layer_size > 0:
+        charsequence = Input(shape=(args.max_token_length,),dtype='int32')
+        charembedded = Embedding(input_dim=len(c2i_dict.keys()), output_dim=args.cemb_layer_size,
+                             input_length=args.max_token_length,
+                             mask_zero=False)(charsequence)
+        fwd_clstm = LSTM(units=args.cemb_layer_size, return_sequences=False)(charembedded)
+        bwd_clstm = LSTM(units=args.cemb_layer_size, go_backwards=True, return_sequences=False)(charembedded)
+        charmerged = concatenate([fwd_clstm, bwd_clstm], axis=-1)
+        chardroppedout = Dropout(0.2)(charmerged)
+        charembedded = Dense(units=args.cemb_layer_size)(chardroppedout)
+        charlevelmodel = Model(inputs=[charsequence],outputs=[charembedded])
+
+        charlevelmodelinput = Input(shape=(args.max_sequence_length,args.max_token_length),dtype='int32',name="charmodelcallinginput")
+        charlevelmodeloutput = TimeDistributed(charlevelmodel)(charlevelmodelinput)
+
+        to_be_concatenated.append(charlevelmodeloutput)
+        inputs.append(charlevelmodelinput)
+        train_data.append(train_Xcemb)
+        test_data.append(test_Xcemb)
+        lstminput_width += args.cemb_layer_size
+
+    if len(to_be_concatenated) == 1:
+        lstminput = embedded
+    else:
+        lstminput = concatenate(to_be_concatenated, axis=-1)
+
+    fwd_lstm = LSTM(units=lstminput_width, return_sequences=True)(lstminput)
+    bwd_lstm = LSTM(units=lstminput_width, go_backwards=True, return_sequences=True)(lstminput)
+    merged = concatenate([fwd_lstm, bwd_lstm], axis=-1)
     droppedout = Dropout(0.2)(merged)
-    densed = TimeDistributed(Dense(output_dim=nb_tags))(droppedout)
+    densed = TimeDistributed(Dense(units=nb_tags))(droppedout)
     output = Activation('softmax')(densed)
-    model = Model(input=[sequence,lexclassed], output=output)
+
+    model = Model(inputs=inputs, outputs=output)
     
     print ("model building done")
     
     model.compile(loss='categorical_crossentropy',optimizer='sgd',metrics=['accuracy'],sample_weight_mode='temporal')
     print ("about to fit")
-    if lexicon:
-        model.fit([train_X,train_Xlexcl], train_Y,batch_size=args.batch_size, nb_epoch=args.epochs, validation_data=([test_X,test_Xlexcl], test_Y))
-    else:
-        model.fit(train_X, train_Y,batch_size=args.batch_size, nb_epoch=args.epochs, validation_data=(test_X, test_Y))
+    model.fit(train_data, train_Y,batch_size=args.batch_size, epochs=args.epochs, validation_data=(test_data, test_Y))
 
 
 if __name__ == "__main__":
