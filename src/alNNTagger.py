@@ -102,6 +102,16 @@ def read_annotated_file(infile,w2i_dict,l2i_dict,max_features,max_sequence_lengt
     test_Y = np.array([np_utils.to_categorical(seq, nb_tags) for seq in test_Y])
     return test_X,test_Y
 
+def create_lexicon_matrix(X,lex,max_sequence_length,lextag_nb)
+    # prepare lexical matrix, aligned word-wise
+
+    Xlex = np.zeros(X.shape[0],max_sequence_length,lextag_nb)
+    for sentence,i in enumerate(X):
+        for word,j in enumerate(sentence):
+            if word in lex:
+                Xlex[i][j] = lex[word]
+    return [Xlex]
+
 def main():
     parser = argparse.ArgumentParser(description="""toy LSTM""")
     parser.add_argument("--train",default="corpus/pos_ud_en_dev.2col")
@@ -135,6 +145,7 @@ def main():
 
     print(len(w2i_dict.keys()))
 
+    embedding_matrix = None
     if args.embeddings:
         embedding_dict =read_embed_file(args.embeddings)
         embedding_matrix=create_embedding_matrix(embedding_dict,w2i_dict,args.embedding_dim)
@@ -142,11 +153,14 @@ def main():
     lexicon = None
     if args.lexicon:
         lexicon = read_lexicon(args.lexicon)
+        train_Xlex = create_lexicon_matrix(train_X,lexicon,args.max_sequence_length,len(l2i_dict.keys()))
+        test_Xlex = create_lexicon_matrix(test_X,lexicon,args.max_sequence_length,len(l2i_dict.keys()))
 
     print ("data reading done")
 
     sequence = Input(shape=(args.max_sequence_length,),dtype='int32')
-
+    if lexicon:
+        lexsequence = Input(shape=(args.max_sequence_length,),dtype='int32')
 
     #TODO review masked zero!
     """ mask_zero: Whether or not the input value 0 is a special "padding" value that should be masked out.
@@ -157,26 +171,32 @@ def main():
 
     print(np.array(embedding_matrix).shape)
     
-    if args.embeddings:
-        embedded = Embedding(input_dim=observed_n_feats, output_dim=args.embedding_dim,
-                         input_length=args.max_sequence_length, weights=embedding_matrix,mask_zero=False)(sequence)
-    else:
-        embedded = Embedding(input_dim=observed_n_feats, output_dim=args.embedding_dim,
-                             input_length=args.max_sequence_length, mask_zero=False)(sequence)
+    embedded = Embedding(input_dim=observed_n_feats, output_dim=args.embedding_dim,
+                            input_length=args.max_sequence_length,
+                            weights=embedding_matrix, # =None if no embeddings provided
+                            mask_zero=False)(sequence)
+    if lexicon:
+        lexiconed = TimeDistributed(Dense(input_dim=l2i_dict.keys()))(lexsequence)
+        lstminput = merge([embedded, lexiconed], mode='concat', concat_axis=-1)
+    else
+        lstminput = embedded
 
-    fwd_lstm = LSTM(output_dim=args.embedding_dim, return_sequences=True)(embedded)
-    bwd_lstm = LSTM(output_dim=args.embedding_dim, go_backwards=True, return_sequences=True)(embedded)
+    fwd_lstm = LSTM(output_dim=args.embedding_dim, return_sequences=True)(lstminput)
+    bwd_lstm = LSTM(output_dim=args.embedding_dim, go_backwards=True, return_sequences=True)(lstminput)
     merged = merge([fwd_lstm, bwd_lstm], mode='concat', concat_axis=-1)
     droppedout = Dropout(0.2)(merged)
     densed = TimeDistributed(Dense(output_dim=nb_tags))(droppedout)
     output = Activation('softmax')(densed)
-    model = Model(input=sequence, output=output)
+    model = Model(input=[sequence,lexsequence], output=output)
     
     print ("model building done")
     
     model.compile(loss='categorical_crossentropy',optimizer='sgd',metrics=['accuracy'],sample_weight_mode='temporal')
     print ("about to fit")
-    model.fit(train_X, train_Y,batch_size=args.batch_size, nb_epoch=args.epochs, validation_data=(test_X, test_Y))
+    if lexicon:
+        model.fit([train_X,train_Xlex], train_Y,batch_size=args.batch_size, nb_epoch=args.epochs, validation_data=([test_X,test_Xlex], test_Y))
+    else:
+        model.fit(train_X, train_Y,batch_size=args.batch_size, nb_epoch=args.epochs, validation_data=(test_X, test_Y))
 
 
 if __name__ == "__main__":
