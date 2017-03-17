@@ -105,7 +105,7 @@ def read_annotated_file(infile,w2i_dict,l2i_dict,max_features,max_sequence_lengt
 def create_lexicon_matrix(X,lex,max_sequence_length,lextag_nb):
     # prepare lexical matrix, aligned word-wise
 
-    Xlex = np.zeros(X.shape[0],max_sequence_length,lextag_nb)
+    Xlex = np.zeros((X.shape[0],max_sequence_length,lextag_nb))
     for sentence,i in enumerate(X):
         for word,j in enumerate(sentence):
             if word in lex:
