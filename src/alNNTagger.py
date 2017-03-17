@@ -184,7 +184,7 @@ def main():
     droppedout = Dropout(0.2)(merged)
     densed = TimeDistributed(Dense(output_dim=nb_tags))(droppedout)
     output = Activation('softmax')(densed)
-    model = Model(input=[sequence,lexclasssequence], output=output)
+    model = Model(input=[sequence,lexclassed], output=output)
     
     print ("model building done")
     
