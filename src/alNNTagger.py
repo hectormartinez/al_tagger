@@ -133,6 +133,8 @@ def main():
 
     observed_n_feats = args.max_features + 1
 
+    print(len(w2i_dict.keys()))
+
     if args.embeddings:
         embedding_dict =read_embed_file(args.embeddings)
         embedding_matrix=create_embedding_matrix(embedding_dict,w2i_dict,args.embedding_dim)
