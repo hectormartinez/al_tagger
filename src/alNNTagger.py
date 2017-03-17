@@ -178,7 +178,7 @@ def main():
     if lexicon:
         lexiconed = TimeDistributed(Dense(input_dim=l2i_dict.keys()))(lexsequence)
         lstminput = merge([embedded, lexiconed], mode='concat', concat_axis=-1)
-    else
+    else:
         lstminput = embedded
 
     fwd_lstm = LSTM(output_dim=args.embedding_dim, return_sequences=True)(lstminput)
