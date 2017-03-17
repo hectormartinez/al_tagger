@@ -165,14 +165,15 @@ def main():
     If mask_zero is set to True, as a consequence, index 0 cannot be used in the vocabulary
     (input_dim should equal |vocabulary| + 2)."""
 
-    print(np.array(embedding_matrix).shape)
+    print(np.array(train_X).shape)
+    print(np.array(train_Xlexcl).shape)
     
     embedded = Embedding(input_dim=observed_n_feats, output_dim=args.embedding_dim,
                             input_length=args.max_sequence_length,
                             weights=embedding_matrix, # =None if no embeddings provided
                             mask_zero=False)(sequence)
     if lexicon:
-        lexclassed = Input(shape=(nb_lexclasses,),dtype='int32')
+        lexclassed = Input(shape=(args.max_sequence_length,),dtype='int32')
         lstminput = merge([embedded, lexclassed], mode='concat', concat_axis=-1)
     else:
         lstminput = embedded
