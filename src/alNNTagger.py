@@ -131,7 +131,6 @@ def main():
     test_X,test_Y=read_annotated_file(testfile,w2i_dict,l2i_dict,args.max_features,args.max_sequence_length,update_l2i=False)
 
 
-
     observed_n_feats = args.max_features + 1
 
     if args.embeddings:
