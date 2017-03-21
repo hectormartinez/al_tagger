@@ -14,6 +14,7 @@ import codecs
 import pickle
 from itertools import count
 import dynet
+import pandas as pd
 
 #Recommended setting for bilty:
 #3 stacked LSTMs, predicting on outermost layer, otherwise default settings, i.e., --h_layers 3 --pred_layer 3
@@ -168,9 +169,15 @@ def save(nntagger, args):
 
 
 
-
-
-
+def read_lexicon(infile):
+    # TODO: lowercase option missing
+    L = dict()
+    frame = pd.read_csv(infile,'\t',names=["form","tag","lemma"])
+    tag_index = sorted([str(x) for x in set(list((frame.tag)))])
+    for form in set(list(frame.form)):
+        tags_for_words = set(list(frame[frame.form == form].tag))
+        L[form] = [1 if tag_index[i] in tags_for_words else 0 for i in range(len(tag_index))]
+    return len(tag_index),L
 
 
 def load_embeddings_file(file_name, sep=" ",lower=False):
@@ -440,7 +447,7 @@ class NNTagger(object):
             print(">>>", layer_num, "layer_num") 
 
             if layer_num == 0:
-                builder = dynet.LSTMBuilder(1, self.in_dim+self.c_in_dim*2, self.h_dim, self.model) # in_dim: size of each layer
+                builder = dynet.LSTMBuilder(1, self.in_dim+self.c_in_dim*2 , self.h_dim, self.model) # in_dim: size of each layer
                 layers.append(BiRNNSequencePredictor(builder)) #returns forward and backward sequence
             else:
                 # add inner layers (if h_layers >1)
@@ -497,6 +504,7 @@ class NNTagger(object):
         for (words, tags) in read_conll_file(folder_name):
             word_indices, word_char_indices = self.get_features(words)
             tag_indices = [self.task2tag2idx[task].get(tag) for tag in tags]
+            print(word_indices,word_char_indices)
             X.append((word_indices,word_char_indices))
             Y.append(tag_indices)
             org_X.append(words)
