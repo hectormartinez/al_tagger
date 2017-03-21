@@ -379,7 +379,7 @@ class NNTagger(object):
         
         assert(nb_tasks==len(self.pred_layer))
         
-        self.predictors, self.char_rnn, self.wembeds, self.cembeds, self.lexfeats = self.build_computation_graph(num_words, num_chars)
+        self.predictors, self.char_rnn, self.wembeds, self.cembeds = self.build_computation_graph(num_words, num_chars)
 
         print("lexfeats",self.lexfeats)
         print("lexfeats[0]",self.lexfeats[0])
