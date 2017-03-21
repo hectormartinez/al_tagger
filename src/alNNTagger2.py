@@ -10,6 +10,7 @@ import time
 import sys
 import numpy as np
 import os
+import codecs
 import pickle
 from itertools import count
 import dynet
