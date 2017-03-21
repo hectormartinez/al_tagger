@@ -405,6 +405,8 @@ class NNTagger(object):
         build graph and link to parameters
         """
          # initialize the word embeddings and the parameters
+        embeddings = None
+        emb_dim = 0
         if self.embeds_file:
             print("loading embeddings", file=sys.stderr)
             embeddings, emb_dim = load_embeddings_file(self.embeds_file, lower=self.lower)
