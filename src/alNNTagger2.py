@@ -339,7 +339,7 @@ class NNTagger(object):
             print("loadings lexicon", file=sys.stderr)
             self.lexicon,self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file,self.w2i)
             self.max_lex_i = len(self.w2i.keys())
-            self.lexfeats = self.model.add_lookup_parameters(self.max_lex_i, self.lex_in_dim)
+            self.lexfeats = self.model.add_lookup_parameters((self.max_lex_i, self.lex_in_dim))
 
             for word in self.lexicon.keys():
                 self.lexfeats.init_row(self.w2i[word],self.lexicon[word])
