@@ -696,9 +696,9 @@ class NNTagger(object):
 
                     if self.lex_file:
                         if word in self.lexicon:
-                            instance_lex_indices.append(self.lexfeats[self.w2i[word]])
+                            instance_lex_indices.append(self.lexfeats[w2i[word]])
                         else:
-                            instance_lex_indices.append(self.lexfeats[self.w2i["_UNK"]])
+                            instance_lex_indices.append(self.lexfeats[w2i["_UNK"]])
                     else:
                         instance_lex_indices.append([])
 
