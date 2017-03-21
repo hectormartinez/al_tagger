@@ -404,10 +404,9 @@ class NNTagger(object):
             total_loss=0.0
             total_tagged=0.0
             random.shuffle(train_data)
-            for ((word_indices,char_indices,word_lex_indices),y, task_of_instance) in train_data:
+            for ((word_indices,char_indices),y, task_of_instance) in train_data:
                 # use same predict function for training and testing
                 output = self.predict(word_indices, char_indices, task_of_instance, train=True)
-
                 loss1 = dynet.esum([self.pick_neg_log(pred,gold) for pred, gold in zip(output, y)])
                 lv = loss1.value()
                 total_loss += lv
@@ -620,7 +619,7 @@ class NNTagger(object):
             print(task_id,"labels:", self.task2tag2idx[task_id], file=sys.stderr )
             i2t = {self.task2tag2idx[task_id][t] : t for t in self.task2tag2idx[task_id].keys()}
 
-        for i, ((word_indices, word_char_indices,word_lex_indices), gold_tag_indices, task_of_instance) in enumerate(zip(test_X, test_Y, task_labels)):
+        for i, ((word_indices, word_char_indices), gold_tag_indices, task_of_instance) in enumerate(zip(test_X, test_Y, task_labels)):
             if verbose:
                 if i%100==0:
                     sys.stderr.write('%s'%i)
