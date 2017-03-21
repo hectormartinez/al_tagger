@@ -516,8 +516,6 @@ class NNTagger(object):
             else:
                 word_indices.append(self.w2i["_UNK"])
 
-
-
             chars_of_word = [self.c2i["<w>"]]
             for char in word:
                 if char in self.c2i:
@@ -538,9 +536,9 @@ class NNTagger(object):
         org_X, org_Y = [], []
         task_labels = []
         for (words, tags) in read_conll_file(folder_name):
-            word_indices, word_char_indices,word_lex_indices = self.get_features(words)
+            word_indices, word_char_indices = self.get_features(words)
             tag_indices = [self.task2tag2idx[task].get(tag) for tag in tags]
-            X.append((word_indices,word_char_indices,word_lex_indices))
+            X.append((word_indices,word_char_indices))
             Y.append(tag_indices)
             org_X.append(words)
             org_Y.append(tags)
