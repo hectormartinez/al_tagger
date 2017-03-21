@@ -180,7 +180,7 @@ def read_lexicon_file(infile):
     for form in set(list(frame.form)):
         tags_for_words = set(list(frame[frame.form == form].tag))
         L[form] = [1 if tag_index[i] in tags_for_words else 0 for i in range(len(tag_index))]
-    L["_UNK"] = np.ones(len(tag_index))
+    L["_UNK"] = list(np.ones(len(tag_index)))
     return L,len(tag_index)
 
 
@@ -701,7 +701,7 @@ class NNTagger(object):
                         if word in self.lexicon:
                             instance_lex_indices.append(self.lexicon[word])
                         else:
-                            instance_lex_indices.append(np.zeros(self.lex_in_dim))
+                            instance_lex_indices.append(list(np.ones(self.lex_in_dim)))
                     else:
                         instance_lex_indices.append([])
 
