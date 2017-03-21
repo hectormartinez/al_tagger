@@ -29,7 +29,7 @@ def main():
     parser.add_argument("--c_in_dim", help="input dimension for character embeddings [default: 100]", required=False,type=int,default=100)
     parser.add_argument("--h_dim", help="hidden dimension [default: 100]", required=False,type=int,default=100)
     parser.add_argument("--h_layers", help="number of stacked LSTMs [default: 1 = no stacking]", required=False,type=int,default=1)
-    parser.add_argument("--lex", help="external lexicon [default: no external lexicon]", required=False,default=None)
+    parser.add_argument("--lex_file", help="external lexicon [default: no external lexicon]", required=False,default=None)
     parser.add_argument("--test", nargs='*', help="test file(s)", required=False) # should be in the same order/task as train
     parser.add_argument("--dev", help="dev file(s)", required=False) 
     parser.add_argument("--output", help="output predictions to file", required=False,default=None)
