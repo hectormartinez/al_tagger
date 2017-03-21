@@ -135,7 +135,7 @@ def load(args):
                       myparams["pred_layer"],
                       activation=myparams["activation"], tasks_ids=myparams["tasks_ids"])
     tagger.set_indices(myparams["w2i"],myparams["c2i"],myparams["task2tag2idx"])
-    tagger.predictors, tagger.char_rnn, tagger.wembeds, tagger.cembeds, tagger.lexfeats = \
+    tagger.predictors, tagger.char_rnn, tagger.wembeds, tagger.cembeds = \
         tagger.build_computation_graph(myparams["num_words"],
                                        myparams["num_chars"])
     tagger.model.load(args.model)
@@ -184,6 +184,9 @@ def read_lexicon_file(infile,w2i):
         L[form] = [1 if tag_index[i] in tags_for_words else 0 for i in range(len(tag_index))]
     L["_UNK"] = list(np.ones(len(tag_index)))
     return L,len(tag_index), w2i
+
+
+
 
 
 def load_embeddings_file(file_name, sep=" ",lower=False):
@@ -304,7 +307,10 @@ class Layer:
 
 
     
-
+def toVecInput(v):
+    v2 = dynet.vecInput(len(v))
+    v2.set(v)
+    return v2
 
 
     
@@ -329,7 +335,6 @@ class NNTagger(object):
         self.predictors = {"inner": [], "output_layers_dict": {}, "task_expected_at": {} } # the inner layers and predictors
         self.wembeds = None # lookup: embeddings for words
         self.cembeds = None # lookup: embeddings for characters
-        self.lexfeats = None # lookup: input for lexicon features
         self.embeds_file = embeds_file
         self.lex_file = lex_file
         self.char_rnn = None # RNN for character input
@@ -341,12 +346,11 @@ class NNTagger(object):
         if self.lex_file:
             print("loadings lexicon", file=sys.stderr)
             self.lexicon,self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file,self.w2i)
-            self.lexfeats = self.model.add_lookup_parameters((len(self.lexicon.keys()), self.lex_in_dim))
 
             for word in self.lexicon.keys():
                 if word not in self.w2i:  # keep word dictionary updating
                     self.w2i[word] = len(self.w2i.keys())  # add new word
-                self.lexfeats.init_row(self.w2i[word], self.lexicon[word])
+
 
     def pick_neg_log(self, pred, gold):
         return -dynet.log(dynet.pick(pred, gold))
@@ -383,10 +387,6 @@ class NNTagger(object):
         assert(nb_tasks==len(self.pred_layer))
         
         self.predictors, self.char_rnn, self.wembeds, self.cembeds = self.build_computation_graph(num_words, num_chars)
-
-        #print("lexfeats",self.lexfeats)
-        #print("lexfeats[0]",self.lexfeats[0])
-        #print("lexfeats[w2i[_UNK]",self.lexfeats[self.w2i["_UNK"]])
 
         if dev:
             dev_X, dev_Y, org_X, org_Y, task_labels = self.get_data_as_indices(dev, "task0")
@@ -518,9 +518,9 @@ class NNTagger(object):
 
             if self.lex_file:
                 if word in self.lexicon:
-                    word_lex_indices=self.lexfeats[self.w2i[word]]
+                    word_lex_indices= toVecInput(self.lexicon[word])
                 else:
-                    word_lex_indices=self.lexfeats[self.w2i["_UNK"]]
+                    word_lex_indices=toVecInput(self.lexicon["_UNK"])
             else:
                 word_lex_indices = []
 
@@ -696,9 +696,10 @@ class NNTagger(object):
 
                     if self.lex_file:
                         if word in self.lexicon:
-                            instance_lex_indices.append(self.lexfeats[w2i[word]])
+                            instance_lex_indices.append(toVecInput(self.lexicon[word]))
                         else:
-                            instance_lex_indices.append(self.lexfeats[w2i["_UNK"]])
+                            instance_lex_indices.append(toVecInput(self.lexicon["_UNK"]))
+
                     else:
                         instance_lex_indices.append([])
 
