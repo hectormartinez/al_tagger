@@ -169,7 +169,7 @@ def save(nntagger, args):
 
 
 
-def read_lexicon(infile):
+def read_lexicon_file(infile):
     # TODO: lowercase option missing
     L = dict()
     frame = pd.read_csv(infile,'\t',names=["form","tag","lemma"])
@@ -177,7 +177,7 @@ def read_lexicon(infile):
     for form in set(list(frame.form)):
         tags_for_words = set(list(frame[frame.form == form].tag))
         L[form] = [1 if tag_index[i] in tags_for_words else 0 for i in range(len(tag_index))]
-    return len(tag_index),L
+    return L,len(tag_index)
 
 
 def load_embeddings_file(file_name, sep=" ",lower=False):
@@ -307,6 +307,7 @@ class NNTagger(object):
     def __init__(self,in_dim,h_dim,c_in_dim,h_layers,pred_layer,embeds_file=None,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
         self.w2i = {}  # word to index mapping
         self.c2i = {}  # char to index mapping
+        self.lexicon = {} # word-to-multi-hot lex features
         self.tasks_ids = tasks_ids # list of names for each task
         self.task2tag2idx = {} # need one dictionary per task
         self.pred_layer = [int(layer) for layer in pred_layer] # at which layer to predict each task
@@ -314,6 +315,7 @@ class NNTagger(object):
         self.in_dim = in_dim
         self.h_dim = h_dim
         self.c_in_dim = c_in_dim
+        self.lex_in_dim = 0 # This gets initiliased at runtime
         self.activation = activation
         self.lower = lower
         self.noise_sigma = noise_sigma
@@ -375,9 +377,9 @@ class NNTagger(object):
             total_loss=0.0
             total_tagged=0.0
             random.shuffle(train_data)
-            for ((word_indices,char_indices),y, task_of_instance) in train_data:
+            for ((word_indices,char_indices,word_lex_indices),y, task_of_instance) in train_data:
                 # use same predict function for training and testing
-                output = self.predict(word_indices, char_indices, task_of_instance, train=True)
+                output = self.predict(word_indices, char_indices,word_lex_indices, task_of_instance, train=True)
 
                 loss1 = dynet.esum([self.pick_neg_log(pred,gold) for pred, gold in zip(output, y)])
                 lv = loss1.value()
@@ -405,11 +407,19 @@ class NNTagger(object):
             print("loading embeddings", file=sys.stderr)
             embeddings, emb_dim = load_embeddings_file(self.embeds_file, lower=self.lower)
             assert(emb_dim==self.in_dim)
-            num_words=len(set(embeddings.keys()).union(set(self.w2i.keys()))) # initialize all with embeddings
+
+        if self.lex_file:
+            print("loadings lexicon", file=sys.stderr)
+            self.lexicon,self.lex_in_dim = read_lexicon_file(self.lex_file)
+            #self.lex_in_dim = lex_in_dim
+            #self.lexicon = lexicon
+
+        num_words=len(set(embeddings.keys()).union(set(self.w2i.keys())).union(set(lexicon.keys()))) # initialize all with embeddings
             # init model parameters and initialize them
-            wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
-            cembeds = self.model.add_lookup_parameters((num_chars, self.c_in_dim))
-               
+        wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
+        cembeds = self.model.add_lookup_parameters((num_chars, self.c_in_dim))
+
+        if self.embeds_file:
             init=0
             l = len(embeddings.keys())
             for word in embeddings.keys():
@@ -422,10 +432,6 @@ class NNTagger(object):
                 init+=1
             print("initialized: {}".format(init), file=sys.stderr)
 
-        else:
-            wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
-            cembeds = self.model.add_lookup_parameters((num_chars, self.c_in_dim))
-               
 
         #make it more flexible to add number of layers as specified by parameter
         layers = [] # inner layers
@@ -447,7 +453,7 @@ class NNTagger(object):
             print(">>>", layer_num, "layer_num") 
 
             if layer_num == 0:
-                builder = dynet.LSTMBuilder(1, self.in_dim+self.c_in_dim*2 , self.h_dim, self.model) # in_dim: size of each layer
+                builder = dynet.LSTMBuilder(1, self.in_dim+self.c_in_dim*2 + self.lex_in_dim, self.h_dim, self.model) # in_dim: size of each layer
                 layers.append(BiRNNSequencePredictor(builder)) #returns forward and backward sequence
             else:
                 # add inner layers (if h_layers >1)
@@ -476,11 +482,17 @@ class NNTagger(object):
         """
         word_indices = []
         word_char_indices = []
+        word_lex_indices =  []
         for word in words:
             if word in self.w2i:
                 word_indices.append(self.w2i[word])
             else:
                 word_indices.append(self.w2i["_UNK"])
+
+            if word in self.lexicon:
+                word_lex_indices=self.lexicon[word]
+            else:
+                word_lex_indices = np.zeros(self.lex_in_dim)
                 
             chars_of_word = [self.c2i["<w>"]]
             for char in word:
@@ -490,7 +502,7 @@ class NNTagger(object):
                     chars_of_word.append(self.c2i["_UNK"])
             chars_of_word.append(self.c2i["</w>"])
             word_char_indices.append(chars_of_word)
-        return word_indices, word_char_indices
+        return word_indices, word_char_indices, word_lex_indices
                                                                                                                                 
 
     def get_data_as_indices(self, folder_name, task):
@@ -502,10 +514,10 @@ class NNTagger(object):
         org_X, org_Y = [], []
         task_labels = []
         for (words, tags) in read_conll_file(folder_name):
-            word_indices, word_char_indices = self.get_features(words)
+            word_indices, word_char_indices,word_lex_indices = self.get_features(words)
             tag_indices = [self.task2tag2idx[task].get(tag) for tag in tags]
             print(word_indices,word_char_indices)
-            X.append((word_indices,word_char_indices))
+            X.append((word_indices,word_char_indices,word_lex_indices))
             Y.append(tag_indices)
             org_X.append(words)
             org_Y.append(tags)
@@ -513,7 +525,7 @@ class NNTagger(object):
         return X, Y, org_X, org_Y, task_labels
 
 
-    def predict(self, word_indices, char_indices, task_id, train=False):
+    def predict(self, word_indices, char_indices, lex_indices, task_id, train=False):
         """
         predict tags for a sentence represented as char+word embeddings
         """
@@ -530,7 +542,7 @@ class NNTagger(object):
             rev_char_emb.append(rev_last_state)
             
         wfeatures = [self.wembeds[w] for w in word_indices]
-        features = [dynet.concatenate([w,c,rev_c]) for w,c,rev_c in zip(wfeatures,char_emb,reversed(rev_char_emb))]
+        features = [dynet.concatenate([w,c,rev_c,l]) for w,c,rev_c,l in zip(wfeatures,char_emb,reversed(rev_char_emb),lex_indices)]
         
         if train: # only do at training time
             features = [dynet.noise(fe,self.noise_sigma) for fe in features]
@@ -579,14 +591,14 @@ class NNTagger(object):
             print(task_id,"labels:", self.task2tag2idx[task_id], file=sys.stderr )
             i2t = {self.task2tag2idx[task_id][t] : t for t in self.task2tag2idx[task_id].keys()}
 
-        for i, ((word_indices, word_char_indices), gold_tag_indices, task_of_instance) in enumerate(zip(test_X, test_Y, task_labels)):
+        for i, ((word_indices, word_char_indices,word_lex_indices), gold_tag_indices, task_of_instance) in enumerate(zip(test_X, test_Y, task_labels)):
             if verbose:
                 if i%100==0:
                     sys.stderr.write('%s'%i)
                 elif i%10==0:
                     sys.stderr.write('.')
                     
-            output = self.predict(word_indices, word_char_indices, task_of_instance)
+            output = self.predict(word_indices, word_char_indices, word_lex_indices,task_of_instance)
             predicted_tag_indices = [np.argmax(o.value()) for o in output]  
             if output_predictions:
                 prediction = [i2t[idx] for idx in predicted_tag_indices]
