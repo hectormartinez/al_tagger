@@ -183,6 +183,7 @@ def read_lexicon_file(infile,w2i):
         tags_for_words = set(list(frame[frame.form == form].tag))
         L[form] = [1 if tag_index[i] in tags_for_words else 0 for i in range(len(tag_index))]
     L["_UNK"] = list(np.ones(len(tag_index)))
+    print("Lex PANDAS", L.values(), tag_index, len(L.keys()))
     return L,len(tag_index), w2i
 
 
@@ -207,6 +208,7 @@ def read_lexicon_file_bak(infile,w2i):
     for form, possible_tags in ft.items():
         L[form] =  [1 if tag_index[i] in possible_tags else 0 for i in range(len(tag_index))]
     L["_UNK"] = list(np.ones(len(tag_index)))
+    print("Lex NOPANDAS", L.values(), tag_index, len(L.keys()))
     return L, len(tag_index), w2i
 
 
