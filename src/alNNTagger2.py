@@ -496,7 +496,7 @@ class NNTagger(object):
         predictors["output_layers_dict"] = output_layers_dict
         predictors["task_expected_at"] = task_expected_at
 
-        return predictors, char_rnn, wembeds, cembeds, lexfeats
+        return predictors, char_rnn, wembeds, cembeds
 
     def get_features(self, words):
         """
