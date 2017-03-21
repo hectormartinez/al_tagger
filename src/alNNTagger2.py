@@ -336,7 +336,7 @@ class NNTagger(object):
 
         self.w2i["_UNK"] = 0  # unk word / OOV
 
-        dynet.renew_cg()
+        #dynet.renew_cg()
 
         if self.lex_file:
             print("loadings lexicon", file=sys.stderr)
@@ -556,7 +556,7 @@ class NNTagger(object):
         """
         predict tags for a sentence represented as char+word embeddings
         """
-        dynet.renew_cg() # new graph
+        #dynet.renew_cg() # new graph
 
         char_emb = []
         rev_char_emb = []
