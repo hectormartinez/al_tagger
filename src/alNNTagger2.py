@@ -134,7 +134,7 @@ def load(args):
                       myparams["pred_layer"],
                       activation=myparams["activation"], tasks_ids=myparams["tasks_ids"])
     tagger.set_indices(myparams["w2i"],myparams["c2i"],myparams["task2tag2idx"])
-    tagger.predictors, tagger.char_rnn, tagger.wembeds, tagger.cembeds = \
+    tagger.predictors, tagger.char_rnn, tagger.wembeds, tagger.cembeds, tagger.lexfeats = \
         tagger.build_computation_graph(myparams["num_words"],
                                        myparams["num_chars"])
     tagger.model.load(args.model)
@@ -160,6 +160,7 @@ def save(nntagger, args):
                 "in_dim": nntagger.in_dim,
                 "h_dim": nntagger.h_dim,
                 "c_in_dim": nntagger.c_in_dim,
+                "lex_in_dim": nntagger.lex_in_dim,
                 "h_layers": nntagger.h_layers,
                 "embeds_file": nntagger.embeds_file,
                 "pred_layer": nntagger.pred_layer
@@ -178,6 +179,7 @@ def read_lexicon_file(infile):
     for form in set(list(frame.form)):
         tags_for_words = set(list(frame[frame.form == form].tag))
         L[form] = [1 if tag_index[i] in tags_for_words else 0 for i in range(len(tag_index))]
+    L["_UNK"] = np.ones(len(tag_index))
     return L,len(tag_index)
 
 
@@ -324,6 +326,7 @@ class NNTagger(object):
         self.predictors = {"inner": [], "output_layers_dict": {}, "task_expected_at": {} } # the inner layers and predictors
         self.wembeds = None # lookup: embeddings for words
         self.cembeds = None # lookup: embeddings for characters
+        self.lexfeats = None # lookup: input for lexicon features
         self.embeds_file = embeds_file
         self.lex_file = lex_file
         self.char_rnn = None # RNN for character input
@@ -371,7 +374,7 @@ class NNTagger(object):
         
         assert(nb_tasks==len(self.pred_layer))
         
-        self.predictors, self.char_rnn, self.wembeds, self.cembeds = self.build_computation_graph(num_words, num_chars)
+        self.predictors, self.char_rnn, self.wembeds, self.cembeds, self.lexfeats = self.build_computation_graph(num_words, num_chars)
 
         if train_algo == "sgd":
             trainer = dynet.SimpleSGDTrainer(self.model)
@@ -423,6 +426,7 @@ class NNTagger(object):
             # init model parameters and initialize them
         wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
         cembeds = self.model.add_lookup_parameters((num_chars, self.c_in_dim))
+        lexfeats = self.model.add_lookup_parameters((num_words, self.lex_in_dim))
         #TODO Revise if we need to save lex dim
 
         if self.embeds_file:
@@ -437,6 +441,11 @@ class NNTagger(object):
                     wembeds.init_row(self.w2i[word], embeddings[word])
                 init+=1
             print("initialized: {}".format(init), file=sys.stderr)
+
+        if self.lex_file:
+            for word in self.lexicon.keys():
+                lexfeats.init_row(self.w2i[word],self.lexicon[word])
+
 
 
         #make it more flexible to add number of layers as specified by parameter
@@ -480,7 +489,7 @@ class NNTagger(object):
         predictors["output_layers_dict"] = output_layers_dict
         predictors["task_expected_at"] = task_expected_at
 
-        return predictors, char_rnn, wembeds, cembeds
+        return predictors, char_rnn, wembeds, cembeds, lexfeats
 
     def get_features(self, words):
         """
@@ -497,9 +506,9 @@ class NNTagger(object):
 
             if self.lex_file:
                 if word in self.lexicon:
-                    word_lex_indices=self.lexicon[word]
+                    word_lex_indices=self.lexfeats[self.w2i[word]]
                 else:
-                    word_lex_indices = np.zeros(self.lex_in_dim)
+                    word_lex_indices=self.lexfeats[self.w2i["_UNK"]]
             else:
                 word_lex_indices = []
 
