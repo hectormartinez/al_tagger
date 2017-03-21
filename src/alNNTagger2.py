@@ -83,6 +83,7 @@ def main():
                               args.h_layers,
                               args.pred_layer,
                               embeds_file=args.embeds,
+                              lex_file = args.lex_file,
                               activation=args.ac,
                               lower=args.lower,
                               noise_sigma=args.sigma)
@@ -304,7 +305,7 @@ class Layer:
     
 class NNTagger(object):
 
-    def __init__(self,in_dim,h_dim,c_in_dim,h_layers,pred_layer,embeds_file=None,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
+    def __init__(self,in_dim,h_dim,c_in_dim,h_layers,pred_layer,embeds_file=None,lex_file=None,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
         self.w2i = {}  # word to index mapping
         self.c2i = {}  # char to index mapping
         self.lexicon = {} # word-to-multi-hot lex features
@@ -324,6 +325,7 @@ class NNTagger(object):
         self.wembeds = None # lookup: embeddings for words
         self.cembeds = None # lookup: embeddings for characters
         self.embeds_file = embeds_file
+        self.lex_file = lex_file
         self.char_rnn = None # RNN for character input
 
 
