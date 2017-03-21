@@ -170,23 +170,6 @@ def save(nntagger, args):
     print("model stored: {}".format(modelname), file=sys.stderr)
 
 
-
-
-def read_lexicon_file_bak(infile,w2i):
-    # TODO: lowercase option missing
-    L = dict()
-    frame = pd.read_csv(infile,'\t',names=["form","tag","lemma"])
-    tag_index = sorted([str(x) for x in set(list((frame.tag)))])
-    for form in set(list(frame.form)):
-        if form not in w2i:
-            w2i[form] = len(w2i.keys())
-        tags_for_words = set(list(frame[frame.form == form].tag))
-        L[form] = [1 if tag_index[i] in tags_for_words else 0 for i in range(len(tag_index))]
-    L["_UNK"] = list(np.ones(len(tag_index)))
-    print("Lex PANDAS", L.values(), tag_index, len(L.keys()))
-    return L,len(tag_index), w2i
-
-
 def read_lexicon_file(infile,w2i):
     L = dict()
     from collections import defaultdict
@@ -206,9 +189,9 @@ def read_lexicon_file(infile,w2i):
 
     tag_index = sorted(tag_set)
     for form, possible_tags in ft.items():
+        print(form,possible_tags)
         L[form] =  [1 if tag_index[i] in possible_tags else 0 for i in range(len(tag_index))]
     L["_UNK"] = list(np.ones(len(tag_index)))
-    print("Lex NOPANDAS", L.values(), tag_index, len(L.keys()))
     return L, len(tag_index), w2i
 
 
