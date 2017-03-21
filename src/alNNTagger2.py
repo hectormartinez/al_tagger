@@ -429,6 +429,9 @@ class NNTagger(object):
         build graph and link to parameters
         """
          # initialize the word embeddings and the parameters
+
+        dynet.renew_cg() # new graph
+
         embeddings = {}
         emb_dim = 0
         if self.embeds_file:
