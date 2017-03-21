@@ -304,15 +304,6 @@ class Layer:
         b = dynet.parameter(self.b)
         return self.act(W*x + b)
 
-
-
-    
-def toVecInput(v):
-    v2 = dynet.vecInput(len(v))
-    v2.set(v)
-    return v2
-
-
     
 class NNTagger(object):
 
@@ -350,7 +341,7 @@ class NNTagger(object):
             self.lexfeats = self.model.add_lookup_parameters((len(self.w2i.keys()), self.lex_in_dim))
 
             for word in self.lexicon.keys():
-                self.lexfeats[self.w2i[word]]=toVecInput(self.lexicon[word])
+                self.lexfeats.init_row(self.w2i[word],self.lexicon[word])
 
 
     def pick_neg_log(self, pred, gold):
