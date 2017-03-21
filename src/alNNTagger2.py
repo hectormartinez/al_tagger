@@ -548,7 +548,11 @@ class NNTagger(object):
             
         wfeatures = [self.wembeds[w] for w in word_indices]
         features = [dynet.concatenate([w,c,rev_c,l]) for w,c,rev_c,l in zip(wfeatures,char_emb,reversed(rev_char_emb),lex_indices)]
-        print("features",features[0])
+        print("windices",word_indices[0])
+        print("char_indices",char_indices[0])
+        print("lex_indices",lex_indices[0])
+
+
         
         if train: # only do at training time
             features = [dynet.noise(fe,self.noise_sigma) for fe in features]
