@@ -189,7 +189,6 @@ def read_lexicon_file(infile,w2i):
 
     tag_index = sorted(tag_set)
     for form, possible_tags in ft.items():
-        print(form,possible_tags)
         L[form] =  [1 if tag_index[i] in possible_tags else 0 for i in range(len(tag_index))]
     L["_UNK"] = list(np.ones(len(tag_index)))
     return L, len(tag_index), w2i
