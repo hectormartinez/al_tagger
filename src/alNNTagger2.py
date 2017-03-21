@@ -557,7 +557,7 @@ class NNTagger(object):
         #print([[w, c, rev_c, l] for w, c, rev_c, l in zip(wfeatures, char_emb, reversed(rev_char_emb), lex_indices)])
 
         if self.lex_file:
-            lexfeatures = [self.lexfeats[w_i] if w_i <= self.max_lex_i else self.lexfeats[self.w2i["_UNK"]] for w_i in
+            lexfeatures = [self.lexfeats[w_i] if w_i < self.max_lex_i else self.lexfeats[self.w2i["_UNK"]] for w_i in
                            word_indices]
 
             features = [dynet.concatenate([w_i,c,rev_c,l]) for w_i,c,rev_c,l in zip(wfeatures,char_emb,reversed(rev_char_emb),lexfeatures)]
