@@ -405,7 +405,7 @@ class NNTagger(object):
         build graph and link to parameters
         """
          # initialize the word embeddings and the parameters
-        embeddings = None
+        embeddings = {}
         emb_dim = 0
         if self.embeds_file:
             print("loading embeddings", file=sys.stderr)
@@ -418,10 +418,11 @@ class NNTagger(object):
             #self.lex_in_dim = lex_in_dim
             #self.lexicon = lexicon
 
-        num_words=len(set(embeddings.keys()).union(set(self.w2i.keys())).union(set(lexicon.keys()))) # initialize all with embeddings
+        num_words=len(set(embeddings.keys()).union(set(self.w2i.keys())).union(set(self.lexicon.keys()))) # initialize all with embeddings
             # init model parameters and initialize them
         wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
         cembeds = self.model.add_lookup_parameters((num_chars, self.c_in_dim))
+        #TODO Revise if we need to save lex dim
 
         if self.embeds_file:
             init=0
