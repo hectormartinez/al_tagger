@@ -172,7 +172,7 @@ def save(nntagger, args):
 
 
 
-def read_lexicon_file(infile,w2i):
+def read_lexicon_file_bak(infile,w2i):
     # TODO: lowercase option missing
     L = dict()
     frame = pd.read_csv(infile,'\t',names=["form","tag","lemma"])
@@ -187,7 +187,7 @@ def read_lexicon_file(infile,w2i):
     return L,len(tag_index), w2i
 
 
-def read_lexicon_file_bak(infile,w2i):
+def read_lexicon_file(infile,w2i):
     L = dict()
     from collections import defaultdict
     ft = defaultdict(set)
