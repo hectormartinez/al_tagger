@@ -14,8 +14,6 @@ import pickle
 from itertools import count
 import dynet
 
-from lib.mnnl import FFSequencePredictor, Layer, RNNSequencePredictor, BiRNNSequencePredictor
-
 #Recommended setting for bilty:
 #3 stacked LSTMs, predicting on outermost layer, otherwise default settings, i.e., --h_layers 3 --pred_layer 3
 
