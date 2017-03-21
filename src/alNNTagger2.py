@@ -691,7 +691,7 @@ class NNTagger(object):
                         if word in self.lexicon:
                             instance_lex_indices.append(self.lexicon[word])
                         else:
-                            instance_lex_indices.append(np.zeros(self.lex_dim))
+                            instance_lex_indices.append(np.zeros(self.lex_in_dim))
                     else:
                         instance_lex_indices.append([])
 
