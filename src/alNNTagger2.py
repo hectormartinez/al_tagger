@@ -365,6 +365,8 @@ class NNTagger(object):
 
         train_X, train_Y, task_labels, w2i, c2i, task2t2i = self.get_train_data(list_folders_name,self.w2i)
 
+        self.renew_cg()
+
         ## after calling get_train_data we have self.tasks_ids
         self.task2layer = {task_id: out_layer for task_id, out_layer in zip(self.tasks_ids, self.pred_layer)}
         print("task2layer", self.task2layer, file=sys.stderr)
