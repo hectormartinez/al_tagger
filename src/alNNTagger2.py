@@ -90,11 +90,6 @@ def main():
 
     if args.train and len( args.train ) != 0:
 
-
-        print("lexfeats",tagger.lexfeats)
-        print("lexfeats[0]",tagger.lexfeats[0])
-        print("lexfeats[w2i[_UNK]",tagger.lexfeats[tagger.w2i["_UNK"]])
-
         tagger.fit(args.train, args.iters, args.trainer, dev=args.dev)
         if args.save:
             save(tagger, args)
@@ -381,6 +376,11 @@ class NNTagger(object):
         assert(nb_tasks==len(self.pred_layer))
         
         self.predictors, self.char_rnn, self.wembeds, self.cembeds, self.lexfeats = self.build_computation_graph(num_words, num_chars)
+
+        print("lexfeats",self.lexfeats)
+        print("lexfeats[0]",self.lexfeats[0])
+        print("lexfeats[w2i[_UNK]",self.lexfeats[self.w2i["_UNK"]])
+
 
         if train_algo == "sgd":
             trainer = dynet.SimpleSGDTrainer(self.model)
