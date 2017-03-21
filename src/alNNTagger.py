@@ -1,9 +1,9 @@
 # bidirectional model
 # https://github.com/fchollet/keras/issues/1629
 from keras.models import Sequential, Model
-from keras.layers import Dense, Activation, Embedding, LSTM, Input, TimeDistributed, Dropout, merge
+from keras.layers import Dense, Activation, Embedding, LSTM, Input, TimeDistributed, Dropout
+from keras.layers import merge
 #from keras.layers.recurrent import Recurrent
-from keras.layers.merge import concatenate
 from keras.preprocessing import sequence
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import np_utils
@@ -133,9 +133,9 @@ def main():
     parser.add_argument("--train",default="corpus/pos_ud_en_dev.2col")
     parser.add_argument("--test",default="corpus/pos_ud_en_test.2col")
     parser.add_argument("--dev",default="corpus/pos_ud_en_dev.2col")
-    parser.add_argument("--lexicon",default="lex/en_lexicon_short.ftl")
+    parser.add_argument("--lexicon",default=None)
     parser.add_argument("--embeddings",default=None)
-    parser.add_argument("--cemb_layer_size",type=int,default=64) # 0 = do not use character embeddings
+    parser.add_argument("--cemb_layer_size",type=int,default=0) # 0 = do not use character embeddings
     parser.add_argument("--max_features",type=int,default=5000 )
     parser.add_argument("--max_sequence_length",type=int,default=50 )
     parser.add_argument("--max_token_length",type=int,default=25 )
@@ -220,7 +220,7 @@ def main():
                              mask_zero=False)(charsequence)
         fwd_clstm = LSTM(units=args.cemb_layer_size, return_sequences=False)(charembedded)
         bwd_clstm = LSTM(units=args.cemb_layer_size, go_backwards=True, return_sequences=False)(charembedded)
-        charmerged = concatenate([fwd_clstm, bwd_clstm], axis=-1)
+        charmerged = merge([fwd_clstm, bwd_clstm])
         chardroppedout = Dropout(0.2)(charmerged)
         charembedded = Dense(units=args.cemb_layer_size)(chardroppedout)
         charlevelmodel = Model(inputs=[charsequence],outputs=[charembedded])
@@ -237,11 +237,11 @@ def main():
     if len(to_be_concatenated) == 1:
         lstminput = embedded
     else:
-        lstminput = concatenate(to_be_concatenated, axis=-1)
+        lstminput = merge(to_be_concatenated)
 
-    fwd_lstm = LSTM(units=lstminput_width, return_sequences=True)(lstminput)
-    bwd_lstm = LSTM(units=lstminput_width, go_backwards=True, return_sequences=True)(lstminput)
-    merged = concatenate([fwd_lstm, bwd_lstm], axis=-1)
+    fwd_lstm = LSTM(input_dim=lstminput_width, output_dim=32, return_sequences=True)(lstminput)
+    bwd_lstm = LSTM(input_dim=lstminput_width,output_dim=32, go_backwards=True, return_sequences=True)(lstminput)
+    merged = merge([fwd_lstm, bwd_lstm])
     droppedout = Dropout(0.2)(merged)
     densed = TimeDistributed(Dense(units=nb_tags))(droppedout)
     output = Activation('softmax')(densed)
@@ -253,6 +253,8 @@ def main():
     model.compile(loss='categorical_crossentropy',optimizer='sgd',metrics=['accuracy'],sample_weight_mode='temporal')
     print ("about to fit")
     model.fit(train_data, train_Y,batch_size=args.batch_size, epochs=args.epochs, validation_data=(test_data, test_Y))
+    preds=model.predic(test_data)
+    print(preds)
 
 
 if __name__ == "__main__":
