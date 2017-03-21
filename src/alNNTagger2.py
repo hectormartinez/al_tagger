@@ -89,6 +89,12 @@ def main():
                               noise_sigma=args.sigma)
 
     if args.train and len( args.train ) != 0:
+
+
+        print("lexfeats",tagger.lexfeats)
+        print("lexfeats[0]",tagger.lexfeats[0])
+        print("lexfeats[w2i[_UNK]",tagger.lexfeats[tagger.w2i["_UNK"]])
+
         tagger.fit(args.train, args.iters, args.trainer, dev=args.dev)
         if args.save:
             save(tagger, args)
