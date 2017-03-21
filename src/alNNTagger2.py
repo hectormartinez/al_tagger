@@ -500,6 +500,8 @@ class NNTagger(object):
                     word_lex_indices=self.lexicon[word]
                 else:
                     word_lex_indices = np.zeros(self.lex_in_dim)
+            else:
+                word_lex_indices = []
 
             chars_of_word = [self.c2i["<w>"]]
             for char in word:
@@ -682,6 +684,8 @@ class NNTagger(object):
                             instance_lex_indices.append(self.lexicon[word])
                         else:
                             instance_lex_indices.append(np.zeros(self.lex_dim))
+                    else:
+                        instance_lex_indices.append([])
 
 
                     chars_of_word = [c2i["<w>"]]
