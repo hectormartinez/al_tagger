@@ -501,7 +501,7 @@ class NNTagger(object):
                 else:
                     word_lex_indices = np.zeros(self.lex_in_dim)
             else:
-                word_lex_indices = [0]
+                word_lex_indices = []
 
             chars_of_word = [self.c2i["<w>"]]
             for char in word:
@@ -550,6 +550,7 @@ class NNTagger(object):
             rev_char_emb.append(rev_last_state)
             
         wfeatures = [self.wembeds[w] for w in word_indices]
+        print([[w, c, rev_c, l] for w, c, rev_c, l in zip(wfeatures, char_emb, reversed(rev_char_emb), lex_indices)])
         features = [dynet.concatenate([w,c,rev_c,l]) for w,c,rev_c,l in zip(wfeatures,char_emb,reversed(rev_char_emb),lex_indices)]
         print("windices",word_indices[0])
         print("char_indices",char_indices[0])
@@ -685,7 +686,7 @@ class NNTagger(object):
                         else:
                             instance_lex_indices.append(np.zeros(self.lex_dim))
                     else:
-                        instance_lex_indices.append([0])
+                        instance_lex_indices.append([])
 
 
                     chars_of_word = [c2i["<w>"]]
