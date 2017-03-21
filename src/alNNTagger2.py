@@ -386,6 +386,7 @@ class NNTagger(object):
             random.shuffle(train_data)
             for ((word_indices,char_indices,word_lex_indices),y, task_of_instance) in train_data:
                 # use same predict function for training and testing
+                print(word_indices,char_indices,word_lex_indices)
                 output = self.predict(word_indices, char_indices,word_lex_indices, task_of_instance, train=True)
 
                 loss1 = dynet.esum([self.pick_neg_log(pred,gold) for pred, gold in zip(output, y)])
