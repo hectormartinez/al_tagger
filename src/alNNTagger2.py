@@ -572,7 +572,7 @@ class NNTagger(object):
             
         wfeatures = [self.wembeds[w] for w in word_indices]
         #print([[w, c, rev_c, l] for w, c, rev_c, l in zip(wfeatures, char_emb, reversed(rev_char_emb), lex_indices)])
-        dynet.renew_cg() # new graph
+
         if self.lex_file:
             features = [dynet.concatenate([w,c,rev_c,l]) for w,c,rev_c,l in zip(wfeatures,char_emb,reversed(rev_char_emb),lex_indices)]
         else:
