@@ -522,7 +522,6 @@ class NNTagger(object):
         for (words, tags) in read_conll_file(folder_name):
             word_indices, word_char_indices,word_lex_indices = self.get_features(words)
             tag_indices = [self.task2tag2idx[task].get(tag) for tag in tags]
-            print(word_indices,word_char_indices)
             X.append((word_indices,word_char_indices,word_lex_indices))
             Y.append(tag_indices)
             org_X.append(words)
@@ -549,6 +548,7 @@ class NNTagger(object):
             
         wfeatures = [self.wembeds[w] for w in word_indices]
         features = [dynet.concatenate([w,c,rev_c,l]) for w,c,rev_c,l in zip(wfeatures,char_emb,reversed(rev_char_emb),lex_indices)]
+        print("features",features[0])
         
         if train: # only do at training time
             features = [dynet.noise(fe,self.noise_sigma) for fe in features]
