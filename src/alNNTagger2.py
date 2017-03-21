@@ -336,6 +336,8 @@ class NNTagger(object):
 
         self.w2i["_UNK"] = 0  # unk word / OOV
 
+        dynet.renew_cg()
+
         if self.lex_file:
             print("loadings lexicon", file=sys.stderr)
             self.lexicon,self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file,self.w2i)
@@ -365,7 +367,6 @@ class NNTagger(object):
 
         train_X, train_Y, task_labels, w2i, c2i, task2t2i = self.get_train_data(list_folders_name,self.w2i)
 
-        dynet.renew_cg()
 
         ## after calling get_train_data we have self.tasks_ids
         self.task2layer = {task_id: out_layer for task_id, out_layer in zip(self.tasks_ids, self.pred_layer)}
