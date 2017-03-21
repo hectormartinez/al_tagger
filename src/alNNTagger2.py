@@ -330,7 +330,7 @@ class NNTagger(object):
         self.embeds_file = embeds_file
         self.lex_file = lex_file
         self.char_rnn = None # RNN for character input
-
+        self.max_lex_i = 0
         self.w2i["_UNK"] = 0  # unk word / OOV
 
         #dynet.renew_cg()
@@ -338,7 +338,8 @@ class NNTagger(object):
         if self.lex_file:
             print("loadings lexicon", file=sys.stderr)
             self.lexicon,self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file,self.w2i)
-            self.lexfeats = self.model.add_lookup_parameters((len(self.w2i.keys()), self.lex_in_dim))
+            self.max_lex_i = len(self.w2i.keys())
+            self.lexfeats = self.model.add_lookup_parameters(self.max_lex_i, self.lex_in_dim)
 
             for word in self.lexicon.keys():
                 self.lexfeats.init_row(self.w2i[word],self.lexicon[word])
@@ -552,16 +553,16 @@ class NNTagger(object):
             char_emb.append(last_state)
             rev_char_emb.append(rev_last_state)
             
-        wfeatures = [self.wembeds[w] for w in word_indices]
+        wfeatures = [self.wembeds[w_i] for w_i in word_indices]
         #print([[w, c, rev_c, l] for w, c, rev_c, l in zip(wfeatures, char_emb, reversed(rev_char_emb), lex_indices)])
 
         if self.lex_file:
-            lexfeatures = [self.lexfeats[w] if w < (len(self.lexfeats)) else self.lexfeats[self.w2i["_UNK"]] for w in
+            lexfeatures = [self.lexfeats[w_i] if w_i <= self.max_lex_i else self.lexfeats[self.w2i["_UNK"]] for w_i in
                            word_indices]
 
-            features = [dynet.concatenate([w,c,rev_c,l]) for w,c,rev_c,l in zip(wfeatures,char_emb,reversed(rev_char_emb),lexfeatures)]
+            features = [dynet.concatenate([w_i,c,rev_c,l]) for w_i,c,rev_c,l in zip(wfeatures,char_emb,reversed(rev_char_emb),lexfeatures)]
         else:
-            features = [dynet.concatenate([w,c,rev_c]) for w,c,rev_c in zip(wfeatures,char_emb,reversed(rev_char_emb))]
+            features = [dynet.concatenate([w_i,c,rev_c]) for w_i,c,rev_c in zip(wfeatures,char_emb,reversed(rev_char_emb))]
         
         if train: # only do at training time
             features = [dynet.noise(fe,self.noise_sigma) for fe in features]
