@@ -172,16 +172,18 @@ def save(nntagger, args):
 
 
 
-def read_lexicon_file(infile):
+def read_lexicon_file(infile,w2i):
     # TODO: lowercase option missing
     L = dict()
     frame = pd.read_csv(infile,'\t',names=["form","tag","lemma"])
     tag_index = sorted([str(x) for x in set(list((frame.tag)))])
     for form in set(list(frame.form)):
+        if form not in w2i:
+            w2i[form] = len(w2i.keys())
         tags_for_words = set(list(frame[frame.form == form].tag))
         L[form] = [1 if tag_index[i] in tags_for_words else 0 for i in range(len(tag_index))]
     L["_UNK"] = list(np.ones(len(tag_index)))
-    return L,len(tag_index)
+    return L,len(tag_index), w2i
 
 
 def load_embeddings_file(file_name, sep=" ",lower=False):
@@ -332,9 +334,11 @@ class NNTagger(object):
         self.lex_file = lex_file
         self.char_rnn = None # RNN for character input
 
+        self.w2i["_UNK"] = 0  # unk word / OOV
+
         if self.lex_file:
             print("loadings lexicon", file=sys.stderr)
-            self.lexicon,self.lex_in_dim = read_lexicon_file(self.lex_file)
+            self.lexicon,self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file,self.w2i)
 
 
 
@@ -355,7 +359,7 @@ class NNTagger(object):
 
         nb_tasks = len( list_folders_name )
 
-        train_X, train_Y, task_labels, w2i, c2i, task2t2i = self.get_train_data(list_folders_name)
+        train_X, train_Y, task_labels, w2i, c2i, task2t2i = self.get_train_data(list_folders_name,self.w2i)
 
         ## after calling get_train_data we have self.tasks_ids
         self.task2layer = {task_id: out_layer for task_id, out_layer in zip(self.tasks_ids, self.pred_layer)}
@@ -646,7 +650,7 @@ class NNTagger(object):
 
     # Get train data: need to read each train set (linked to a task) separately
 
-    def get_train_data(self, list_folders_name):
+    def get_train_data(self, list_folders_name,w2i):
         """
         :param list_folders_name: list of folders names
         :param lower: whether to lowercase tokens
@@ -662,11 +666,9 @@ class NNTagger(object):
         #num_tokens=0
 
         # word 2 indices and tag 2 indices
-        w2i = {} # word to index
         c2i = {} # char to index
         task2tag2idx = {} # id of the task -> tag2idx
 
-        w2i["_UNK"] = 0  # unk word / OOV
         c2i["_UNK"] = 0  # unk char
         c2i["<w>"] = 1   # word start
         c2i["</w>"] = 2  # word end index
