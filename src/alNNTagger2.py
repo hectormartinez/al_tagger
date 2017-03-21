@@ -195,9 +195,9 @@ def read_lexicon_file(infile,w2i):
         line = line.strip()
         if line:
             try:
-                form, tag, lemma = line.strip("\t") #requires f,t,l format
+                form, tag, lemma = line.split("\t") #requires f,t,l format
             except:
-                print("lexicon error:",line.strip("\t"))
+                print("lexicon error:",line.split("\t"))
             if form not in w2i:
                 w2i[form] = len(w2i.keys())
             tag_set.add(tag)
