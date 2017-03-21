@@ -194,7 +194,10 @@ def read_lexicon_file(infile,w2i):
     for line in open(infile).readlines():
         line = line.strip()
         if line:
-            form, tag, lemma = line.strip("\t") #requires f,t,l format
+            try:
+                form, tag, lemma = line.strip("\t") #requires f,t,l format
+            except:
+                print("lexicon error:",line.strip("\t"))
             if form not in w2i:
                 w2i[form] = len(w2i.keys())
             tag_set.add(tag)
