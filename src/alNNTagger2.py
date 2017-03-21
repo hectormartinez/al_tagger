@@ -452,6 +452,8 @@ class NNTagger(object):
 
         if self.lex_file:
             for word in self.lexicon.keys():
+                if word not in self.w2i: #keep word dictionary updating
+                    self.w2i[word]=len(self.w2i.keys()) # add new word
                 lexfeats.init_row(self.w2i[word],self.lexicon[word])
 
 
