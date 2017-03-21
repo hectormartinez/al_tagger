@@ -556,7 +556,7 @@ class NNTagger(object):
         """
         predict tags for a sentence represented as char+word embeddings
         """
-        #dynet.renew_cg() # new graph
+        dynet.renew_cg() # new graph
 
         char_emb = []
         rev_char_emb = []
