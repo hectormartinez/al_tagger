@@ -339,8 +339,12 @@ class NNTagger(object):
         if self.lex_file:
             print("loadings lexicon", file=sys.stderr)
             self.lexicon,self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file,self.w2i)
+            self.lexfeats = self.model.add_lookup_parameters((len(self.lexicon.keys()), self.lex_in_dim))
 
-
+            for word in self.lexicon.keys():
+                if word not in self.w2i:  # keep word dictionary updating
+                    self.w2i[word] = len(self.w2i.keys())  # add new word
+                self.lexfeats.init_row(self.w2i[word], self.lexicon[word])
 
     def pick_neg_log(self, pred, gold):
         return -dynet.log(dynet.pick(pred, gold))
@@ -398,7 +402,6 @@ class NNTagger(object):
             random.shuffle(train_data)
             for ((word_indices,char_indices,word_lex_indices),y, task_of_instance) in train_data:
                 # use same predict function for training and testing
-                print(word_indices,char_indices,word_lex_indices)
                 output = self.predict(word_indices, char_indices,word_lex_indices, task_of_instance, train=True)
 
                 loss1 = dynet.esum([self.pick_neg_log(pred,gold) for pred, gold in zip(output, y)])
@@ -435,7 +438,6 @@ class NNTagger(object):
             # init model parameters and initialize them
         wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
         cembeds = self.model.add_lookup_parameters((num_chars, self.c_in_dim))
-        lexfeats = self.model.add_lookup_parameters((num_words, self.lex_in_dim))
         #TODO Revise if we need to save lex dim
 
         if self.embeds_file:
@@ -450,12 +452,6 @@ class NNTagger(object):
                     wembeds.init_row(self.w2i[word], embeddings[word])
                 init+=1
             print("initialized: {}".format(init), file=sys.stderr)
-
-        if self.lex_file:
-            for word in self.lexicon.keys():
-                if word not in self.w2i: #keep word dictionary updating
-                    self.w2i[word]=len(self.w2i.keys()) # add new word
-                lexfeats.init_row(self.w2i[word],self.lexicon[word])
 
 
 
@@ -662,9 +658,6 @@ class NNTagger(object):
         task_labels = [] #keeps track of where instances come from "task1" or "task2"..
         self.tasks_ids = [] #record the id of the tasks
 
-        #num_sentences=0
-        #num_tokens=0
-
         # word 2 indices and tag 2 indices
         c2i = {} # char to index
         task2tag2idx = {} # id of the task -> tag2idx
@@ -672,7 +665,6 @@ class NNTagger(object):
         c2i["_UNK"] = 0  # unk char
         c2i["<w>"] = 1   # word start
         c2i["</w>"] = 2  # word end index
-        
         
         for i, folder_name in enumerate( list_folders_name ):
             num_sentences=0
