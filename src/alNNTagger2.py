@@ -364,8 +364,7 @@ class NNTagger(object):
         # store mappings of words and tags to indices
         self.set_indices(w2i,c2i,task2t2i)
 
-        if dev:
-            dev_X, dev_Y, org_X, org_Y, task_labels = self.get_data_as_indices(dev, "task0")
+
 
         # init lookup parameters and define graph
         print("build graph",file=sys.stderr)
@@ -380,6 +379,9 @@ class NNTagger(object):
         print("lexfeats",self.lexfeats)
         print("lexfeats[0]",self.lexfeats[0])
         print("lexfeats[w2i[_UNK]",self.lexfeats[self.w2i["_UNK"]])
+
+        if dev:
+            dev_X, dev_Y, org_X, org_Y, task_labels = self.get_data_as_indices(dev, "task0")
 
 
         if train_algo == "sgd":
