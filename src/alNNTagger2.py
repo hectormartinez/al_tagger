@@ -363,9 +363,6 @@ class NNTagger(object):
 
         # store mappings of words and tags to indices
         self.set_indices(w2i,c2i,task2t2i)
-
-
-
         # init lookup parameters and define graph
         print("build graph",file=sys.stderr)
         
@@ -699,9 +696,9 @@ class NNTagger(object):
 
                     if self.lex_file:
                         if word in self.lexicon:
-                            instance_lex_indices.append(self.lexicon[word])
+                            instance_lex_indices.append(self.lexfeats[self.w2i[word]])
                         else:
-                            instance_lex_indices.append(list(np.ones(self.lex_in_dim)))
+                            instance_lex_indices.append(self.lexfeats[self.w2i["_UNK"]])
                     else:
                         instance_lex_indices.append([])
 
