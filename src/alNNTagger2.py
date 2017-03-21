@@ -335,6 +335,7 @@ class NNTagger(object):
         self.predictors = {"inner": [], "output_layers_dict": {}, "task_expected_at": {} } # the inner layers and predictors
         self.wembeds = None # lookup: embeddings for words
         self.cembeds = None # lookup: embeddings for characters
+        self.lexfeats = None
         self.embeds_file = embeds_file
         self.lex_file = lex_file
         self.char_rnn = None # RNN for character input
@@ -346,10 +347,10 @@ class NNTagger(object):
         if self.lex_file:
             print("loadings lexicon", file=sys.stderr)
             self.lexicon,self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file,self.w2i)
+            self.lexfeats = self.model.add_lookup_parameters((len(self.w2i.keys()), self.lex_in_dim))
 
             for word in self.lexicon.keys():
-                if word not in self.w2i:  # keep word dictionary updating
-                    self.w2i[word] = len(self.w2i.keys())  # add new word
+                self.lexfeats[self.w2i[word]]=toVecInput(self.lexicon[word])
 
 
     def pick_neg_log(self, pred, gold):
@@ -405,7 +406,7 @@ class NNTagger(object):
             random.shuffle(train_data)
             for ((word_indices,char_indices,word_lex_indices),y, task_of_instance) in train_data:
                 # use same predict function for training and testing
-                output = self.predict(word_indices, char_indices,word_lex_indices, task_of_instance, train=True)
+                output = self.predict(word_indices, char_indices, task_of_instance, train=True)
 
                 loss1 = dynet.esum([self.pick_neg_log(pred,gold) for pred, gold in zip(output, y)])
                 lv = loss1.value()
@@ -443,7 +444,6 @@ class NNTagger(object):
             # init model parameters and initialize them
         wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
         cembeds = self.model.add_lookup_parameters((num_chars, self.c_in_dim))
-        #TODO Revise if we need to save lex dim
 
         if self.embeds_file:
             init=0
@@ -516,13 +516,7 @@ class NNTagger(object):
             else:
                 word_indices.append(self.w2i["_UNK"])
 
-            if self.lex_file:
-                if word in self.lexicon:
-                    word_lex_indices= toVecInput(self.lexicon[word])
-                else:
-                    word_lex_indices=toVecInput(self.lexicon["_UNK"])
-            else:
-                word_lex_indices = []
+
 
             chars_of_word = [self.c2i["<w>"]]
             for char in word:
@@ -532,7 +526,7 @@ class NNTagger(object):
                     chars_of_word.append(self.c2i["_UNK"])
             chars_of_word.append(self.c2i["</w>"])
             word_char_indices.append(chars_of_word)
-        return word_indices, word_char_indices, word_lex_indices
+        return word_indices, word_char_indices
                                                                                                                                 
 
     def get_data_as_indices(self, folder_name, task):
@@ -554,7 +548,7 @@ class NNTagger(object):
         return X, Y, org_X, org_Y, task_labels
 
 
-    def predict(self, word_indices, char_indices, lex_indices, task_id, train=False):
+    def predict(self, word_indices, char_indices, task_id, train=False):
         """
         predict tags for a sentence represented as char+word embeddings
         """
@@ -574,7 +568,10 @@ class NNTagger(object):
         #print([[w, c, rev_c, l] for w, c, rev_c, l in zip(wfeatures, char_emb, reversed(rev_char_emb), lex_indices)])
 
         if self.lex_file:
-            features = [dynet.concatenate([w,c,rev_c,l]) for w,c,rev_c,l in zip(wfeatures,char_emb,reversed(rev_char_emb),lex_indices)]
+            lexfeatures = [self.lexfeats[w] if w < (len(self.lexfeats)) else self.lexfeats[self.w2i["_UNK"]] for w in
+                           word_indices]
+
+            features = [dynet.concatenate([w,c,rev_c,l]) for w,c,rev_c,l in zip(wfeatures,char_emb,reversed(rev_char_emb),lexfeatures)]
         else:
             features = [dynet.concatenate([w,c,rev_c]) for w,c,rev_c in zip(wfeatures,char_emb,reversed(rev_char_emb))]
         
@@ -632,7 +629,7 @@ class NNTagger(object):
                 elif i%10==0:
                     sys.stderr.write('.')
                     
-            output = self.predict(word_indices, word_char_indices, word_lex_indices,task_of_instance)
+            output = self.predict(word_indices, word_char_indices,task_of_instance)
             predicted_tag_indices = [np.argmax(o.value()) for o in output]  
             if output_predictions:
                 prediction = [i2t[idx] for idx in predicted_tag_indices]
@@ -683,7 +680,6 @@ class NNTagger(object):
                 num_sentences += 1
                 instance_word_indices = [] #sequence of word indices
                 instance_char_indices = [] #sequence of char indices
-                instance_lex_indices = []
                 instance_tags_indices = [] #sequence of tag indices
 
                 for i, (word, tag) in enumerate(zip(words, tags)):
@@ -693,16 +689,6 @@ class NNTagger(object):
                     if word not in w2i:
                         w2i[word] = len(w2i)
                     instance_word_indices.append(w2i[word])
-
-                    if self.lex_file:
-                        if word in self.lexicon:
-                            instance_lex_indices.append(toVecInput(self.lexicon[word]))
-                        else:
-                            instance_lex_indices.append(toVecInput(self.lexicon["_UNK"]))
-
-                    else:
-                        instance_lex_indices.append([])
-
 
                     chars_of_word = [c2i["<w>"]]
                     for char in word:
@@ -718,7 +704,7 @@ class NNTagger(object):
 
                     instance_tags_indices.append(task2tag2idx[task_id].get(tag))
 
-                X.append((instance_word_indices, instance_char_indices,instance_lex_indices)) # list of word indices, for every word list of char indices
+                X.append((instance_word_indices, instance_char_indices)) # list of word indices, for every word list of char indices
                 Y.append(instance_tags_indices)
                 task_labels.append(task_id)
 
