@@ -328,6 +328,11 @@ class NNTagger(object):
         self.lex_file = lex_file
         self.char_rnn = None # RNN for character input
 
+        if self.lex_file:
+            print("loadings lexicon", file=sys.stderr)
+            self.lexicon,self.lex_in_dim = read_lexicon_file(self.lex_file)
+
+
 
     def pick_neg_log(self, pred, gold):
         return -dynet.log(dynet.pick(pred, gold))
@@ -412,11 +417,6 @@ class NNTagger(object):
             embeddings, emb_dim = load_embeddings_file(self.embeds_file, lower=self.lower)
             assert(emb_dim==self.in_dim)
 
-        if self.lex_file:
-            print("loadings lexicon", file=sys.stderr)
-            self.lexicon,self.lex_in_dim = read_lexicon_file(self.lex_file)
-            #self.lex_in_dim = lex_in_dim
-            #self.lexicon = lexicon
 
         num_words=len(set(embeddings.keys()).union(set(self.w2i.keys())).union(set(self.lexicon.keys()))) # initialize all with embeddings
             # init model parameters and initialize them
@@ -494,11 +494,12 @@ class NNTagger(object):
             else:
                 word_indices.append(self.w2i["_UNK"])
 
-            if word in self.lexicon:
-                word_lex_indices=self.lexicon[word]
-            else:
-                word_lex_indices = np.zeros(self.lex_in_dim)
-                
+            if self.lexicon:
+                if word in self.lexicon:
+                    word_lex_indices=self.lexicon[word]
+                else:
+                    word_lex_indices = np.zeros(self.lex_in_dim)
+
             chars_of_word = [self.c2i["<w>"]]
             for char in word:
                 if char in self.c2i:
@@ -659,7 +660,8 @@ class NNTagger(object):
             for instance_idx, (words, tags) in enumerate(read_conll_file(folder_name)):
                 num_sentences += 1
                 instance_word_indices = [] #sequence of word indices
-                instance_char_indices = [] #sequence of char indices 
+                instance_char_indices = [] #sequence of char indices
+                instance_lex_indices = []
                 instance_tags_indices = [] #sequence of tag indices
 
                 for i, (word, tag) in enumerate(zip(words, tags)):
@@ -669,6 +671,13 @@ class NNTagger(object):
                     if word not in w2i:
                         w2i[word] = len(w2i)
                     instance_word_indices.append(w2i[word])
+
+                    if self.lex_file:
+                        if word in self.lexicon:
+                            instance_lex_indices.append(self.lexicon[word])
+                        else:
+                            instance_lex_indices.append(np.zeros(self.lex_dim))
+
 
                     chars_of_word = [c2i["<w>"]]
                     for char in word:
@@ -684,7 +693,7 @@ class NNTagger(object):
 
                     instance_tags_indices.append(task2tag2idx[task_id].get(tag))
 
-                X.append((instance_word_indices, instance_char_indices)) # list of word indices, for every word list of char indices
+                X.append((instance_word_indices, instance_char_indices,instance_lex_indices)) # list of word indices, for every word list of char indices
                 Y.append(instance_tags_indices)
                 task_labels.append(task_id)
 
