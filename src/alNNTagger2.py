@@ -4,6 +4,10 @@
 A neural network based tagger with external lexical features (bi-LSTM+lex)
 :author: Benoît Sagot & Héctor Martinez Alonso, extending code by Barbara Plank and Yoav Goldberg (ACL 2016 paper, https://github.com/bplank/bilstm-aux, 'bitly' tagger)
 """
+
+#https://gist.github.com/dirko/1d596ca757a541da96ac3caa6f291229
+
+
 import argparse
 import random
 import time
