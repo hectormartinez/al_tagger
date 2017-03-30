@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# coding=utf-8
 """
 A neural network based tagger with external lexical features (bi-LSTM+lex)
 :author: Benoît Sagot & Héctor Martinez Alonso, extending code by Barbara Plank and Yoav Goldberg (ACL 2016 paper, https://github.com/bplank/bilstm-aux, 'bitly' tagger)
@@ -19,6 +18,8 @@ import pickle
 from itertools import count
 import dynet
 import pandas as pd
+from collections import defaultdict
+
 
 #Recommended setting for bilty:
 #3 stacked LSTMs, predicting on outermost layer, otherwise default settings, i.e., --h_layers 3 --pred_layer 3
@@ -176,10 +177,9 @@ def save(nntagger, args):
 
 def read_lexicon_file(infile,w2i):
     L = dict()
-    from collections import defaultdict
     ft = defaultdict(set)
     tag_set = set()
-    for line in open(infile).readlines():
+    for line in open(infile,encoding="utf-8").readlines():
         line = line.strip()
         if line:
             try:
