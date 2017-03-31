@@ -7,16 +7,18 @@ from keras.layers.core import TimeDistributedDense, Activation
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers.embeddings import Embedding
 from sklearn.cross_validation import train_test_split
-from keras.layers import Merge
+from keras.layers import Merge, Layer
 from keras.backend import tf
 from lambdawithmask import Lambda as MaskLambda
 from sklearn.metrics import confusion_matrix, accuracy_score
 
-raw = open('wikigold.conll.txt', 'r').readlines()
+#raw = open('../corpus/wikigold.conll.txt', 'r').readlines()
+raw = open('../corpus/pos_ud_en_train.2col', 'r').readlines()
+
 all_x = []
 point = []
 for line in raw:
-    stripped_line = line.strip().split(' ')
+    stripped_line = line.strip().split('\t')
     point.append(stripped_line)
     if line == '\n':
         all_x.append(point[:-1])
@@ -35,10 +37,10 @@ ind2word = {index: word for index, word in enumerate(words)}
 labels = list(set([c for x in y for c in x]))
 label2ind = {label: (index + 1) for index, label in enumerate(labels)}
 ind2label = {(index + 1): label for index, label in enumerate(labels)}
-print 'Input sequence length range: ', max(lengths), min(lengths)
+print('Input sequence length range: ', max(lengths), min(lengths))
 
 maxlen = max([len(x) for x in X])
-print 'Maximum sequence length:', maxlen
+print('Maximum sequence length:', maxlen)
 
 
 def encode(x, n):
@@ -56,11 +58,13 @@ X_enc_f = pad_sequences(X_enc, maxlen=maxlen)
 X_enc_b = pad_sequences(X_enc_reverse, maxlen=maxlen)
 y_enc = pad_sequences(y_enc, maxlen=maxlen)
 
+n_labels = 17
+
 (X_train_f, X_test_f, X_train_b,
  X_test_b, y_train, y_test) = train_test_split(X_enc_f, X_enc_b, y_enc,
-                                               test_size=11*32, train_size=45*32, random_state=42)
-print 'Training and testing tensor shapes:'
-print X_train_f.shape, X_test_f.shape, X_train_b.shape, X_test_b.shape, y_train.shape, y_test.shape
+                                               test_size=n_labels*32, train_size=45*32, random_state=42)
+print ('Training and testing tensor shapes:')
+print (X_train_f.shape, X_test_f.shape, X_train_b.shape, X_test_b.shape, y_train.shape, y_test.shape)
 
 max_features = len(word2ind)
 embedding_size = 128
@@ -90,7 +94,7 @@ model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam')
 
 batch_size = 32
-model.fit([X_train_f, X_train_b], y_train, batch_size=batch_size, nb_epoch=40,
+model.fit([X_train_f, X_train_b], y_train, batch_size=batch_size, nb_epoch=20,
           validation_data=([X_test_f, X_test_b], y_test))
 score = model.evaluate([X_test_f, X_test_b], y_test, batch_size=batch_size)
 print('Raw test score:', score)
@@ -107,13 +111,13 @@ def score(yh, pr):
 pr = model.predict_classes([X_train_f, X_train_b])
 yh = y_train.argmax(2)
 fyh, fpr = score(yh, pr)
-print 'Training accuracy:', accuracy_score(fyh, fpr)
-print 'Training confusion matrix:'
-print confusion_matrix(fyh, fpr)
+print('Training accuracy:', accuracy_score(fyh, fpr))
+print('Training confusion matrix:')
+print(confusion_matrix(fyh, fpr))
 
 pr = model.predict_classes([X_test_f, X_test_b])
 yh = y_test.argmax(2)
 fyh, fpr = score(yh, pr)
-print 'Testing accuracy:', accuracy_score(fyh, fpr)
-print 'Testing confusion matrix:'
-print confusion_matrix(fyh, fpr)
+print ('Testing accuracy:', accuracy_score(fyh, fpr))
+print ('Testing confusion matrix:')
+print (confusion_matrix(fyh, fpr))
