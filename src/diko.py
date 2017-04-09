@@ -3,7 +3,8 @@
 from keras.models import Sequential
 import numpy as np
 from keras.layers.recurrent import LSTM
-from keras.layers.core import TimeDistributedDense, Activation
+from keras.layers.core import Dense, Activation
+from keras.layers.wrappers import TimeDistributed, Bidirectional
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers.embeddings import Embedding
 from keras.layers import Merge, Layer
@@ -79,26 +80,22 @@ def prep_data():
 
 
     train_X_enc = [[word2ind[c] for c in x] for x in train_X]
-    tran_X_enc_reverse = [[c for c in reversed(x)] for x in train_X_enc]
 
     train_y_enc = [[0] * (maxlen - len(ey)) + [label2ind[c] for c in ey] for ey in train_Y]
     train_y_enc = [[encode(c, max_label) for c in ey] for ey in train_y_enc]
 
-    train_X_enc_f = pad_sequences(train_X_enc, maxlen=maxlen)
-    train_X_enc_b = pad_sequences(tran_X_enc_reverse, maxlen=maxlen)
+    train_X_enc = pad_sequences(train_X_enc, maxlen=maxlen)
     train_y_enc = pad_sequences(train_y_enc, maxlen=maxlen)
 
     test_X_enc = [[word2ind[c] for c in x] for x in test_X]
-    tran_X_enc_reverse = [[c for c in reversed(x)] for x in test_X_enc]
 
     test_y_enc = [[0] * (maxlen - len(ey)) + [label2ind[c] for c in ey] for ey in test_Y]
     test_y_enc = [[encode(c, max_label) for c in ey] for ey in test_y_enc]
 
-    test_X_enc_f = pad_sequences(test_X_enc, maxlen=maxlen)
-    test_X_enc_b = pad_sequences(tran_X_enc_reverse, maxlen=maxlen)
+    test_X_enc = pad_sequences(test_X_enc, maxlen=maxlen)
     test_y_enc = pad_sequences(test_y_enc, maxlen=maxlen)
 
-    return train_X_enc_f, test_X_enc_f, train_X_enc_b,test_X_enc_b, train_y_enc, test_y_enc,word2ind,label2ind,maxlen
+    return train_X_enc, test_X_enc, train_y_enc, test_y_enc,word2ind,label2ind,maxlen
 
 def reverse_func(x, mask=None):
     return tf.reverse(x, [False, True, False])
@@ -106,48 +103,50 @@ def reverse_func(x, mask=None):
 
 def main():
 
-    X_train_f, X_test_f, X_train_b, X_test_b, y_train, y_test,word2ind,label2ind,maxlen = prep_data()
+    X_train, X_test, y_train, y_test,word2ind,label2ind,maxlen = prep_data()
 
     print ('Training and testing tensor shapes:')
-    print (X_train_f.shape, X_test_f.shape, X_train_b.shape, X_test_b.shape, y_train.shape, y_test.shape)
+    print (X_train.shape, X_test.shape, y_train.shape, y_test.shape)
 
     max_features = len(word2ind)
     embedding_size = 128
     hidden_size = 32
     out_size = len(label2ind) + 1
 
-    model_forward = Sequential()
-    model_forward.add(Embedding(max_features, embedding_size, input_length=maxlen, mask_zero=True))
-    model_forward.add(LSTM(hidden_size, return_sequences=True))
+    # model_forward = Sequential()
+    # model_forward.add(Embedding(max_features, embedding_size, input_length=maxlen, mask_zero=True))
+    # model_forward.add(LSTM(hidden_size, return_sequences=True))
 
-    model_backward = Sequential()
-    model_backward.add(Embedding(max_features, embedding_size, input_length=maxlen, mask_zero=True))
-    model_backward.add(LSTM(hidden_size, return_sequences=True))
-    model_backward.add(MaskLambda(function=reverse_func, mask_function=reverse_func))
+    # model_backward = Sequential()
+    # model_backward.add(Embedding(max_features, embedding_size, input_length=maxlen, mask_zero=True))
+    # model_backward.add(LSTM(hidden_size, return_sequences=True))
+    # model_backward.add(MaskLambda(function=reverse_func, mask_function=reverse_func))
 
     model = Sequential()
 
-    model.add(Merge([model_forward, model_backward], mode='concat'))
-    model.add(TimeDistributedDense(out_size))
+    model.add(Embedding(max_features, embedding_size, input_length=maxlen, mask_zero=True))
+    model.add(Bidirectional(LSTM(hidden_size, return_sequences=True)))
+#    model.add(Merge([model_forward, model_backward], mode='concat'))
+    model.add(TimeDistributed(Dense(out_size)))
     model.add(Activation('softmax'))
 
     model.compile(loss='categorical_crossentropy', optimizer='sgd')
 
     batch_size = 32
-    model.fit([X_train_f, X_train_b], y_train, batch_size=batch_size, nb_epoch=20,
-              validation_data=([X_test_f, X_test_b], y_test))
-    score = model.evaluate([X_test_f, X_test_b], y_test, batch_size=batch_size)
-    print('Raw test score:', score)
+    model.fit([X_train], y_train, batch_size=batch_size, epochs=100,
+              validation_data=([X_test], y_test))
+    raw_test_score = model.evaluate([X_test], y_test, batch_size=batch_size)
+    print('Raw test score:', raw_test_score)
 
 
-    pr = model.predict_classes([X_train_f, X_train_b])
+    pr = model.predict_classes([X_train])
     yh = y_train.argmax(2)
     fyh, fpr = score(yh, pr)
     print('Training accuracy:', accuracy_score(fyh, fpr))
     print('Training confusion matrix:')
     print(confusion_matrix(fyh, fpr))
 
-    pr = model.predict_classes([X_test_f, X_test_b])
+    pr = model.predict_classes([X_test])
     yh = y_test.argmax(2)
     fyh, fpr = score(yh, pr)
     print ('Testing accuracy:', accuracy_score(fyh, fpr))

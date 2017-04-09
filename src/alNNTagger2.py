@@ -548,7 +548,7 @@ class NNTagger(object):
 
     def predict(self, word_indices, char_indices, task_id, train=False):
         """
-        predict tags for a sentence represented as char+word embeddings
+        predict tags for a sentence represented as word+char embeddings
         """
         dynet.renew_cg() # new graph
 
