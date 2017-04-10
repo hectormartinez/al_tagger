@@ -7,7 +7,7 @@ def load_embeddings_file(file_name, sep=" ",lower=False):
     load embeddings file
     """
     emb={}
-    for line in open(file_name):
+    for line in open(file_name,encoding="utf-8"):
         fields = line.split(sep)
         vec = [float(x) for x in fields[1:]]
         word = fields[0]
