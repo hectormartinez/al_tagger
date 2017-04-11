@@ -22,7 +22,7 @@ seed=113 # assume we pass this to script
 #dev_data = args.dev #"/Users/bplank/corpora/pos/ud1.3/orgtok/goldpos/da-ud-test.conllu"
 #test_data = args.test #"/Users/bplank/corpora/pos/ud1.3/orgtok/goldpos/da-ud-test.conllu"
 
-train_data = BASE+args.lang + "-ud-train.conllu"
+train_data = BASE+args.lang + "-ud-dev.conllu"
 dev_data = BASE + args.lang + "-ud-dev.conllu"
 test_data = BASE + args.lang + "-ud-test.conllu"
 
