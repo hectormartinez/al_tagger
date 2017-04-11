@@ -406,7 +406,7 @@ class SimpleBiltyTagger(object):
             total += len(gold_tag_indices)
 
         if out_file:
-            fout = open(out_file,mode="w")
+            fout = open(out_file,mode="w",encoding="utf-8")
             i2w =  {v: k for k, v in self.w2i.items()}
             i2label =  {v: k for k, v in self.tag2idx.items()}
 
