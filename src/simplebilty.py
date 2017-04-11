@@ -411,8 +411,9 @@ class SimpleBiltyTagger(object):
 
 
             for i, ((word_indices, word_char_indices), gold_tag_indices,predicted_tag_indices) in enumerate(zip(test_X, test_Y,predicted_tag_indices)):
-                for w, g, p in zip(word_indices,predicted_tag_indices,predicted_tag_indices):
-                    print(i2w[w],i2label[g],i2label[p])
+                #for w, g, p in zip(word_indices,predicted_tag_indices,predicted_tag_indices):
+                #    print(i2w[w],i2label[g],i2label[p])
+                print(word_indices,gold_tag_indices,predicted_tag_indices)
         return correct, total
 
 
