@@ -114,7 +114,7 @@ def load(args):
     load a model from file; specify the .model file, it assumes the *pickle file in the same location
     """
     myparams = pickle.load(open(args.model+".pickle", "rb"))
-    tagger = SimpleBiltyTagger(myparams["in_dim"],
+    tagger = SimpleBiltyTaggerNoChars(myparams["in_dim"],
                       myparams["h_dim"],
                       myparams["c_in_dim"],
                       myparams["h_layers"],
@@ -122,8 +122,7 @@ def load(args):
                       activation=myparams["activation"], tasks_ids=myparams["tasks_ids"])
     tagger.set_indices(myparams["w2i"],myparams["c2i"],myparams["task2tag2idx"])
     tagger.predictors, tagger.char_rnn, tagger.wembeds, tagger.cembeds = \
-        tagger.build_computation_graph(myparams["num_words"],
-                                       myparams["num_chars"])
+        tagger.build_computation_graph(myparams["num_words"])
     #tagger.model.load(str.encode(args.model))
     tagger.model.load(args.model)
     print("model loaded: {}".format(args.model), file=sys.stderr)
@@ -140,7 +139,6 @@ def save(nntagger, args):
     import pickle
     print(nntagger.task2tag2idx)
     myparams = {"num_words": len(nntagger.w2i),
-                "num_chars": len(nntagger.c2i),
                 "tasks_ids": nntagger.tasks_ids,
                 "w2i": nntagger.w2i,
                 "c2i": nntagger.c2i,
@@ -199,7 +197,7 @@ class SimpleBiltyTaggerNoChars(object):
         
         num_words = len(self.w2i)
 
-        self.predictors, self.wembeds, self.cembeds = self.build_computation_graph(num_words, num_chars)
+        self.predictors, self.wembeds, self.cembeds = self.build_computation_graph(num_words)
 
         if train_algo == "sgd":
             trainer = dynet.SimpleSGDTrainer(self.model)
@@ -231,7 +229,7 @@ class SimpleBiltyTaggerNoChars(object):
                 correct, total = self.evaluate(dev_X, dev_Y)
                 print("\ndev accuracy: %.4f" % (correct / total), file=sys.stderr)
 
-    def build_computation_graph(self, num_words, num_chars):
+    def build_computation_graph(self, num_words):
         """
         build graph and link to parameters
         """
