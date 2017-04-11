@@ -121,7 +121,7 @@ def load(args):
                       myparams["pred_layer"],
                       activation=myparams["activation"], tasks_ids=myparams["tasks_ids"])
     tagger.set_indices(myparams["w2i"],myparams["c2i"],myparams["task2tag2idx"])
-    tagger.predictors, tagger.char_rnn, tagger.wembeds, tagger.cembeds = \
+    tagger.predictors, tagger.wembeds = \
         tagger.build_computation_graph(myparams["num_words"])
     #tagger.model.load(str.encode(args.model))
     tagger.model.load(args.model)
@@ -197,7 +197,7 @@ class SimpleBiltyTaggerNoChars(object):
         
         num_words = len(self.w2i)
 
-        self.predictors, self.wembeds, self.cembeds = self.build_computation_graph(num_words)
+        self.predictors, self.wembeds = self.build_computation_graph(num_words)
 
         if train_algo == "sgd":
             trainer = dynet.SimpleSGDTrainer(self.model)
