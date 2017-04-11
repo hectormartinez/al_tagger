@@ -406,7 +406,13 @@ class SimpleBiltyTagger(object):
             total += len(gold_tag_indices)
 
         if out_file:
-            print(test_X[2], test_Y[2],test_Y_hat[2])
+            i2w =  {v: k for k, v in self.w2i.items()}
+            i2label =  {v: k for k, v in self.tag2idx.items()}
+
+
+            for i, ((word_indices, word_char_indices), gold_tag_indices,predicted_tag_indices) in enumerate(zip(test_X, test_Y,predicted_tag_indices)):
+                for w, g, p in zip(word_indices,predicted_tag_indices,predicted_tag_indices):
+                    print(i2w[w],i2label[g],i2label[p])
         return correct, total
 
 
