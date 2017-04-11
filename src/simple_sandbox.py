@@ -3,7 +3,7 @@
 ## to properly seed dyNet add parameter to your script:
 ## python run_simply.py --dynet-seed 113
 
-from simplebilty import SimpleBiltyTagger
+from simplebilty_nochars import SimpleBiltyTagger
 import argparse
 import random
 ### Use --dynet-seed $SEED
@@ -37,5 +37,5 @@ train_X, train_Y = tagger.get_train_data(train_data)
 dev_X, dev_Y = tagger.get_data_as_indices(dev_data)
 tagger.fit(train_X, train_Y, iters, trainer,seed=seed,dev_X=dev_X,dev_Y=dev_Y)
 test_X, test_Y = tagger.get_data_as_indices(test_data)
-correct, total = tagger.evaluate(test_X, test_Y,out_file="testout"+args.lang)
+correct, total = tagger.evaluate(test_X, test_Y,out_file="testout."+args.lang)
 print("test accuracy",correct, total, correct/total)
