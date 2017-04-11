@@ -10,6 +10,7 @@ correctoov = 0
 for line in open(args.infile,encoding="utf-8"):
     line = line.strip()
     if line:
+        totalwords+=1
         w,g,p = line.split("\t")
         if w == "_UNK": #it's OOV as determined by the system
             totaloov+=1
