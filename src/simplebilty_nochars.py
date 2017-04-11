@@ -60,9 +60,8 @@ def main():
         print("loading model from file {}".format(args.model), file=sys.stderr)
         tagger = load(args)
     else:
-        tagger = SimpleBiltyTagger(args.in_dim,
+        tagger = SimpleBiltyTaggerNoChars(args.in_dim,
                               args.h_dim,
-                              args.c_in_dim,
                               args.h_layers,
                               embeds_file=args.embeds,
                               activation=args.ac,
@@ -158,17 +157,15 @@ def save(nntagger, args):
     print("model stored: {}".format(modelname), file=sys.stderr)
 
 
-class SimpleBiltyTagger(object):
+class SimpleBiltyTaggerNoChars(object):
 
-    def __init__(self,in_dim,h_dim,c_in_dim,h_layers,embeds_file=None,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
+    def __init__(self,in_dim,h_dim,h_layers,embeds_file=None,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
         self.w2i = {}  # word to index mapping
-        self.c2i = {}  # char to index mapping
         self.tag2idx = {} # tag to tag_id mapping
         self.pred_layer = 1 # at which layer to predict
         self.model = dynet.Model() #init model
         self.in_dim = in_dim
         self.h_dim = h_dim
-        self.c_in_dim = c_in_dim
         self.activation = activation
         self.lower = lower
         self.noise_sigma = noise_sigma
@@ -183,10 +180,9 @@ class SimpleBiltyTagger(object):
     def pick_neg_log(self, pred, gold):
         return -dynet.log(dynet.pick(pred, gold))
 
-    def set_indices(self, w2i, c2i, tag2idx):
+    def set_indices(self, w2i, tag2idx):
         self.tag2idx= tag2idx
         self.w2i = w2i
-        self.c2i = c2i
 
     def fit(self, train_X, train_Y, num_iterations, train_algo,seed=None, dev_X=None, dev_Y=None ):
         """
@@ -202,9 +198,8 @@ class SimpleBiltyTagger(object):
         print("build graph",file=sys.stderr)
         
         num_words = len(self.w2i)
-        num_chars = len(self.c2i)
-        
-        self.predictors, self.char_rnn, self.wembeds, self.cembeds = self.build_computation_graph(num_words, num_chars)
+
+        self.predictors, self.wembeds, self.cembeds = self.build_computation_graph(num_words, num_chars)
 
         if train_algo == "sgd":
             trainer = dynet.SimpleSGDTrainer(self.model)
@@ -248,8 +243,7 @@ class SimpleBiltyTagger(object):
             num_words=len(set(embeddings.keys()).union(set(self.w2i.keys()))) # initialize all with embeddings
             # init model parameters and initialize them
             wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
-            cembeds = self.model.add_lookup_parameters((num_chars, self.c_in_dim))
-               
+
             init=0
             l = len(embeddings.keys())
             for word in embeddings.keys():
@@ -264,8 +258,7 @@ class SimpleBiltyTagger(object):
 
         else:
             wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
-            cembeds = self.model.add_lookup_parameters((num_chars, self.c_in_dim))
-               
+
 
         #make it more flexible to add number of layers as specified by parameter
         layers = [] # inner layers
@@ -274,7 +267,7 @@ class SimpleBiltyTagger(object):
             #print(">>>", layer_num, "layer_num")
 
             if layer_num == 0:
-                builder = dynet.LSTMBuilder(1, self.in_dim+self.c_in_dim*2, self.h_dim, self.model) # in_dim: size of each layer
+                builder = dynet.LSTMBuilder(1, self.in_dim, self.h_dim, self.model) # in_dim: size of each layer
                 layers.append(BiRNNSequencePredictor(builder)) #returns forward and backward sequence
             else:
                 # add inner layers (if h_layers >1)
@@ -286,14 +279,13 @@ class SimpleBiltyTagger(object):
         task_num_labels= len(self.tag2idx)
         output_layer = FFSequencePredictor(Layer(self.model, self.h_dim*2, task_num_labels, dynet.softmax))
 
-        char_rnn = RNNSequencePredictor(dynet.LSTMBuilder(1, self.c_in_dim, self.c_in_dim, self.model))
 
         predictors = {}
         predictors["inner"] = layers
         predictors["output_layers_dict"] = output_layer
         predictors["task_expected_at"] = self.h_layers
 
-        return predictors, char_rnn, wembeds, cembeds
+        return predictors, wembeds
 
     def get_features(self, words):
         """
@@ -306,16 +298,8 @@ class SimpleBiltyTagger(object):
                 word_indices.append(self.w2i[word])
             else:
                 word_indices.append(self.w2i["_UNK"])
-                
-            chars_of_word = [self.c2i["<w>"]]
-            for char in word:
-                if char in self.c2i:
-                    chars_of_word.append(self.c2i[char])
-                else:
-                    chars_of_word.append(self.c2i["_UNK"])
-            chars_of_word.append(self.c2i["</w>"])
-            word_char_indices.append(chars_of_word)
-        return word_indices, word_char_indices
+
+        return word_indices
                                                                                                                                 
 
     def get_data_as_indices(self, file_name):
@@ -342,18 +326,8 @@ class SimpleBiltyTagger(object):
         """
         dynet.renew_cg() # new graph
 
-        char_emb = []
-        rev_char_emb = []
-        # get representation for words
-        for chars_of_token in char_indices:
-            # use last state as word representation
-            last_state = self.char_rnn.predict_sequence([self.cembeds[c] for c in chars_of_token])[-1]
-            rev_last_state = self.char_rnn.predict_sequence([self.cembeds[c] for c in reversed(chars_of_token)])[-1]
-            char_emb.append(last_state)
-            rev_char_emb.append(rev_last_state)
-            
         wfeatures = [self.wembeds[w] for w in word_indices]
-        features = [dynet.concatenate([w,c,rev_c]) for w,c,rev_c in zip(wfeatures,char_emb,reversed(rev_char_emb))]
+        features = [dynet.concatenate([w,c,rev_c]) for w,c,rev_c in wfeatures]
         
         if train: # only do at training time
             features = [dynet.noise(fe,self.noise_sigma) for fe in features]
