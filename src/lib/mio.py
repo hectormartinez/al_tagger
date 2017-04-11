@@ -28,14 +28,14 @@ def read_lexicon_file(infile,w2i,coarse_lex=0):
         if line:
             try:
                 form, tag, lemma = line.split("\t") #requires f,t,l format
+                if coarse_lex:
+                    if "#" in tag: tag = tag[:tag.index("#")]
+                if form not in w2i:
+                    w2i[form] = len(w2i.keys())
+                tag_set.add(tag)
+                ft[form].add(tag)
             except:
-                print("lexicon error:",line.split("\t"))
-            if coarse_lex:
-                if "#" in tag: tag = tag[:tag.index("#")]
-            if form not in w2i:
-                w2i[form] = len(w2i.keys())
-            tag_set.add(tag)
-            ft[form].add(tag)
+                print("lexicon error:", line.split("\t"))
 
     tag_index = sorted(tag_set)
     for form, possible_tags in ft.items():
