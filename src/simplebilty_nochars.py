@@ -211,9 +211,9 @@ class SimpleBiltyTaggerNoChars(object):
             total_loss=0.0
             total_tagged=0.0
             random.shuffle(train_data)
-            for ((word_indices,char_indices),y) in train_data:
+            for (word_indices,y) in train_data:
                 # use same predict function for training and testing
-                output = self.predict(word_indices, char_indices, train=True)
+                output = self.predict(word_indices, train=True)
 
                 loss1 = dynet.esum([self.pick_neg_log(pred,gold) for pred, gold in zip(output, y)])
                 lv = loss1.value()
