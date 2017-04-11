@@ -14,7 +14,7 @@ import pickle
 import dynet
 
 from lib.mnnl import FFSequencePredictor, Layer, RNNSequencePredictor, BiRNNSequencePredictor
-from lib.mio import read_conll_file, load_embeddings_file
+from lib.mio import read_conll_file, load_embeddings_file, read_lexicon_file
 
 
 def main():
