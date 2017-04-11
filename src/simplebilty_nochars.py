@@ -289,7 +289,7 @@ class SimpleBiltyTaggerNoChars(object):
 
     def get_features(self, words):
         """
-        from a list of words, return the word and word char indices
+        from a list of words, return the word
         """
         word_indices = []
         word_char_indices = []
@@ -311,16 +311,16 @@ class SimpleBiltyTaggerNoChars(object):
         org_X, org_Y = [], []
 
         for (words, tags) in read_conll_file(file_name):
-            word_indices, word_char_indices = self.get_features(words)
+            word_indices = self.get_features(words)
             tag_indices = [self.tag2idx.get(tag) for tag in tags]
-            X.append((word_indices,word_char_indices))
+            X.append((word_indices))
             Y.append(tag_indices)
             org_X.append(words)
             org_Y.append(tags)
         return X, Y  #, org_X, org_Y - for now don't use
 
 
-    def predict(self, word_indices, char_indices, train=False):
+    def predict(self, word_indices, train=False):
         """
         predict tags for a sentence represented as char+word embeddings
         """
@@ -370,9 +370,9 @@ class SimpleBiltyTaggerNoChars(object):
         total = 0.0
         test_Y_hat = []
 
-        for i, ((word_indices, word_char_indices), gold_tag_indices) in enumerate(zip(test_X, test_Y)):
+        for i, ((word_indices), gold_tag_indices) in enumerate(zip(test_X, test_Y)):
 
-            output = self.predict(word_indices, word_char_indices)
+            output = self.predict(word_indices)
             predicted_tag_indices = [np.argmax(o.value()) for o in output]
             test_Y_hat.append(predicted_tag_indices)
 
