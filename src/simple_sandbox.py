@@ -3,7 +3,7 @@
 ## to properly seed dyNet add parameter to your script:
 ## python run_simply.py --dynet-seed 113
 
-from simplebilty_nochars import SimpleBiltyTagger
+from simplebilty_nochars import SimpleBiltyTaggerNoChars
 import argparse
 import random
 ### Use --dynet-seed $SEED
