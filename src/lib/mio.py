@@ -1,6 +1,7 @@
 import codecs
 import numpy as np
 import sys
+from collections import defaultdict
 
 def load_embeddings_file(file_name, sep=" ",lower=False):
     """
@@ -17,6 +18,28 @@ def load_embeddings_file(file_name, sep=" ",lower=False):
 
     print("loaded pre-trained embeddings (word->emb_vec) size: {} (lower: {})".format(len(emb.keys()), lower))
     return emb, len(emb[word])
+
+def read_lexicon_file(infile,w2i):
+    L = dict()
+    ft = defaultdict(set)
+    tag_set = set()
+    for line in open(infile,encoding="utf-8").readlines():
+        line = line.strip()
+        if line:
+            try:
+                form, tag, lemma = line.split("\t") #requires f,t,l format
+            except:
+                print("lexicon error:",line.split("\t"))
+            if form not in w2i:
+                w2i[form] = len(w2i.keys())
+            tag_set.add(tag)
+            ft[form].add(tag)
+
+    tag_index = sorted(tag_set)
+    for form, possible_tags in ft.items():
+        L[form] =  [1 if tag_index[i] in possible_tags else 0 for i in range(len(tag_index))]
+    L["_UNK"] = list(np.ones(len(tag_index)))
+    return L, len(tag_index), w2i
 
 def read_conll_file(file_name):
     """

@@ -13,8 +13,7 @@ parser = argparse.ArgumentParser(description="""Run the NN tagger""")
 # parser.add_argument("--dev", help="dev file(s)", required=False)
 #parser.add_argument("--test", help="test file(s)", required=False)
 parser.add_argument("--lang", help="lang prefix", required=False)
-parser.add_argument("--dynet-seed", help="random seed for dynet (needs to be first argument!)", required=False,
-                    type=int,default=113)
+parser.add_argument("--dynet-seed", help="random seed for dynet (needs to be first argument!)", required=False, type=int)
 parser.add_argument("--dynet-mem", help="memory for dynet (needs to be first argument!)", required=False, type=int)
 args = parser.parse_args()
 
@@ -37,8 +36,8 @@ c_in_dim=100
 h_layers=1
 iters=20
 trainer="sgd"
-tagger = SimpleBiltyTagger(in_dim, h_dim,c_in_dim,h_layers,embeds_file=embedsfile)
-train_X, train_Y = tagger.get_train_data(train_data)
+tagger = SimpleBiltyTagger(in_dim, h_dim,c_in_dim,h_layers,embeds_file=embedsfile,lex_file=None)
+train_X, train_Y = tagger.get_train_data(train_data,tagger.w2i)
 dev_X, dev_Y = tagger.get_data_as_indices(dev_data)
 tagger.fit(train_X, train_Y, iters, trainer,seed=seed,dev_X=dev_X,dev_Y=dev_Y)
 test_X, test_Y = tagger.get_data_as_indices(test_data)
