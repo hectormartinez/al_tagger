@@ -28,7 +28,7 @@ test_data = BASE + args.lang + "-ud-test.conllu"
 
 in_dim=64
 h_dim=10
-c_in_dim=10
+c_in_dim=0
 h_layers=1
 iters=2
 trainer="sgd"
