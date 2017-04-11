@@ -13,6 +13,9 @@ parser = argparse.ArgumentParser(description="""Run the NN tagger""")
 # parser.add_argument("--dev", help="dev file(s)", required=False)
 #parser.add_argument("--test", help="test file(s)", required=False)
 parser.add_argument("--lang", help="lang prefix", required=False)
+parser.add_argument("--dynet-seed", help="random seed for dynet (needs to be first argument!)", required=False,
+                    type=int,default=113)
+parser.add_argument("--dynet-mem", help="memory for dynet (needs to be first argument!)", required=False, type=int)
 args = parser.parse_args()
 
 
