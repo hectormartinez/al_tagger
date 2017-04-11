@@ -19,7 +19,7 @@ args = parser.parse_args()
 
 
 #BASE="/projdata/alpage2/hmartine/data/ud1.3/orgtok/goldpos/"
-#LEXBASE="/projdata/alpage2/hmartine/data/lex/"
+#LEXBASE="/projdata/alpage2/hmartine/proj/al_tagger/lex/"
 BASE="/Users/sagot/Documents/al/al_tagger/trunk/ud13/"
 LEXBASE="/Users/sagot/Documents/al/al_tagger/trunk/lex/"
 seed=113 # assume we pass this to script

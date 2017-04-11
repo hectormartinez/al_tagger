@@ -19,7 +19,7 @@ def load_embeddings_file(file_name, sep=" ",lower=False):
     print("loaded pre-trained embeddings (word->emb_vec) size: {} (lower: {})".format(len(emb.keys()), lower))
     return emb, len(emb[word])
 
-def read_lexicon_file(infile,w2i):
+def read_lexicon_file(infile,w2i,coarse_lex=0):
     L = dict()
     ft = defaultdict(set)
     tag_set = set()
@@ -30,6 +30,8 @@ def read_lexicon_file(infile,w2i):
                 form, tag, lemma = line.split("\t") #requires f,t,l format
             except:
                 print("lexicon error:",line.split("\t"))
+            if coarse_lex:
+                if "#" in tag: tag = tag[:tag.index("#")]
             if form not in w2i:
                 w2i[form] = len(w2i.keys())
             tag_set.add(tag)

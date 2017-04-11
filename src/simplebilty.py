@@ -30,6 +30,7 @@ def main():
     parser.add_argument("--h_dim", help="hidden dimension [default: 100]", required=False,type=int,default=100)
     parser.add_argument("--h_layers", help="number of stacked LSTMs [default: 1 = no stacking]", required=False,type=int,default=1)
     parser.add_argument("--lex_file", help="external lexicon [default: no external lexicon]", required=False,default=None)
+    parser.add_argument("--coarse_lex", help="while reading tags in external lexicon, ignore everything after the first '#'", required=False,type=int,default=0)
     parser.add_argument("--test", nargs='*', help="test file(s)", required=False) # should be in the same order/task as train
     parser.add_argument("--dev", help="dev file(s)", required=False) 
     parser.add_argument("--output", help="output predictions to file", required=False,default=None)
@@ -72,6 +73,7 @@ def main():
                               args.h_layers,
                               embeds_file=args.embeds,
                               lex_file = args.lex_file,
+                              coarse_lex = args.coarse_lex,
                               activation=args.ac,
                               lower=args.lower,
                               noise_sigma=args.sigma)
@@ -168,7 +170,7 @@ def save(nntagger, args):
 
 class SimpleBiltyTagger(object):
 
-    def __init__(self,in_dim,h_dim,c_in_dim,h_layers,embeds_file=None,lex_file=None,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
+    def __init__(self,in_dim,h_dim,c_in_dim,h_layers,embeds_file=None,lex_file=None,coarse_lex=0,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
         self.w2i = {}  # word to index mapping
         self.c2i = {}  # char to index mapping
         self.lexicon = {} # word-to-multi-hot lex features
@@ -197,9 +199,11 @@ class SimpleBiltyTagger(object):
 
         if self.lex_file:
             print("loadings lexicon", file=sys.stderr)
-            self.lexicon,self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file,self.w2i)
+            self.lexicon,self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file,self.w2i,coarse_lex)
             self.max_lex_i = len(self.w2i.keys())
             self.lexfeats = self.model.add_lookup_parameters((self.max_lex_i, self.lex_in_dim))
+
+            print("%s words in lexicon, associated with %s distinct labels" % (self.max_lex_i, self.lex_in_dim), file=sys.stderr)
 
             for word in self.lexicon.keys():
                 self.lexfeats.init_row(self.w2i[word],self.lexicon[word])
