@@ -7,7 +7,7 @@ args = parser.parse_args()
 totalwords = 0
 totaloov = 0
 correctoov = 0
-for line in open(args.infile):
+for line in open(args.infile,encoding="utf-8"):
     line = line.strip()
     if line:
         w,g,p = line.split("\t")
