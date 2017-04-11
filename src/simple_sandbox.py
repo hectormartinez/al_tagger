@@ -32,7 +32,7 @@ c_in_dim=10
 h_layers=1
 iters=2
 trainer="sgd"
-tagger = SimpleBiltyTagger(in_dim, h_dim,c_in_dim,h_layers,embeds_file=None)
+tagger = SimpleBiltyTaggerNoChars(in_dim, h_dim,c_in_dim,h_layers,embeds_file=None)
 train_X, train_Y = tagger.get_train_data(train_data)
 dev_X, dev_Y = tagger.get_data_as_indices(dev_data)
 tagger.fit(train_X, train_Y, iters, trainer,seed=seed,dev_X=dev_X,dev_Y=dev_Y)
