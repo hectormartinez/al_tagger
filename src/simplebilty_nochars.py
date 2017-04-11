@@ -27,6 +27,7 @@ def main():
     parser.add_argument("--c_in_dim", help="input dimension for character embeddings [default: 100]", required=False,type=int,default=0)
     parser.add_argument("--h_dim", help="hidden dimension [default: 100]", required=False,type=int,default=100)
     parser.add_argument("--h_layers", help="number of stacked LSTMs [default: 1 = no stacking]", required=False,type=int,default=1)
+    parser.add_argument("--lex_file", help="external lexicon [default: no external lexicon]", required=False,default=None)
     parser.add_argument("--test", nargs='*', help="test file(s)", required=False) # should be in the same order/task as train
     parser.add_argument("--dev", help="dev file(s)", required=False) 
     parser.add_argument("--output", help="output predictions to file", required=False,default=None)
@@ -64,6 +65,7 @@ def main():
                               args.h_dim,
                               args.h_layers,
                               embeds_file=args.embeds,
+                              lex_file = args.lex_file,
                               activation=args.ac,
                               lower=args.lower,
                               noise_sigma=args.sigma)
@@ -148,6 +150,7 @@ def save(nntagger, args):
                 "h_dim": nntagger.h_dim,
                 "c_in_dim": nntagger.c_in_dim,
                 "h_layers": nntagger.h_layers,
+                "lex_in_dim": nntagger.lex_in_dim,
                 "embeds_file": nntagger.embeds_file,
                 "pred_layer": nntagger.pred_layer
                 }
@@ -157,13 +160,17 @@ def save(nntagger, args):
 
 class SimpleBiltyTaggerNoChars(object):
 
-    def __init__(self,in_dim,h_dim,h_layers,embeds_file=None,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
+    def __init__(self,in_dim,h_dim,h_layers,embeds_file=None,lex_file=None,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
         self.w2i = {}  # word to index mapping
         self.tag2idx = {} # tag to tag_id mapping
+        self.lexicon = {} # word-to-multi-hot lex features
+
         self.pred_layer = 1 # at which layer to predict
         self.model = dynet.Model() #init model
         self.in_dim = in_dim
         self.h_dim = h_dim
+        self.lex_in_dim = 0 # This gets initiliased at runtime
+
         self.activation = activation
         self.lower = lower
         self.noise_sigma = noise_sigma
@@ -171,9 +178,20 @@ class SimpleBiltyTaggerNoChars(object):
         self.predictors = {"inner": [], "output_layers_dict": {}, "task_expected_at": {} } # the inner layers and predictors
         self.wembeds = None # lookup: embeddings for words
         self.cembeds = None # lookup: embeddings for characters
+        self.lexfeats = None
         self.embeds_file = embeds_file
+        self.lex_file = lex_file
         self.char_rnn = None # RNN for character input
+        self.max_lex_i = 0
 
+        if self.lex_file:
+            print("loadings lexicon", file=sys.stderr)
+            self.lexicon, self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file, self.w2i)
+            self.max_lex_i = len(self.w2i.keys())
+            self.lexfeats = self.model.add_lookup_parameters((self.max_lex_i, self.lex_in_dim))
+
+            for word in self.lexicon.keys():
+                self.lexfeats.init_row(self.w2i[word], self.lexicon[word])
 
     def pick_neg_log(self, pred, gold):
         return -dynet.log(dynet.pick(pred, gold))
@@ -238,7 +256,7 @@ class SimpleBiltyTaggerNoChars(object):
             print("loading embeddings", file=sys.stderr)
             embeddings, emb_dim = load_embeddings_file(self.embeds_file, lower=self.lower)
             assert(emb_dim==self.in_dim)
-            num_words=len(set(embeddings.keys()).union(set(self.w2i.keys()))) # initialize all with embeddings
+            num_words = len(set(embeddings.keys()).union(set(self.w2i.keys())).union(set(self.lexicon.keys())))  # initialize all with embeddings
             # init model parameters and initialize them
             wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
 
@@ -258,6 +276,8 @@ class SimpleBiltyTaggerNoChars(object):
             wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
 
 
+
+
         #make it more flexible to add number of layers as specified by parameter
         layers = [] # inner layers
         #print("h_layers:", self.h_layers, file=sys.stderr)
@@ -265,7 +285,7 @@ class SimpleBiltyTaggerNoChars(object):
             #print(">>>", layer_num, "layer_num")
 
             if layer_num == 0:
-                builder = dynet.LSTMBuilder(1, self.in_dim, self.h_dim, self.model) # in_dim: size of each layer
+                builder = dynet.LSTMBuilder(1, self.in_dim+self.lex_in_dim, self.h_dim, self.model) # in_dim: size of each layer
                 layers.append(BiRNNSequencePredictor(builder)) #returns forward and backward sequence
             else:
                 # add inner layers (if h_layers >1)
@@ -325,8 +345,15 @@ class SimpleBiltyTaggerNoChars(object):
         dynet.renew_cg() # new graph
 
         wfeatures = [self.wembeds[w] for w in word_indices]
-        features = [dynet.concatenate([w]) for w in wfeatures]
-        
+
+        if self.lex_file:
+            lexfeatures = [self.lexfeats[w_i] if w_i < self.max_lex_i else self.lexfeats[self.w2i["_UNK"]] for w_i in
+                           word_indices]
+            features = [dynet.concatenate([w_i,l]) for w_i,l in zip(wfeatures,lexfeatures)]
+        else:
+            features = [dynet.concatenate([w_i]) for w_i in wfeatures]
+
+
         if train: # only do at training time
             features = [dynet.noise(fe,self.noise_sigma) for fe in features]
 
