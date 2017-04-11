@@ -18,10 +18,10 @@ parser.add_argument("--dynet-mem", help="memory for dynet (needs to be first arg
 args = parser.parse_args()
 
 
-#BASE="/projdata/alpage2/hmartine/data/ud1.3/orgtok/goldpos/"
-#LEXBASE="/projdata/alpage2/hmartine/data/lex/"
-BASE="/Users/sagot/Documents/al/al_tagger/trunk/ud13/"
-LEXBASE="/Users/sagot/Documents/al/al_tagger/trunk/lex/"
+BASE="/projdata/alpage2/hmartine/data/ud1.3/orgtok/goldpos/"
+LEXBASE="/projdata/alpage2/hmartine/data/lex/"
+#BASE="/Users/sagot/Documents/al/al_tagger/trunk/ud13/"
+#LEXBASE="/Users/sagot/Documents/al/al_tagger/trunk/lex/"
 seed=113 # assume we pass this to script
 #train_data = args.train #"/Users/bplank/corpora/pos/ud1.3/orgtok/goldpos/da-ud-dev.conllu"
 #dev_data = args.dev #"/Users/bplank/corpora/pos/ud1.3/orgtok/goldpos/da-ud-test.conllu"
