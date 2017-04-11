@@ -16,4 +16,4 @@ for line in open(args.infile,encoding="utf-8"):
             totaloov+=1
             correctoov+= int(g==p)
 
-print(totaloov/totalwords, correctoov/totaloov)
+print(args.infile,"token-based OOV ratio",totaloov/totalwords, "accuracy for OOV words",correctoov/totaloov)
