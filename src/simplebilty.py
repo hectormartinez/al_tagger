@@ -388,21 +388,25 @@ class SimpleBiltyTagger(object):
         raise Exception("oops should not be here")
         return None
 
-    def evaluate(self, test_X, test_Y):
+    def evaluate(self, test_X, test_Y,out_file=None):
         """
         compute accuracy on a test file
         """
         correct = 0
         total = 0.0
+        test_Y_hat = []
 
         for i, ((word_indices, word_char_indices), gold_tag_indices) in enumerate(zip(test_X, test_Y)):
 
             output = self.predict(word_indices, word_char_indices)
-            predicted_tag_indices = [np.argmax(o.value()) for o in output]  
+            predicted_tag_indices = [np.argmax(o.value()) for o in output]
+            test_Y_hat.append(predicted_tag_indices)
 
             correct += sum([1 for (predicted, gold) in zip(predicted_tag_indices, gold_tag_indices) if predicted == gold])
             total += len(gold_tag_indices)
 
+        if out_file:
+            print(test_X[2], test_Y[2],test_Y_hat[2])
         return correct, total
 
 
