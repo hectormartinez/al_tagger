@@ -325,7 +325,7 @@ class SimpleBiltyTaggerNoChars(object):
         dynet.renew_cg() # new graph
 
         wfeatures = [self.wembeds[w] for w in word_indices]
-        features = [dynet.concatenate([w,c,rev_c]) for w,c,rev_c in wfeatures]
+        features = [dynet.concatenate([w]) for w in wfeatures]
         
         if train: # only do at training time
             features = [dynet.noise(fe,self.noise_sigma) for fe in features]
