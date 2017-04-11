@@ -420,7 +420,7 @@ class SimpleBiltyTaggerNoChars(object):
 
     # Get train data: need to read each train set (linked to a task) separately
 
-    def get_train_data(self, train_data):
+    def get_train_data(self, train_data,w2i):
         """
         transform training data to features (word indices)
         map tags to integers
@@ -429,7 +429,7 @@ class SimpleBiltyTaggerNoChars(object):
         Y = []
 
         # word 2 indices and tag 2 indices
-        w2i = {} # word to index
+        #w2i = {} # word to index
         c2i = {} # char to index
         tag2idx = {} # tag2idx
 
