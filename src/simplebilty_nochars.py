@@ -183,6 +183,7 @@ class SimpleBiltyTaggerNoChars(object):
         self.lex_file = lex_file
         self.char_rnn = None # RNN for character input
         self.max_lex_i = 0
+        self.w2i["_UNK"] = 0  # unk word / OOV
 
         if self.lex_file:
             print("loadings lexicon", file=sys.stderr)
