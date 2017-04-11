@@ -408,16 +408,11 @@ class SimpleBiltyTaggerNoChars(object):
         tag2idx = {} # tag2idx
 
         w2i["_UNK"] = 0  # unk word / OOV
-        c2i["_UNK"] = 0  # unk char
-        c2i["<w>"] = 1   # word start
-        c2i["</w>"] = 2  # word end index
-        
-        
+
         num_sentences=0
         num_tokens=0
         for instance_idx, (words, tags) in enumerate(read_conll_file(train_data)):
             instance_word_indices = [] #sequence of word indices
-            instance_char_indices = [] #sequence of char indices
             instance_tags_indices = [] #sequence of tag indices
 
             for i, (word, tag) in enumerate(zip(words, tags)):
@@ -426,14 +421,6 @@ class SimpleBiltyTaggerNoChars(object):
                 if word not in w2i:
                     w2i[word] = len(w2i)
                 instance_word_indices.append(w2i[word])
-
-                chars_of_word = [c2i["<w>"]]
-                for char in word:
-                    if char not in c2i:
-                        c2i[char] = len(c2i)
-                    chars_of_word.append(c2i[char])
-                chars_of_word.append(c2i["</w>"])
-                instance_char_indices.append(chars_of_word)
 
                 if tag not in tag2idx:
                     tag2idx[tag]=len(tag2idx)
@@ -444,7 +431,7 @@ class SimpleBiltyTaggerNoChars(object):
 
             num_sentences+=1
 
-            X.append((instance_word_indices, instance_char_indices)) # list of word indices, for every word list of char indices
+            X.append((instance_word_indices)) # list of word indices, for every word list of char indices
             Y.append(instance_tags_indices)
 
 
@@ -454,7 +441,7 @@ class SimpleBiltyTaggerNoChars(object):
         assert(len(X)==len(Y))
 
         # store mappings of words and tags to indices
-        self.set_indices(w2i, c2i, tag2idx)
+        self.set_indices(w2i, tag2idx)
 
         return X, Y
 
