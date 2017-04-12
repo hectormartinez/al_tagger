@@ -278,18 +278,21 @@ class SimpleBiltyTaggerNoChars(object):
             self.lexicon, self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file, self.w2i, self.coarse_lex)
             #self.lexfeats = self.model.add_lookup_parameters((len(self.w2i.keys()), self.lex_in_dim))
 
-            lexfeatM = [[0] *len(self.w2i.keys())] * self.lex_in_dim
+            try:
+                lexfeatM = [[0] *(len(self.w2i.keys())+1)] * self.lex_in_dim
 
-            for word in self.w2i:
-                if word in self.lexicon:
-                    #self.lexfeats.init_row(self.w2i[word], self.lexicon[word])
-                    lexfeatM[self.w2i[word]]=self.lexicon[word]
-                else:
-                    #self.lexfeats.init_row(self.w2i[word], self.lexicon["_UNK"])
-                    lexfeatM[self.w2i[word]]=self.lexicon["_UNK"]
+                for word in self.w2i:
+                    if word in self.lexicon:
+                        #self.lexfeats.init_row(self.w2i[word], self.lexicon[word])
+                        lexfeatM[self.w2i[word]]=self.lexicon[word]
+                    else:
+                        #self.lexfeats.init_row(self.w2i[word], self.lexicon["_UNK"])
+                        lexfeatM[self.w2i[word]]=self.lexicon["_UNK"]
 
-            #Input tensor takes the shape from input, no need to specify
-            self.lexfeats = inputTensor(lexfeatM)
+                #Input tensor takes the shape from input, no need to specify
+                self.lexfeats = inputTensor(lexfeatM)
+            except:
+                print(np.array(lexfeatM).shape,len(self.w2i.keys()))
 
 
         #make it more flexible to add number of layers as specified by parameter
