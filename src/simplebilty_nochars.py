@@ -12,6 +12,8 @@ import numpy as np
 import os
 import pickle
 import dynet
+from dynet import *
+
 
 from lib.mnnl import FFSequencePredictor, Layer, RNNSequencePredictor, BiRNNSequencePredictor
 from lib.mio import read_conll_file, load_embeddings_file, read_lexicon_file
@@ -274,13 +276,20 @@ class SimpleBiltyTaggerNoChars(object):
         if self.lex_file:
             print("loading lexicon", file=sys.stderr)
             self.lexicon, self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file, self.w2i, self.coarse_lex)
-            self.lexfeats = self.model.add_lookup_parameters((len(self.w2i.keys()), self.lex_in_dim))
+            #self.lexfeats = self.model.add_lookup_parameters((len(self.w2i.keys()), self.lex_in_dim))
+
+            lexfeatM = [[0] *len(self.w2i.keys())] * self.lex_in_dim
 
             for word in self.w2i:
                 if word in self.lexicon:
-                    self.lexfeats.init_row(self.w2i[word], self.lexicon[word])
+                    #self.lexfeats.init_row(self.w2i[word], self.lexicon[word])
+                    lexfeatM[self.w2i[word]]=self.lexicon[word]
                 else:
-                    self.lexfeats.init_row(self.w2i[word], self.lexicon["_UNK"])
+                    #self.lexfeats.init_row(self.w2i[word], self.lexicon["_UNK"])
+                    lexfeatM[self.w2i[word]]=self.lexicon["_UNK"]
+
+            #Input tensor takes the shape from input, no need to specify
+            self.lexfeats = inputTensor(lexfeatM)
 
 
         #make it more flexible to add number of layers as specified by parameter
