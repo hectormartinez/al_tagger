@@ -272,28 +272,27 @@ class SimpleBiltyTaggerNoChars(object):
             self.num_words_in_train_and_embeds = len(self.w2i.keys())
             wembeds = self.model.add_lookup_parameters((self.num_words_in_train_and_embeds, self.in_dim))
 
-
         if self.lex_file:
             print("loading lexicon", file=sys.stderr)
             self.lexicon, self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file, self.w2i, self.coarse_lex)
             #self.lexfeats = self.model.add_lookup_parameters((len(self.w2i.keys()), self.lex_in_dim))
 
             try:
-                lexfeatM = [[0]  * self.lex_in_dim] *(len(self.w2i.keys())+1)
-
+                self.lexfeats = [[0]  * self.lex_in_dim] *(len(self.w2i.keys())+1)
 
                 for word in self.w2i:
                     if word in self.lexicon:
                         #self.lexfeats.init_row(self.w2i[word], self.lexicon[word])
-                        lexfeatM[self.w2i[word]]=self.lexicon[word]
+                        self.lexfeats[self.w2i[word]]=self.lexicon[word]
                     else:
                         #self.lexfeats.init_row(self.w2i[word], self.lexicon["_UNK"])
-                        lexfeatM[self.w2i[word]]=self.lexicon["_UNK"]
+                        self.lexfeats[self.w2i[word]]=self.lexicon["_UNK"]
 
                 #Input tensor takes the shape from input, no need to specify
-                self.lexfeats = inputTensor(lexfeatM)
+                #lexfeats = inputTensor(lexfeatM)
+                print("lexicon loaded", file=sys.stderr)
             except:
-                print(np.array(lexfeatM).shape,len(self.w2i.keys()))
+                print(np.array(lexfeats).shape,len(self.w2i.keys()))
 
 
         #make it more flexible to add number of layers as specified by parameter
@@ -360,12 +359,13 @@ class SimpleBiltyTaggerNoChars(object):
         """
         predict tags for a sentence represented as char+word embeddings
         """
+
         dynet.renew_cg() # new graph
 
         wfeatures = [self.wembeds[w] if w < self.num_words_in_train_and_embeds else self.wembeds[0] for w in word_indices]
 
         if self.lex_file:
-            lexfeatures = [self.lexfeats[w_i] for w_i in word_indices]
+            lexfeatures = inputTensor([self.lexfeats[w_i] for w_i in word_indices])
             features = [dynet.concatenate([w_i,l]) for w_i,l in zip(wfeatures,lexfeatures)]
         else:
             features = [dynet.concatenate([w_i]) for w_i in wfeatures]
