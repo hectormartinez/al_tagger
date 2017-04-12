@@ -6,6 +6,7 @@
 \usepackage{emnlp2017}
 \usepackage{times}
 \usepackage{latexsym}
+\usepackage{graphicx}
 
 % Uncomment this line for the final submission:
 %\emnlpfinalcopy
@@ -88,14 +89,34 @@ such an inclusion can be achieved and show, based on experiments on all corpora 
 repository (version 1.3), that it leads to significant improvements over \citeauthor{plank16}'s (\citeyear{plank16}).
 state-of-the-art results.
 
-\section{Our baseline: \citeauthor{plank16}'s (\citeyear{plank16}) bi-LSTM tagger \texttt{bilty}}
+\section{Baseline bi-LSTM tagger}
+
+As shown by \citet{plank16}, state-of-the-art performance can be achieved using a bi-LSTM architecture fed with word
+representations. Optimal performance is achieved representing words using the concatenation of (i) a word vector
+$\vec{w}$ built using a word embedding layer, and (ii) a representation $\vec{c}$ of the word's characters built using a
+character-level bi-LSTM, which is trained jointly with the word-level layers. Further improvements can be obtained on
+most but not all languages by initialising the word embedding layer with pre-computed word embeddings. We refer to
+\citet{plank16} for further details.\footnote{In our work, we did not use \citeauthor{plank16}'s (\citeyear{plank16})
+  idea of a secondary task aimed at predicting the frequency class of each word. Integrating this secondary task in
+  their bi-LSTM architecture, the authors obtain better OOV scores but virtually identical overall scores when averaged
+  over all tested languages/corpora. We therefore decided to stick to the standard one-task architecture. }
+
+\section{Integrating lexical morphosyntactic information}
+
+\begin{figure*}
+\includegraphics[width=\linewidth]{emnlp17schema}
+\caption{Schematic representation of the architecture of (a)~\citeauthor{plank16}'s (\citeyear{plank16}) bi-LSTM tagger,
+and (b)~our extension thereof for integrating external morphosyntactic lexical information. Each of these two schemas
+represent concern a single word. Connections of the word-level LSTM cells to their counterparts for the preceeding and
+following word are represented with grey arrows.}\label{fig:schema}
+\end{figure*}
+
+\section{Experimental setup}
 
 We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
 available\footnote{\url{https://github.com/bplank/bilstm-aux}} and ``significantly refactored version of the code
 originally used in'' \cite{plank16}. We use its best-performing configuration, which consists in using both word-level
 and character-level embeddings and 3 stacked bi-LSTM layers.
-
-\section{Extending \texttt{bilty} for integrating lexical morphosyntactic information}
 
 \section{Results and discussion}
 
