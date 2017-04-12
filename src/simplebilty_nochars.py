@@ -28,6 +28,7 @@ def main():
     parser.add_argument("--h_dim", help="hidden dimension [default: 100]", required=False,type=int,default=100)
     parser.add_argument("--h_layers", help="number of stacked LSTMs [default: 1 = no stacking]", required=False,type=int,default=1)
     parser.add_argument("--lex_file", help="external lexicon [default: no external lexicon]", required=False,default=None)
+    parser.add_argument("--coarse_lex", help="while reading tags in external lexicon, ignore everything after the first '#'", required=False,type=int,default=0)
     parser.add_argument("--test", nargs='*', help="test file(s)", required=False) # should be in the same order/task as train
     parser.add_argument("--dev", help="dev file(s)", required=False) 
     parser.add_argument("--output", help="output predictions to file", required=False,default=None)
@@ -66,13 +67,14 @@ def main():
                               args.h_layers,
                               embeds_file=args.embeds,
                               lex_file = args.lex_file,
+                              coarse_lex = args.coarse_lex,
                               activation=args.ac,
                               lower=args.lower,
                               noise_sigma=args.sigma)
 
     if args.train:
         ## read data
-        train_X, train_Y = tagger.get_train_data(args.train)
+        train_X, train_Y = tagger.get_train_data(args.train,self.w2i)
 
 
         if dev:
@@ -160,7 +162,7 @@ def save(nntagger, args):
 
 class SimpleBiltyTaggerNoChars(object):
 
-    def __init__(self,in_dim,h_dim,h_layers,embeds_file=None,lex_file=None,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
+    def __init__(self,in_dim,h_dim,h_layers,embeds_file=None,lex_file=None,coarse_lex=0,activation=dynet.tanh, lower=False, noise_sigma=0.1, tasks_ids=[]):
         self.w2i = {}  # word to index mapping
         self.tag2idx = {} # tag to tag_id mapping
         self.lexicon = {} # word-to-multi-hot lex features
@@ -182,17 +184,9 @@ class SimpleBiltyTaggerNoChars(object):
         self.embeds_file = embeds_file
         self.lex_file = lex_file
         self.char_rnn = None # RNN for character input
-        self.max_lex_i = 0
+        self.num_words_in_train_and_embeds = 0
+        self.coarse_lex = coarse_lex
         self.w2i["_UNK"] = 0  # unk word / OOV
-
-        if self.lex_file:
-            print("loadings lexicon", file=sys.stderr)
-            self.lexicon, self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file, self.w2i)
-            self.max_lex_i = len(self.w2i.keys())
-            self.lexfeats = self.model.add_lookup_parameters((self.max_lex_i, self.lex_in_dim))
-
-            for word in self.lexicon.keys():
-                self.lexfeats.init_row(self.w2i[word], self.lexicon[word])
 
     def pick_neg_log(self, pred, gold):
         return -dynet.log(dynet.pick(pred, gold))
@@ -214,9 +208,7 @@ class SimpleBiltyTaggerNoChars(object):
         # init lookup parameters and define graph
         print("build graph",file=sys.stderr)
         
-        num_words = len(self.w2i)
-
-        self.predictors, self.wembeds = self.build_computation_graph(num_words)
+        self.predictors, self.wembeds = self.build_computation_graph()
 
         if train_algo == "sgd":
             trainer = dynet.SimpleSGDTrainer(self.model)
@@ -248,7 +240,7 @@ class SimpleBiltyTaggerNoChars(object):
                 correct, total = self.evaluate(dev_X, dev_Y)
                 print("\ndev accuracy: %.4f" % (correct / total), file=sys.stderr)
 
-    def build_computation_graph(self, num_words):
+    def build_computation_graph(self):
         """
         build graph and link to parameters
         """
@@ -257,9 +249,10 @@ class SimpleBiltyTaggerNoChars(object):
             print("loading embeddings", file=sys.stderr)
             embeddings, emb_dim = load_embeddings_file(self.embeds_file, lower=self.lower)
             assert(emb_dim==self.in_dim)
-            num_words = len(set(embeddings.keys()).union(set(self.w2i.keys())).union(set(self.lexicon.keys())))  # initialize all with embeddings
+            self.num_words_in_train_and_embeds = len(set(embeddings.keys()).union(set(self.w2i.keys())))  # initialize all with embeddings
             # init model parameters and initialize them
-            wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
+#            print("wembeds = self.model.add_lookup_parameters((",self.num_words_in_train_and_embeds,", ",self.in_dim,")", file=sys.stderr)
+            wembeds = self.model.add_lookup_parameters((self.num_words_in_train_and_embeds, self.in_dim))
 
             init=0
             l = len(embeddings.keys())
@@ -274,9 +267,20 @@ class SimpleBiltyTaggerNoChars(object):
             print("initialized: {}".format(init), file=sys.stderr)
 
         else:
-            wembeds = self.model.add_lookup_parameters((num_words, self.in_dim))
+            self.num_words_in_train_and_embeds = len(self.w2i.keys())
+            wembeds = self.model.add_lookup_parameters((self.num_words_in_train_and_embeds, self.in_dim))
 
 
+        if self.lex_file:
+            print("loading lexicon", file=sys.stderr)
+            self.lexicon, self.lex_in_dim, self.w2i = read_lexicon_file(self.lex_file, self.w2i, self.coarse_lex)
+            self.lexfeats = self.model.add_lookup_parameters((len(self.w2i.keys()), self.lex_in_dim))
+
+            for word in self.w2i:
+                if word in self.lexicon:
+                    self.lexfeats.init_row(self.w2i[word], self.lexicon[word])
+                else:
+                    self.lexfeats.init_row(self.w2i[word], self.lexicon["_UNK"])
 
 
         #make it more flexible to add number of layers as specified by parameter
@@ -308,7 +312,7 @@ class SimpleBiltyTaggerNoChars(object):
 
     def get_features(self, words):
         """
-        from a list of words, return the word
+        from a list of words, return the list of word indices
         """
         word_indices = []
         word_char_indices = []
@@ -345,11 +349,10 @@ class SimpleBiltyTaggerNoChars(object):
         """
         dynet.renew_cg() # new graph
 
-        wfeatures = [self.wembeds[w] for w in word_indices]
+        wfeatures = [self.wembeds[w] if w < self.num_words_in_train_and_embeds else self.wembeds[0] for w in word_indices]
 
         if self.lex_file:
-            lexfeatures = [self.lexfeats[w_i] if w_i < self.max_lex_i else self.lexfeats[self.w2i["_UNK"]] for w_i in
-                           word_indices]
+            lexfeatures = [self.lexfeats[w_i] for w_i in word_indices]
             features = [dynet.concatenate([w_i,l]) for w_i,l in zip(wfeatures,lexfeatures)]
         else:
             features = [dynet.concatenate([w_i]) for w_i in wfeatures]
@@ -420,7 +423,7 @@ class SimpleBiltyTaggerNoChars(object):
 
     # Get train data: need to read each train set (linked to a task) separately
 
-    def get_train_data(self, train_data,w2i):
+    def get_train_data(self, train_data, w2i):
         """
         transform training data to features (word indices)
         map tags to integers
@@ -462,7 +465,7 @@ class SimpleBiltyTaggerNoChars(object):
 
 
         print("%s sentences %s tokens" % (num_sentences, num_tokens), file=sys.stderr)
-        print("%s w features, %s c features " % (len(w2i),len(c2i)), file=sys.stderr)
+        print("%s w features and %s c features in training data" % (len(w2i),len(c2i)), file=sys.stderr)
 
         assert(len(X)==len(Y))
 
