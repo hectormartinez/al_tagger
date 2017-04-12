@@ -280,6 +280,8 @@ class SimpleBiltyTaggerNoChars(object):
 
             try:
                 lexfeatM = [[0] *(len(self.w2i.keys())+1)] * self.lex_in_dim
+                lexfeatM = [[0]  * self.lex_in_dim] *(len(self.w2i.keys())+1)
+
 
                 for word in self.w2i:
                     if word in self.lexicon:
