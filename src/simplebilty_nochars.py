@@ -279,7 +279,6 @@ class SimpleBiltyTaggerNoChars(object):
             #self.lexfeats = self.model.add_lookup_parameters((len(self.w2i.keys()), self.lex_in_dim))
 
             try:
-                lexfeatM = [[0] *(len(self.w2i.keys())+1)] * self.lex_in_dim
                 lexfeatM = [[0]  * self.lex_in_dim] *(len(self.w2i.keys())+1)
 
 
