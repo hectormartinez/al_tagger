@@ -18,12 +18,12 @@ parser.add_argument("--dynet-mem", help="memory for dynet (needs to be first arg
 args = parser.parse_args()
 
 
-BASE="/scratch/rbawden/al_tagger.git/trunk/data/"
-EMBEDSBASE="/scratch/rbawden/al_tagger.git/trunk/embeds/"
-LEXBASE="/scratch/rbawden/al_tagger.git/trunk/lex/"
 #BASE="/projdata/alpage2/hmartine/data/ud1.3/orgtok/goldpos/"
 #EMBEDSBASE="/projdata/alpage2/hmartine/data/embeds/poly_a/"
 #LEXBASE="/projdata/alpage2/hmartine/data/lex/"
+BASE="/scratch/rbawden/al_tagger.git/trunk/data/"
+EMBEDSBASE="/scratch/rbawden/al_tagger.git/trunk/embeds/"
+LEXBASE="/scratch/rbawden/al_tagger.git/trunk/lex/"
 seed=113 # assume we pass this to script
 #train_data = args.train #"/Users/bplank/corpora/pos/ud1.3/orgtok/goldpos/da-ud-dev.conllu"
 #dev_data = args.dev #"/Users/bplank/corpora/pos/ud1.3/orgtok/goldpos/da-ud-test.conllu"
@@ -32,7 +32,7 @@ seed=113 # assume we pass this to script
 train_data = BASE+args.lang + "-ud-train.conllu"
 dev_data = BASE + args.lang + "-ud-dev.conllu"
 test_data = BASE + args.lang + "-ud-test.conllu"
-lexfile = LEXBASE + args.lang + ".lex2"
+lexfile = LEXBASE + args.lang + ".lex"
 embedsfile = EMBEDSBASE + args.lang + ".polyglot.txt"
 
 in_dim=64
@@ -41,10 +41,10 @@ c_in_dim=100
 h_layers=1
 iters=20
 trainer="sgd"
-tagger = SimpleBiltyTagger(in_dim, h_dim,c_in_dim,h_layers,embeds_file=embedsfile,lex_file=lexfile)
+tagger = SimpleBiltyTagger(in_dim, h_dim,c_in_dim,h_layers,embeds_file=embedsfile,lex_file=lexfile,coarse_lex=1)
 train_X, train_Y = tagger.get_train_data(train_data,tagger.w2i)
 dev_X, dev_Y = tagger.get_data_as_indices(dev_data)
 tagger.fit(train_X, train_Y, iters, trainer,seed=seed,dev_X=dev_X,dev_Y=dev_Y)
 test_X, test_Y = tagger.get_data_as_indices(test_data)
-correct, total = tagger.evaluate(test_X, test_Y,out_file="bilty.100ch.POLY.LEX2."+args.lang)
+correct, total = tagger.evaluate(test_X, test_Y,out_file="bilty.100ch.POLY.LEXcoarse."+args.lang)
 print("test accuracy",correct, total, correct/total)
