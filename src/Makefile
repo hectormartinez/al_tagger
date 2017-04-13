@@ -1,4 +1,5 @@
-lex2embeds:	trace_lex2_embeds.bg	\
+lex2embeds:	infos	\
+		trace_lex2_embeds.bg	\
 		trace_lex2_embeds.cs	\
 		trace_lex2_embeds.da	\
 		trace_lex2_embeds.de	\
@@ -19,7 +20,8 @@ lex2embeds:	trace_lex2_embeds.bg	\
 		trace_lex2_embeds.sl	\
 		trace_lex2_embeds.sv
 
-lexembeds:	trace_lex_embeds.ar	\
+lexembeds:	infos	\
+		trace_lex_embeds.ar	\
 		trace_lex_embeds.bg	\
 		trace_lex_embeds.ca	\
 		trace_lex_embeds.cs	\
@@ -43,7 +45,8 @@ lexembeds:	trace_lex_embeds.ar	\
 		trace_lex_embeds.sl	\
 		trace_lex_embeds.sv
 
-lexcoarseembeds:trace_lexcoarse_embeds.ar	\
+lexcoarseembeds:infos	\
+		trace_lexcoarse_embeds.ar	\
 		trace_lexcoarse_embeds.bg	\
 		trace_lexcoarse_embeds.ca	\
 		trace_lexcoarse_embeds.cs	\
@@ -66,6 +69,10 @@ lexcoarseembeds:trace_lexcoarse_embeds.ar	\
 		trace_lexcoarse_embeds.pt	\
 		trace_lexcoarse_embeds.sl	\
 		trace_lexcoarse_embeds.sv
+
+infos:
+	echo "python = "`which python`
+	echo "PATH = " $PATH
 
 
 trace_lex2_embeds.%:
