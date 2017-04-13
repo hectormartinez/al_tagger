@@ -136,6 +136,75 @@ lexcoarse:	trace_lexcoarse.ar	\
 		trace_lexcoarse.sl	\
 		trace_lexcoarse.sv
 
+lex2nochar:	trace_lex2_nochar.bg	\
+		trace_lex2_nochar.cs	\
+		trace_lex2_nochar.da	\
+		trace_lex2_nochar.de	\
+		trace_lex2_nochar.el	\
+		trace_lex2_nochar.en	\
+		trace_lex2_nochar.es	\
+		trace_lex2_nochar.et	\
+		trace_lex2_nochar.fa	\
+		trace_lex2_nochar.fr	\
+		trace_lex2_nochar.ga	\
+		trace_lex2_nochar.hr	\
+		trace_lex2_nochar.id	\
+		trace_lex2_nochar.it	\
+		trace_lex2_nochar.nl	\
+		trace_lex2_nochar.no	\
+		trace_lex2_nochar.pl	\
+		trace_lex2_nochar.pt	\
+		trace_lex2_nochar.sl	\
+		trace_lex2_nochar.sv
+
+lexnochar:	trace_lex_nochar.ar	\
+		trace_lex_nochar.bg	\
+		trace_lex_nochar.ca	\
+		trace_lex_nochar.cs	\
+		trace_lex_nochar.da	\
+		trace_lex_nochar.de	\
+		trace_lex_nochar.el	\
+		trace_lex_nochar.en	\
+		trace_lex_nochar.es	\
+		trace_lex_nochar.et	\
+		trace_lex_nochar.eu	\
+		trace_lex_nochar.fi	\
+		trace_lex_nochar.fr	\
+		trace_lex_nochar.he	\
+		trace_lex_nochar.hi	\
+		trace_lex_nochar.id	\
+		trace_lex_nochar.it	\
+		trace_lex_nochar.nl	\
+		trace_lex_nochar.no	\
+		trace_lex_nochar.pl	\
+		trace_lex_nochar.pt	\
+		trace_lex_nochar.sl	\
+		trace_lex_nochar.sv
+
+lexcoarsenochar:trace_lexcoarse_nochar.ar	\
+		trace_lexcoarse_nochar.bg	\
+		trace_lexcoarse_nochar.ca	\
+		trace_lexcoarse_nochar.cs	\
+		trace_lexcoarse_nochar.da	\
+		trace_lexcoarse_nochar.de	\
+		trace_lexcoarse_nochar.el	\
+		trace_lexcoarse_nochar.en	\
+		trace_lexcoarse_nochar.es	\
+		trace_lexcoarse_nochar.et	\
+		trace_lexcoarse_nochar.eu	\
+		trace_lexcoarse_nochar.fi	\
+		trace_lexcoarse_nochar.fr	\
+		trace_lexcoarse_nochar.he	\
+		trace_lexcoarse_nochar.hi	\
+		trace_lexcoarse_nochar.id	\
+		trace_lexcoarse_nochar.it	\
+		trace_lexcoarse_nochar.nl	\
+		trace_lexcoarse_nochar.no	\
+		trace_lexcoarse_nochar.pl	\
+		trace_lexcoarse_nochar.pt	\
+		trace_lexcoarse_nochar.sl	\
+		trace_lexcoarse_nochar.sv
+
 lex2b:		trace_lex2.gl	\
 		trace_lex2.grc	\
 		trace_lex2.hu	\
@@ -160,6 +229,30 @@ lexcoarseb:	trace_lexcoarse.gl	\
 		trace_lexcoarse.tr	\
 		trace_lexcoarse.zh
 
+lex2bnochar:	trace_lex2_nochar.gl	\
+		trace_lex2_nochar.grc	\
+		trace_lex2_nochar.hu	\
+		trace_lex2_nochar.la	\
+		trace_lex2_nochar.ro
+
+lexbnochar:	trace_lex_nochar.gl	\
+		trace_lex_nochar.hu	\
+		trace_lex_nochar.kk	\
+		trace_lex_nochar.lv	\
+		trace_lex_nochar.ro	\
+		trace_lex_nochar.ru	\
+		trace_lex_nochar.tr	\
+		trace_lex_nochar.zh
+
+lexcoarsebnochar:trace_lexcoarse_nochar.gl	\
+		trace_lexcoarse_nochar.hu	\
+		trace_lexcoarse_nochar.kk	\
+		trace_lexcoarse_nochar.lv	\
+		trace_lexcoarse_nochar.ro	\
+		trace_lexcoarse_nochar.ru	\
+		trace_lexcoarse_nochar.tr	\
+		trace_lexcoarse_nochar.zh
+
 infos:
 	echo "python = "`which python` > infos.$$$$;\
 	echo "PATH = " ${PATH} >> infos.$$$$
@@ -182,3 +275,12 @@ trace_lex.%:
 
 trace_lexcoarse.%:
 	python run_simple_lexcoarse.py --dynet-seed 113 --lang $* > $@ 2>&1
+
+trace_lex2_nochar.%:
+	python run_simple_nochar_lex2.py --dynet-seed 113 --lang $* > $@ 2>&1
+
+trace_lex_nochar.%:
+	python run_simple_nochar_lex.py --dynet-seed 113 --lang $* > $@ 2>&1
+
+trace_lexcoarse_nochar.%:
+	python run_simple_nochar_lexcoarse.py --dynet-seed 113 --lang $* > $@ 2>&1
