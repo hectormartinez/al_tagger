@@ -99,18 +99,30 @@ $\vec{w}$ built using a word embedding layer, called its {\em word embedding}, a
 the word's characters, called its {\em character-based embedding} built using a character-level bi-LSTM, which is
 trained jointly with the word-level layers. Further improvements can be obtained on most but not all languages by
 initialising the word embedding layer with pre-computed word embeddings. This baseline architecture is illustrated by
-Figure~\ref{fig:schema}(a). We refer to \citet{plank16} for further details.\footnote{In our work, we did not use
-  \citeauthor{plank16}'s (\citeyear{plank16}) idea of a secondary task aimed at predicting the frequency class of each
-  word. Integrating this secondary task in their bi-LSTM architecture, the authors obtain better OOV scores but
-  virtually identical overall scores when averaged over all tested languages/corpora. We therefore decided to stick to
-  the standard one-task architecture. \textcolor{blue}{Pet peeve: paragraphic footnotes. I have added a candidate paragraph on the main text , in blue, at the end of section 3.}}
+Figure~\ref{fig:schema}(a). We refer to \citet{plank16} for further details.
 
-\textcolor{blue}{Note that we do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s (\citeyear{plank16}) , and that we use a single bi-LSTM layer instead of multi-layer stacking. While  such systams can improve the overall results, we can to be able to clearly assess the relative contribution of lexicon information in contrast to word and character embeddings on an already competitive single-layer baseline.}
+Note that we do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s
+(\citeyear{plank16}), and that we use a single bi-LSTM layer instead of multi-layer stacking. While such systems can
+improve the overall results,\footnote{\textcolor{red}{Note however that \citeauthor{plank16}'s (\citeyear{plank16})
+    secondary task ---predicting the frequency class of each word--- results in better OOV scores but virtually identical
+    overall scores when averaged over all tested languages/corpora.}} our goal is to clearly assess the relative
+contribution of information provided by an external morphosyntactic lexicon in contrast to word and character embeddings
+on an already \textcolor{red}{very} competitive single-layer baseline.
 
 \section{Integrating lexical morphosyntactic information}
 
-\textcolor{blue}{We extend the bi-LSTM architecture from Section \ref{sec:baselinearchitecture} with an additional input layer that contains token-wise features obtained from  lexica. The input vector $\vec{l}$ for a given word is an n-hot vector where each active value corresponds to one of the possible tags in the lexicon. For instance, the word \textit{house} is both a singular noun and a verb in its base form, and its input vector will be 2-hot.
-Note that this way of incorporating lexicon information as new features in an input layer is label-set agnostic, and no explicit relation is needed between the morphosyntactic inventory of the lexicon and the label set we are aiming at predicting, namely the 17-label tagset from UD.}
+We extend the bi-LSTM architecture from Section \ref{sec:baselinearchitecture} with an additional input layer that
+contains token-wise features obtained from lexica. The input vector $\vec{l}$ for a given word is an $n$-hot vector
+where each active value corresponds to one of the possible labels in the lexicon. For instance, the English word
+\textit{house}, which is both a singular noun and a verb in its base form, is likely to be associated with a 2-hot input
+vector.  Note that this way of incorporating lexicon information as new features in an input layer is label-set
+agnostic, and no explicit relation is needed between the morphosyntactic inventory of the lexicon and the label set we
+are aiming at predicting, namely the 17-label tagset from UD.
+
+\textcolor{red}{As illustrated in Figure~\ref{fig:schema}(b), the output of this input layer is concatenated to that of
+  the two baseline input layers, namely the word embedding $\vec{w}$ and (if enabled) the character-based embedding
+  $\vec{c}$. The result of this concatenation serves as an input to the bi-LSTM layer.}
+
 \begin{figure*}
 \includegraphics[width=\linewidth]{emnlp17schema}
 \caption{Schematic representation of the architecture of (a)~\citeauthor{plank16}'s (\citeyear{plank16}) bi-LSTM tagger,
@@ -143,8 +155,7 @@ contains a (inflected) wordform, a lemma, a PoS from the Universal POS
 tagset,\footnote{\url{http://universaldependencies.org/u/pos/all.html}} and a set of attribute-value pairs from the
 Universal Features.\footnote{\url{http://universaldependencies.org/u/feat/all.html}} In Table~\ref{tbl:lex}, lexicons
 directly converted from Apertium lexicons have type {\em ap.lex}, lexicons obtained via Apertium morphological analysers
-have type {\em ap.ma}, and lexicons obtained via Giellatekno morphological analysers
-have type {\em ap.gt}. \textcolor{blue}{HM: Me no comprende. ap.gt?}
+have type {\em ap.ma}, and lexicons obtained via Giellatekno morphological analysers have type {\em gt.ma}.
 
 The {\sc lex2} series of lexicons have been gathered from numerous sources. For space reasons, we are not able to describe
 here the language-specific transformations we applied to some of these lexicons. References are given in
