@@ -72,7 +72,7 @@ lexcoarseembeds:infos	\
 
 infos:
 	echo "python = "`which python` > infos.$$$$;\
-	echo "PATH = " $PATH >> infos.$$$$
+	echo "PATH = " ${PATH} >> infos.$$$$
 
 
 trace_lex2_embeds.%:
