@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # coding=utf-8
 """
-A neural network based tagger  (bi-LSTM) - version w/o MTL
-:author: Barbara Plank
+A neural network based tagger with external lexical features (bi-LSTM+lex)
+:author: Benoît Sagot & Héctor Martinez Alonso, extending code by Barbara Plank and Yoav Goldberg (ACL 2016 paper, https://github.com/bplank/bilstm-aux, 'bilty' tagger)
 """
 import argparse
 import random
@@ -362,7 +362,7 @@ class SimpleBiltyTaggerNoChars(object):
 
         dynet.renew_cg() # new graph
 
-        wfeatures = [self.wembeds[w] if w < self.num_words_in_train_and_embeds else self.wembeds[0] for w in word_indices]
+        wfeatures = [self.wembeds[w] if w <= self.num_words_in_train_and_embeds else self.wembeds[0] for w in word_indices]
 
         if self.lex_file:
             lexfeatures = inputTensor([self.lexfeats[w_i] for w_i in word_indices])
