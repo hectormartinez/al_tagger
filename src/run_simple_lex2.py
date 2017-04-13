@@ -18,8 +18,11 @@ parser.add_argument("--dynet-mem", help="memory for dynet (needs to be first arg
 args = parser.parse_args()
 
 
-BASE="/projdata/alpage2/hmartine/data/ud1.3/orgtok/goldpos/"
-LEXBASE="/projdata/alpage2/hmartine/data/lex/"
+BASE="/scratch/rbawden/al_tagger.git/trunk/data/"
+EMBEDSBASE="/scratch/rbawden/al_tagger.git/trunk/embeds/"
+LEXBASE="/scratch/rbawden/al_tagger.git/trunk/lex/"
+#BASE="/projdata/alpage2/hmartine/data/ud1.3/orgtok/goldpos/"
+#LEXBASE="/projdata/alpage2/hmartine/data/lex/"
 #BASE="/Users/sagot/Documents/al/al_tagger/trunk/ud13/"
 #LEXBASE="/Users/sagot/Documents/al/al_tagger/trunk/lex/"
 seed=113 # assume we pass this to script
@@ -43,5 +46,5 @@ train_X, train_Y = tagger.get_train_data(train_data,tagger.w2i)
 dev_X, dev_Y = tagger.get_data_as_indices(dev_data)
 tagger.fit(train_X, train_Y, iters, trainer,seed=seed,dev_X=dev_X,dev_Y=dev_Y)
 test_X, test_Y = tagger.get_data_as_indices(test_data)
-correct, total = tagger.evaluate(test_X, test_Y)
+correct, total = tagger.evaluate(test_X, test_Y,out_file="bilty.100ch.LEX2."+args.lang)
 print("test accuracy",correct, total, correct/total)
