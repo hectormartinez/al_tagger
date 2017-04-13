@@ -71,8 +71,8 @@ lexcoarseembeds:infos	\
 		trace_lexcoarse_embeds.sv
 
 infos:
-	echo "python = "`which python`
-	echo "PATH = " $PATH
+	echo "python = "`which python` > infos.$$$$;\
+	echo "PATH = " $PATH >> infos.$$$$
 
 
 trace_lex2_embeds.%:
