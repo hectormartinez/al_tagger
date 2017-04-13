@@ -253,6 +253,8 @@ lexcoarsebnochar:trace_lexcoarse_nochar.gl	\
 		trace_lexcoarse_nochar.tr	\
 		trace_lexcoarse_nochar.zh
 
+allnochar: lexnochar lex2nochar lexcoarsenochar lexbnochar lex2bnochar lexcoarsebnochar
+
 infos:
 	echo "python = "`which python` > infos.$$$$;\
 	echo "PATH = " ${PATH} >> infos.$$$$
