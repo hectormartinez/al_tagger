@@ -154,7 +154,7 @@ trace_lex2.%:
 	python run_simple_lex2.py --dynet-seed 113 --lang $* > $@ 2>&1
 
 trace_lex.%:
-	python run_lex.py --dynet-seed 113 --lang $* > $@ 2>&1
+	python run_simple_lex.py --dynet-seed 113 --lang $* > $@ 2>&1
 
 trace_lexcoarse.%:
-	python run_lexcoarse.py --dynet-seed 113 --lang $* > $@ 2>&1
+	python run_simple_lexcoarse.py --dynet-seed 113 --lang $* > $@ 2>&1
