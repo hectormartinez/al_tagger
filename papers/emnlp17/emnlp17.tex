@@ -96,11 +96,12 @@ representations. Optimal performance is achieved representing words using the co
 $\vec{w}$ built using a word embedding layer, called its {\em word embedding}, and (ii) a representation $\vec{c}$ of
 the word's characters, called its {\em character-based embedding} built using a character-level bi-LSTM, which is
 trained jointly with the word-level layers. Further improvements can be obtained on most but not all languages by
-initialising the word embedding layer with pre-computed word embeddings. We refer to \citet{plank16} for further
-details.\footnote{In our work, we did not use \citeauthor{plank16}'s (\citeyear{plank16}) idea of a secondary task aimed
-  at predicting the frequency class of each word. Integrating this secondary task in their bi-LSTM architecture, the
-  authors obtain better OOV scores but virtually identical overall scores when averaged over all tested
-  languages/corpora. We therefore decided to stick to the standard one-task architecture. }
+initialising the word embedding layer with pre-computed word embeddings. This baseline architecture is illustrated by
+Figure~\ref{fig:schema}(a). We refer to \citet{plank16} for further details.\footnote{In our work, we did not use
+  \citeauthor{plank16}'s (\citeyear{plank16}) idea of a secondary task aimed at predicting the frequency class of each
+  word. Integrating this secondary task in their bi-LSTM architecture, the authors obtain better OOV scores but
+  virtually identical overall scores when averaged over all tested languages/corpora. We therefore decided to stick to
+  the standard one-task architecture. }
 
 \section{Integrating lexical morphosyntactic information}
 
