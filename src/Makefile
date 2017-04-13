@@ -136,6 +136,30 @@ lexcoarse:	trace_lexcoarse.ar	\
 		trace_lexcoarse.sl	\
 		trace_lexcoarse.sv
 
+lex2b:		trace_lex2.gl	\
+		trace_lex2.grc	\
+		trace_lex2.hu	\
+		trace_lex2.la	\
+		trace_lex2.ro
+
+lexb:		trace_lex.gl	\
+		trace_lex.hu	\
+		trace_lex.kk	\
+		trace_lex.lv	\
+		trace_lex.ro	\
+		trace_lex.ru	\
+		trace_lex.tr	\
+		trace_lex.zh
+
+lexcoarseb:	trace_lexcoarse.gl	\
+		trace_lexcoarse.hu	\
+		trace_lexcoarse.kk	\
+		trace_lexcoarse.lv	\
+		trace_lexcoarse.ro	\
+		trace_lexcoarse.ru	\
+		trace_lexcoarse.tr	\
+		trace_lexcoarse.zh
+
 infos:
 	echo "python = "`which python` > infos.$$$$;\
 	echo "PATH = " ${PATH} >> infos.$$$$
