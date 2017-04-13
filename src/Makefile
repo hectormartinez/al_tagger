@@ -253,6 +253,107 @@ lexcoarsebnochar:trace_lexcoarse_nochar.gl	\
 		trace_lexcoarse_nochar.tr	\
 		trace_lexcoarse_nochar.zh
 
+baselinenochar:	trace_nolex_nochar.ar	\
+		trace_nolex_nochar.bg	\
+		trace_nolex_nochar.ca	\
+		trace_nolex_nochar.cs	\
+		trace_nolex_nochar.da	\
+		trace_nolex_nochar.de	\
+		trace_nolex_nochar.el	\
+		trace_nolex_nochar.en	\
+		trace_nolex_nochar.es	\
+		trace_nolex_nochar.et	\
+		trace_nolex_nochar.eu	\
+		trace_nolex_nochar.fa	\
+		trace_nolex_nochar.fi	\
+		trace_nolex_nochar.fr	\
+		trace_nolex_nochar.ga	\
+		trace_nolex_nochar.gl	\
+		trace_nolex_nochar.grc	\
+		trace_nolex_nochar.he	\
+		trace_nolex_nochar.hi	\
+		trace_nolex_nochar.hr	\
+		trace_nolex_nochar.hu	\
+		trace_nolex_nochar.id	\
+		trace_nolex_nochar.it	\
+		trace_nolex_nochar.kk	\
+		trace_nolex_nochar.la	\
+		trace_nolex_nochar.lv	\
+		trace_nolex_nochar.nl	\
+		trace_nolex_nochar.no	\
+		trace_nolex_nochar.pl	\
+		trace_nolex_nochar.pt	\
+		trace_nolex_nochar.ro	\
+		trace_nolex_nochar.ru	\
+		trace_nolex_nochar.sl	\
+		trace_nolex_nochar.sv	\
+		trace_nolex_nochar.tr	\
+		trace_nolex_nochar.zh
+
+baseline:	trace_nolex.ar	\
+		trace_nolex.bg	\
+		trace_nolex.ca	\
+		trace_nolex.cs	\
+		trace_nolex.da	\
+		trace_nolex.de	\
+		trace_nolex.el	\
+		trace_nolex.en	\
+		trace_nolex.es	\
+		trace_nolex.et	\
+		trace_nolex.eu	\
+		trace_nolex.fa	\
+		trace_nolex.fi	\
+		trace_nolex.fr	\
+		trace_nolex.ga	\
+		trace_nolex.gl	\
+		trace_nolex.grc	\
+		trace_nolex.he	\
+		trace_nolex.hi	\
+		trace_nolex.hr	\
+		trace_nolex.hu	\
+		trace_nolex.id	\
+		trace_nolex.it	\
+		trace_nolex.kk	\
+		trace_nolex.la	\
+		trace_nolex.lv	\
+		trace_nolex.nl	\
+		trace_nolex.no	\
+		trace_nolex.pl	\
+		trace_nolex.pt	\
+		trace_nolex.ro	\
+		trace_nolex.ru	\
+		trace_nolex.sl	\
+		trace_nolex.sv	\
+		trace_nolex.tr	\
+		trace_nolex.zh
+
+baselineembeds:	trace_nolex_embeds.ar	\
+		trace_nolex_embeds.bg	\
+		trace_nolex_embeds.ca	\
+		trace_nolex_embeds.cs	\
+		trace_nolex_embeds.da	\
+		trace_nolex_embeds.de	\
+		trace_nolex_embeds.el	\
+		trace_nolex_embeds.en	\
+		trace_nolex_embeds.es	\
+		trace_nolex_embeds.et	\
+		trace_nolex_embeds.eu	\
+		trace_nolex_embeds.fa	\
+		trace_nolex_embeds.fi	\
+		trace_nolex_embeds.fr	\
+		trace_nolex_embeds.ga	\
+		trace_nolex_embeds.he	\
+		trace_nolex_embeds.hi	\
+		trace_nolex_embeds.hr	\
+		trace_nolex_embeds.id	\
+		trace_nolex_embeds.it	\
+		trace_nolex_embeds.nl	\
+		trace_nolex_embeds.no	\
+		trace_nolex_embeds.pl	\
+		trace_nolex_embeds.pt	\
+		trace_nolex_embeds.sl	\
+		trace_nolex_embeds.sv
+
 allnochar: lexnochar lex2nochar lexcoarsenochar lexbnochar lex2bnochar lexcoarsebnochar
 
 infos:
@@ -286,3 +387,13 @@ trace_lex_nochar.%:
 
 trace_lexcoarse_nochar.%:
 	python run_simple_nochar_lexcoarse.py --dynet-seed 113 --lang $* > $@ 2>&1
+
+trace_nolex_nochar.%:
+	python run_simple_nochars.py --dynet-seed 113 --lang $* > $@ 2>&1
+
+trace_nolex.%:
+	python run_simple.py --dynet-seed 113 --lang $* > $@ 2>&1
+
+trace_nolex_embeds.%:
+	python run_simple_embeds.py --dynet-seed 113 --lang $* > $@ 2>&1
+
