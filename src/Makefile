@@ -425,6 +425,10 @@ speedup4:	trace_lex2.la	\
 		trace_lex2.sv
 
 
+speedup5:	trace_lex.fi	\
+		trace_lex.fr	\
+		trace_lex.he
+
 allnochar: lexnochar lex2nochar lexcoarsenochar lexbnochar lex2bnochar lexcoarsebnochar
 
 infos:
