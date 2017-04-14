@@ -54,7 +54,7 @@
 \maketitle
 
 \begin{abstract}
-  Neural part-of-speech tagging has achieved very competitive results with the incorporation of character embeddings and pre-trained word embeddings. In this paper, we investigate whether a bi-LSTM tagger can benefit from using information from morphosyntactic lexicons as additional input. The tagger shows a consistent, average improvement of 2.6\% tagging accuracy for systems without character embeddings, but also an improvement of 0.5\% in the presence of character embeddings, which indicates that morphosyntactic lexicons do indeed provide information that is not captured by the embeddings themselves.
+  Neural part-of-speech tagging has achieved very competitive results with the incorporation of character embeddings and pre-trained word embeddings. In this paper, we investigate whether a bi-LSTM tagger can benefit from using information from morphosyntactic lexicons as additional input. The tagger shows a consistent, average improvement of 2.6\% tagging accuracy for systems without character embeddings, but also an improvement of 0.5\% in the presence of character embeddings, which indicates that morphosyntactic lexicons do indeed provide information that is not captured by the embeddings themselves. The improvements are particularly important for the smaller datasets.
 \end{abstract}
 
 
@@ -89,7 +89,9 @@ However, the inclusion of lexical information from morphosyntactic lexicons into
 replacement or complement to pre-computed word embeddings, remains to be investigated. In this paper, we describe how
 such an inclusion can be achieved and show, based on experiments on all corpora from the Universal Dependencies
 repository (version 1.3), that it leads to significant improvements over \citeauthor{plank16}'s (\citeyear{plank16}).
-state-of-the-art results. \textcolor{blue}{Moreover, lexicon information is qualitatively different from word and character embedding information in that it improves the prediction of A CERTAIN CLASS OF WORDS}
+state-of-the-art results. 
+
+%\textcolor{blue}{Moreover, lexicon information is qualitatively different from word and character embedding information in that it improves the prediction of A CERTAIN CLASS OF WORDS}
 
 \section{Baseline bi-LSTM tagger}
 \label{sec:baselinearchitecture}
@@ -107,7 +109,7 @@ improve the overall results,\footnote{\textcolor{red}{Note however that \citeaut
     secondary task ---predicting the frequency class of each word--- results in better OOV scores but virtually identical
     overall scores when averaged over all tested languages/corpora.}} our goal is to clearly assess the relative
 contribution of information provided by an external morphosyntactic lexicon in contrast to word and character embeddings
-on an already \textcolor{red}{very} competitive single-layer baseline.
+on an already very competitive single-layer baseline.
 
 \section{Integrating lexical morphosyntactic information}
 
@@ -159,7 +161,7 @@ have type {\em ap.ma}, and lexicons obtained via Giellatekno morphological analy
 
 The {\sc lex2} series of lexicons have been gathered from numerous sources. For space reasons, we are not able to describe
 here the language-specific transformations we applied to some of these lexicons. References are given in
-Table~\ref{tbl:lex}. \textcolor{blue}{Nevertheless, most of these lexicons share SOME PROPERTY. }
+Table~\ref{tbl:lex}. 
 
 Finally, whenever available and following \citet{plank16}, we performed experiments using Polyglot pre-computed
 embeddings published by \citet{alrfou13}. Languages for which Polyglot embeddings are available are indicated in Table~\ref{tbl:lex}.
@@ -243,7 +245,9 @@ For each language, there are as many as twelve variants of the tagger to compare
 
 In absence of character and word embeddings, using a lexicon improves the prediction quality of almost all datasets, except 2; Basque and Estonian, which have very high type-token ratios (0.23 compared to 0.09 for English).
 
-In terms of further work, we should say something about trying not only with UPOS, but also with the native, often larger tagset for the treebanks that also have it.
+The improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}$ + $\vec{c}$ setup, the three languages with the highest improvements when using a lexicon are exactly the ones with smallest datasets.
+
+Further work includes using lexicons to tag finer-grained tag inventories, as well as a more thorough analysis on the relation between lexicon and training data properties, including the perplexity of the character language model.
 %}
 
 
