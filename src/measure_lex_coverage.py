@@ -72,7 +72,7 @@ def getmetrics(lang, lexicon, lexfile,train_counter,dev_counter,test_counter,tra
             metrics["cover_instance_test"] = cover_instance(lex, test_counter)
             metrics["cover_instance_traintest"] = cover_instance(lex, traintest_counter)
             print("\t".join(sorted(metrics.keys())))
-            print([str(metrics[k]) for k in sorted(metrics.keys())])
+            print("\t".join([str(metrics[k]) for k in sorted(metrics.keys())]))
 
 getmetrics(args.lang, "lex", lexfile,train_counter,dev_counter,test_counter,traintest_counter)
 getmetrics(args.lang, "lex2", lexfile2,train_counter,dev_counter,test_counter,traintest_counter)
