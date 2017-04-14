@@ -40,6 +40,7 @@ traintest_counter = train_counter + test_counter
 
 def cover_instance(lexicon,wordcounter):
     filteredcounter = Counter([(k,v) for k,v in wordcounter.items() if k in lexicon])
+    print(sum(filteredcounter.values()), sum(wordcounter.values()))
     return sum(filteredcounter.values()) / sum(wordcounter.values())
 def cover_type(lexicon,wordcounter):
     return len(lexicon.intersection(set(train_counter.keys()))) / len(set(wordcounter.keys()))
