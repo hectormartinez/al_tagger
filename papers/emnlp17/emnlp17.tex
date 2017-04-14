@@ -197,16 +197,16 @@ code & type & \#entries & \#tags (full/coarse) & name & reference & \#entries & 
 %fi & {\em gt.ma} & 227,530 & 202/13 &  &  &  &  & yes\\
 %fr & {\em ap.lex} & 136,025 & 135/13 & Le{\it fff} & \citep{sagot10lefff} & 539,278 & 25 & yes\\
 %ga &  &  &  & inmdb & \citep{mechura14} & 113,975 & 32 & yes\\
-gl & {\em ap.lex} & 240,698 & 165/13 & LeffGa & \citep{sagot10lefff} & 742,954 & 28 & \\
-grc &  &  &  & Diogenes (Greek) & \citep{heslin07} & 1,313,962 & 18 & \\
-he & {\em ap.lex} & 267,533 & 107/16 &  &  &  &  & yes\\
-hi & {\em ap.lex} & 158,605 & 201/14 &  &  &  &  & yes\\
-hr &  &  &  & HML & \citep{oliver04} & 1,360,687 & 22 & yes\\
-hu & {\em gt.ma} & 2,937 & 4/3 & MULTEXT-East V4 & \citep{erjavec10} & 75,354 & 834 & \\
-id & {\em ap.lex} & 12,199 & 38/14 & Kateglo & \scalebox{0.9}{\url{github.com/ivanlanin/kateglo}} & 72,217 & 118 & yes\\
-it & {\em ap.lex} & 278,356 & 154/14 & Morph it! & \citep{zanchetta05} & 422,756 & 16 & yes\\
-kk & {\em gt.ma} & 434,119 & 1274/16 &  &  &  &  & \\
-la &  &  &  & Diogenes (Latin) & \citep{heslin07} & 562,409 & 16 & \\
+%gl & {\em ap.lex} & 240,698 & 165/13 & LeffGa & \citep{sagot10lefff} & 742,954 & 28 & \\
+%grc &  &  &  & Diogenes (Greek) & \citep{heslin07} & 1,313,962 & 18 & \\
+%he & {\em ap.lex} & 267,533 & 107/16 &  &  &  &  & yes\\
+%hi & {\em ap.lex} & 158,605 & 201/14 &  &  &  &  & yes\\
+%hr &  &  &  & HML & \citep{oliver04} & 1,360,687 & 22 & yes\\
+%hu & {\em gt.ma} & 2,937 & 4/3 & MULTEXT-East V4 & \citep{erjavec10} & 75,354 & 834 & \\
+%id & {\em ap.lex} & 12,199 & 38/14 & Kateglo & \scalebox{0.9}{\url{github.com/ivanlanin/kateglo}} & 72,217 & 118 & yes\\
+%it & {\em ap.lex} & 278,356 & 154/14 & Morph it! & \citep{zanchetta05} & 422,756 & 16 & yes\\
+%kk & {\em gt.ma} & 434,119 & 1274/16 &  &  &  &  & \\
+%la &  &  &  & Diogenes (Latin) & \citep{heslin07} & 562,409 & 16 & \\
 lv & {\em ap.lex} & 313,642 & 583/14 &  &  &  &  & \\
 nl & {\em ap.lex} & 167,302 & 85/14 & Alpino lexicon V1 & \citep{bouma00} & 80,928 & 65 & yes\\
 no & {\em ap.lex} & 2,469,905 & 158/13 & OrdBank & \citep{hagen10} & 880,503 & 224 & yes\\
@@ -246,6 +246,16 @@ fi & Morph\textsubscript{coarse} & 228k & 13 & 53.54\% & 0.29 & yes \\
 fr & Le{\it fff} & 539k & 25 & 87.59\% &0.11 &yes\\
 ga & inmdb & 114k & 32 & 34.57\% & 0.26& yes\\
 gl & Apertium\textsubscript{coarse} & 241k & 12 & 85.35\%  & 0.12 &no\\
+grc  & Diogenes & 1,314k & 18 & 45.93\% & 0.20 &no\\
+he & Apertium\textsubscript{coarse} & 268k & 16 & 71.04\% & 0.12 & yes\\
+hi & Apertium\textsubscript{coarse} & 159k & 14 & 82.87\% & 0.05 & yes\\
+hr  & HML   & 1,361k & 22 & 84.81\% & 0.21 & yes \\
+%hu & {\em gt.ma} & 2,937 & 4/3 & MULTEXT-East V4 & \citep{erjavec10} & 75,354 & 834 & \\
+id & Apertium\textsubscript{full }& 12k & 38 &61.37\% &0.18 & no   \\
+it & Apertium\textsubscript{coarse} & 278k &14 & 78.37\% & 0.10 & yes\\
+kk & Morph\textsubscript{coarse}& 434k & 16 &  79.06\% & 0.48 & no\\
+la  & Diogenes & 562k & 16 & 83.25\% & 0.31 &no\\
+lv & Apertium\textsubscript{coarse} & 314k & 14  & 58.05\%  & 0.33& no \\
 \bottomrule
 \end{tabular}
 \caption{Dataset information. Best lexicon for its language along with its size, number of tags and coverage over the UD1.3 data. We also provide the}\label{tbl:lex}
@@ -282,6 +292,8 @@ For each language, there are as many as twelve variants of the tagger to compare
 In absence of character and word embeddings, using a lexicon improves the prediction quality of almost all datasets, except 2; Basque and Estonian, which have very high type-token ratios (0.23 compared to 0.09 for English).
 
 The improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}$ + $\vec{c}$ setup, the three languages with the highest improvements when using a lexicon are exactly the ones with smallest datasets.
+
+While lexicon coverage is important, the best lexicon for a language is not always the one with the highest coverage, e.g. an alternative lexicon for Italian had a coverage of 90\% instead of 78\%. We attribute this variation to properties of the tagset but also properties of which words are indeed covered by the lexicon.
 
 Further work includes using lexicons to tag finer-grained tag inventories, as well as a more thorough analysis on the relation between lexicon and training data properties, including the perplexity of the character language model.
 %}
