@@ -101,8 +101,7 @@ representations. Optimal performance is achieved representing words using the co
 $\vec{w}$ built using a word embedding layer, called its {\em word embedding}, and (ii) a representation $\vec{c}$ of
 the word's characters, called its {\em character-based embedding} built using a character-level bi-LSTM, which is
 trained jointly with the word-level layers. Further improvements can be obtained on most but not all languages by
-initialising the word embedding layer with pre-computed word embeddings. This baseline architecture is illustrated by
-Figure~\ref{fig:schema}(a). We refer to \citet{plank16} for further details.
+initialising the word embedding layer with pre-computed word embeddings. We refer to \citet{plank16} for further details.
 
 Note that we do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s
 (\citeyear{plank16}), and that we use a single bi-LSTM layer instead of multi-layer stacking. While such systems can
@@ -112,7 +111,7 @@ improve the overall results,\footnote{Note however that \citeauthor{plank16}'s (
 contribution of information provided by an external morphosyntactic lexicon in contrast to word and character embeddings
 on an already very competitive single-layer baseline.
 
-\section{Integrating lexical morphosyntactic information}
+\section{Integrating lexical information}
 
 We extend the bi-LSTM architecture from Section \ref{sec:baselinearchitecture} with an additional input layer that
 contains token-wise features obtained from lexica. The input vector $\vec{l}$ for a given word is an $n$-hot vector
@@ -122,17 +121,21 @@ vector.  Note that this way of incorporating lexicon information as new features
 agnostic, and no explicit relation is needed between the morphosyntactic inventory of the lexicon and the label set we
 are aiming at predicting, namely the 17-label tagset from UD.
 
-Figure~\ref{fig:schema}(b) shows how the output of this input layer is concatenated to that of
-  the two baseline input layers, namely the word embedding $\vec{w}$ and (if enabled) the character-based embedding
-  $\vec{c}$. The result of this concatenation serves as an input to the bi-LSTM layer.
+Figure~\ref{fig:schema} shows how the output of this input layer is concatenated to that of the two baseline input
+layers, namely the word embedding $\vec{w}$ and (if enabled) the character-based embedding $\vec{c}$. The result of this
+concatenation serves as an input to the bi-LSTM layer.
 
-\begin{figure*}
-\includegraphics[width=\linewidth]{emnlp17schema}
-\caption{Schematic representation of the architecture of (a)~\citeauthor{plank16}'s (\citeyear{plank16}) bi-LSTM tagger,
-and (b)~our extension thereof for integrating external morphosyntactic lexical information. Each of these two schemas
-represent concern a single word. Connections of the word-level LSTM cells to their counterparts for the preceeding and
-following word are represented with grey arrows.}\label{fig:schema}
-\end{figure*}
+\begin{figure}
+\includegraphics[width=\columnwidth]{emnlp17schemaB}
+%\caption{Schematic representation of the architecture of (a)~\citeauthor{plank16}'s (\citeyear{plank16}) bi-LSTM tagger,
+%and (b)~our extension thereof for integrating external morphosyntactic lexical information. Each of these two schemas
+%concerns a single word. Connections of the word-level LSTM cells to their counterparts for the preceeding and
+%following word are represented with grey arrows.}\label{fig:schema}
+\caption{Schematic representation of the architecture of our extension of \citeauthor{plank16}'s (\citeyear{plank16})
+  bi-LSTM tagging architecture for integrating external morphosyntactic lexical information. This schema concerns a
+  single word. Connections of the word-level LSTM cell to its counterparts for the preceeding and following word are
+  represented with grey arrows.}\label{fig:schema}
+\end{figure}
 
 \section{Experiments}
 
