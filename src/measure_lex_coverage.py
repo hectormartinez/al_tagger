@@ -9,7 +9,7 @@ import random
 
 import os.path
 
-from collections import Counter
+from collections import Counter,defaultdict
 
 def getwords(infile):
     C = Counter()
@@ -51,22 +51,29 @@ def cover_type(lexicon,wordcounter):
     return len(lexicon.intersection(set(train_counter.keys()))) / len(set(wordcounter.keys()))
 
 def getmetrics(lang, lexicon, lexfile,train_counter,dev_counter,test_counter,traintest_counter):
+    metrics = dict()
+    metrics["lang\tlex"] = lang + "\t" + lexicon
+    metrics["cover_type_train"] = "_"
+    metrics["cover_type_dev"] = "_"
+    metrics["cover_type_test"] = "_"
+    metrics["cover_type_traintest"] = "_"
+    metrics["cover_instance_train"] = "_"
+    metrics["cover_instance_dev"] = "_"
+    metrics["cover_instance_test"] = "_"
+    metrics["cover_instance_traintest"] = "_"
+    
     if os.path.isfile(lexfile):
-        lex = set(getwords(lexfile).keys())
-        metrics = dict()
-        metrics["lang\tlex"] = lang + "\t"+lexicon
-        metrics["cover_type_train"] = cover_type(lex, train_counter)
-        metrics["cover_type_dev"] = cover_type(lex, dev_counter)
-        metrics["cover_type_test"] = cover_type(lex, test_counter)
-        metrics["cover_type_traintest"] = cover_type(lex, traintest_counter)
-        metrics["cover_instance_train"] = cover_instance(lex, train_counter)
-        metrics["cover_instance_dev"] = cover_instance(lex, dev_counter)
-        metrics["cover_instance_test"] = cover_instance(lex, test_counter)
-        metrics["cover_instance_traintest"] = cover_instance(lex, traintest_counter)
-        print("\t".join(sorted(metrics.keys())))
-        print([str(metrics[k]) for k in sorted(metrics.keys())])
-    else:
-     print("_")
+            lex = set(getwords(lexfile).keys())
+            metrics["cover_type_train"] = cover_type(lex, train_counter)
+            metrics["cover_type_dev"] = cover_type(lex, dev_counter)
+            metrics["cover_type_test"] = cover_type(lex, test_counter)
+            metrics["cover_type_traintest"] = cover_type(lex, traintest_counter)
+            metrics["cover_instance_train"] = cover_instance(lex, train_counter)
+            metrics["cover_instance_dev"] = cover_instance(lex, dev_counter)
+            metrics["cover_instance_test"] = cover_instance(lex, test_counter)
+            metrics["cover_instance_traintest"] = cover_instance(lex, traintest_counter)
+            print("\t".join(sorted(metrics.keys())))
+            print([str(metrics[k]) for k in sorted(metrics.keys())])
 
 getmetrics(args.lang, "lex", lexfile,train_counter,dev_counter,test_counter,traintest_counter)
 getmetrics(args.lang, "lex2", lexfile2,train_counter,dev_counter,test_counter,traintest_counter)
