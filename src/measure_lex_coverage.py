@@ -48,7 +48,6 @@ def cover_instance(lexicon,wordcounter):
     return sum(filteredcounter.values()) / sum(wordcounter.values())
 
 def cover_type(lexicon,wordcounter):
-    lexicon.intersection(set)
     return len(lexicon.intersection(set(wordcounter.keys()))) / len(set(wordcounter.keys()))
 
 def getmetrics(lang, lexicon, lexfile,train_counter,dev_counter,test_counter,traintest_counter):
