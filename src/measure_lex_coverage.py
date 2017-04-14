@@ -39,7 +39,7 @@ test_counter = getwords(test_data)
 traintest_counter = train_counter + test_counter
 
 def cover_instance(lexicon,wordcounter):
-    filteredcounter = Counter([(k,v) for k,v in wordcounter.items() if k in lexicon])
+    filteredcounter = Counter(dict([(k,v) for k,v in wordcounter.items() if k in lexicon]))
     print(sum(filteredcounter.values()), sum(wordcounter.values()), len(lexicon))
     print(filteredcounter.most_common(15))
     print(wordcounter.most_common(15))
