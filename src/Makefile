@@ -353,6 +353,27 @@ baselineembeds:	trace_nolex_embeds.ar	\
 		trace_nolex_embeds.sl	\
 		trace_nolex_embeds.sv
 
+
+speedup:	trace_lex_embeds.ar	\
+		trace_lex_embeds.ca	\
+		trace_lex_embeds.cs	\
+		trace_lex_embeds.de	\
+		trace_lex_embeds.es	\
+		trace_lex_embeds.et	\
+		trace_lex_embeds.fi	\
+		trace_lex_embeds.fr	\
+		trace_lex_embeds.he	\
+		trace_lex_embeds.hi	\
+		trace_lex_embeds.id	\
+		trace_lex_embeds.it	\
+		trace_lex_embeds.nl	\
+		trace_lex_embeds.no	\
+		trace_lex_embeds.pl	\
+		trace_lex_embeds.pt	\
+		trace_lex_embeds.sl	\
+		trace_lex_embeds.sv
+
+
 allnochar: lexnochar lex2nochar lexcoarsenochar lexbnochar lex2bnochar lexcoarsebnochar
 
 infos:
