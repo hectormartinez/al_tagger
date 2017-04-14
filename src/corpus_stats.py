@@ -33,7 +33,7 @@ test_data = BASE + args.lang + "-ud-test.conllu"
 train_counter = getwords(train_data)
 dev_counter = getwords(dev_data)
 test_counter = getwords(test_data)
-all_corpus = train_counter + test_counter + dev_data
+all_corpus = train_counter + test_counter + dev_counter
 
 def cover_instance(lexicon,wordcounter):
     filteredcounter = Counter(dict([(k,v) for k,v in wordcounter.items() if k in lexicon]))
