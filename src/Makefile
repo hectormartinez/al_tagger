@@ -359,16 +359,7 @@ baselineembeds:	trace_nolex_embeds.ar	\
 		trace_nolex_embeds.sv
 
 
-speedup:	trace_lex_embeds.ar	\
-		trace_lex_embeds.ca	\
-		trace_lex_embeds.de	\
-		trace_lex_embeds.es	\
-		trace_lex_embeds.et	\
-		trace_lex_embeds.fi	\
-		trace_lex_embeds.fr	\
-		trace_lex_embeds.he	\
-		trace_lex_embeds.hi	\
-		trace_lex_embeds.id	\
+speedup:	trace_lex_embeds.id	\
 		trace_lex_embeds.it	\
 		trace_lex_embeds.nl	\
 		trace_lex_embeds.no	\
@@ -379,12 +370,10 @@ speedup:	trace_lex_embeds.ar	\
 
 csspeedup:	trace_lex_embeds.cs		\
 		trace_lex2_embeds.cs		\
-		trace_lexcoarse_embeds.cs	\
 		trace_lex.cs			\
 		trace_lex2.cs			\
 		trace_lexcoarse.cs		\
 		trace_lex_nolex.cs		\
-		trace_lex2_nolex.cs		\
 		trace_lexcoarse_nolex.cs
 
 allnochar: lexnochar lex2nochar lexcoarsenochar lexbnochar lex2bnochar lexcoarsebnochar
