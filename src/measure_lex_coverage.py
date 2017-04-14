@@ -42,5 +42,5 @@ traintest_counter = train_counter + test_counter
 if os.path.isfile(lexfile):
     lex = getwords(lexfile)
     metrics = []
-    metrics.append(len(set(lex.keys).intersection(set(train_counter.keys))))
+    metrics.append(len(set(lex.keys()).intersection(set(train_counter.keys()))))
     print(metrics)
