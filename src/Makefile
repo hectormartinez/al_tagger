@@ -162,6 +162,11 @@ lex2nochar:	trace_lex2_nochar.bg	\
 		trace_lex2_nochar.la	\
 		trace_lex2_nochar.ro
 
+smalltarget:	trace_lex2_nochar.no	\
+		trace_lex2_nochar.pl	\
+		trace_lex2_nochar.pt
+
+
 lexnochar:	trace_lex_nochar.ar	\
 		trace_lex_nochar.bg	\
 		trace_lex_nochar.ca	\
@@ -356,7 +361,6 @@ baselineembeds:	trace_nolex_embeds.ar	\
 
 speedup:	trace_lex_embeds.ar	\
 		trace_lex_embeds.ca	\
-		trace_lex_embeds.cs	\
 		trace_lex_embeds.de	\
 		trace_lex_embeds.es	\
 		trace_lex_embeds.et	\
@@ -373,6 +377,15 @@ speedup:	trace_lex_embeds.ar	\
 		trace_lex_embeds.sl	\
 		trace_lex_embeds.sv
 
+csspeedup:	trace_lex_embeds.cs		\
+		trace_lex2_embeds.cs		\
+		trace_lexcoarse_embeds.cs	\
+		trace_lex.cs			\
+		trace_lex2.cs			\
+		trace_lexcoarse.cs		\
+		trace_lex_nolex.cs		\
+		trace_lex2_nolex.cs		\
+		trace_lexcoarse_nolex.cs
 
 allnochar: lexnochar lex2nochar lexcoarsenochar lexbnochar lex2bnochar lexcoarsebnochar
 
