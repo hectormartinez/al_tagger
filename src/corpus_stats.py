@@ -50,6 +50,7 @@ def TTR(wordcounter):
 
 def getmetrics(lang,train_counter,dev_counter,test_counter,all_corpus):
     metrics = dict()
+    metrics["_lang"] = lang
     metrics["OOTC_instance"] = cover_instance(set(train_counter.keys()),test_counter)
     metrics["OOTC_type"] = cover_type(set(train_counter.keys()),test_counter)
     metrics["TTR"] = TTR(all_corpus)
