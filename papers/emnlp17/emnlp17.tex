@@ -10,6 +10,7 @@
 \usepackage{booktabs}
 \usepackage{color}
 
+
 % Uncomment this line for the final submission:
 %\emnlpfinalcopy
 
@@ -48,7 +49,7 @@
 \author{Anonymous submission}
 
 \date{}
-
+\hypersetup{draft}
 \begin{document}
 
 \maketitle
@@ -72,8 +73,8 @@ entropy Markov models (MEMMs) \cite{ratnaparkhi96} and Conditional Random Fields
 \cite{lafferty01,constant12}. Recently, neural approaches have reached very competitive accuracy levels, improving over
 the state of the art in an number of settings \cite{plank16}.
 
-As a complement to the annotated corpora used to train such systems, external lexical information has been shown to be
-valuable sources of information. First, morphosyntactic lexicons, which provide a large inventory of (word,~PoS)
+As a complement to the annotated corpora used to train such systems, external lexicons can be a valuable source of information.
+First, morphosyntactic lexicons, which provide a large inventory of (word,~PoS)
 pairs. Such lexical information can be used in the form of constraints at tagging time \cite{kim99,hajic00tagging} or
 during the training process as additional features combined with standard features extracted from the training corpus
 \cite{chrupala08,goldberg09,denis12}.
@@ -162,7 +163,6 @@ have type {\em ap.ma}, and lexicons obtained via Giellatekno morphological analy
 The {\sc lex2} series of lexicons have been gathered from numerous sources. For space reasons, we are not able to describe
 here the language-specific transformations we applied to some of these lexicons. References are given in
 Table~\ref{tbl:lex}. 
-
 Finally, whenever available and following \citet{plank16}, we performed experiments using Polyglot pre-computed
 embeddings published by \citet{alrfou13}. Languages for which Polyglot embeddings are available are indicated in Table~\ref{tbl:lex}.
 
