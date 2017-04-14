@@ -437,6 +437,11 @@ speedup7:	trace_lex2.gl		\
 		trace_lexcoarse.no	\
 		trace_lexcoarse.ru
 
+lagrc:		trace_lex2.la		\
+		trace_lex2_nochar.la	\
+		trace_lex2.grc		\
+		trace_lex2_nochar.grc
+
 
 allnochar: lexnochar lex2nochar lexcoarsenochar lexbnochar lex2bnochar lexcoarsebnochar
 
