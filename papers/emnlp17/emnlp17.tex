@@ -251,11 +251,11 @@ Further work includes using lexicons to tag finer-grained tag inventories, as we
 %}
 
 \begin{table*}
-\centering\footnotesize
+\centering\scriptsize
 \begin{tabular}{l|rrr|rrr|rrr}
 \toprule
 Language & \multicolumn{3}{c}{Baseline} & \multicolumn{3}{c}{With best lexicon} & \multicolumn{3}{c}{Gain when using} \\
-Language & \multicolumn{3}{c}{(no lexicon)} & \multicolumn{3}{c}{(selected on dev)} & \multicolumn{3}{c}{best lexicon} \\
+ & \multicolumn{3}{c}{(no lexicon)} & \multicolumn{3}{c}{(selected on dev)} & \multicolumn{3}{c}{best lexicon} \\
  & \multicolumn{1}{c}{$\vec{w}$} & \multicolumn{1}{c}{$\vec{w}+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}_P+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}$} & \multicolumn{1}{c}{$\vec{w}+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}_P+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}$} & \multicolumn{1}{c}{$\vec{w}+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}_P+\vec{c}$} \\
 \midrule
 Arabic (ar) & 93.90 & 95.99 & 96.20 & 94.58 & 96.05 & 96.22 & +0.68 & +0.06 & +0.02\\
