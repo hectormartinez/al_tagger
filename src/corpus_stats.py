@@ -46,7 +46,7 @@ def cover_type(lexicon,wordcounter):
     return len(lexicon.intersection(set(wordcounter.keys()))) / len(set(wordcounter.keys()))
 
 def TTR(wordcounter):
-    return len(wordcounter.keys) / sum(wordcounter.values())
+    return len(wordcounter.keys()) / sum(wordcounter.values())
 
 def getmetrics(lang,train_counter,dev_counter,test_counter,all_corpus):
     metrics = dict()
