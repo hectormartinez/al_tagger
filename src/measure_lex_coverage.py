@@ -18,8 +18,17 @@ def getwords(infile):
     for line in open(infile,encoding="utf-8"):
         line = line.strip()
         if line:
-            tokenlist = line.split("\n")
-            C[tokenlist[0]]+=1
+            w,p = line.split("\t")
+            C[w]+=1
+    return C
+
+def getlex(infile):
+    C = Counter
+    for line in open(infile,encoding="utf-8"):
+        line = line.strip()
+        if line:
+            w,p,l = line.split("\t")
+            C[w]+=1
     return C
 
 parser = argparse.ArgumentParser(description="""Run the NN tagger""")
@@ -42,7 +51,6 @@ test_counter = getwords(train_data)
 traintest_counter = train_counter + test_counter
 
 if os.path.isfile(lexfile):
-    lex = getwords(lexfile)
+    lex = getlex(lexfile)
     metrics = []
-    metrics.append(set(lex.keys).intersection(set(train_counter.keys)))
-    
+    metrics.append(set(lex.keys).intersection(set(train_counter.e)))
