@@ -3,7 +3,6 @@
 ## to properly seed dyNet add parameter to your script:
 ## python run_simply.py --dynet-seed 113
 
-from simplebilty_nochars import SimpleBiltyTaggerNoChars
 import argparse
 import random
 ### Use --dynet-seed $SEED
@@ -43,4 +42,5 @@ traintest_counter = train_counter + test_counter
 if os.path.isfile(lexfile):
     lex = getwords(lexfile)
     metrics = []
-    metrics.append(set(lex.keys).intersection(set(train_counter.e)))
+    metrics.append(len(set(lex.keys).intersection(set(train_counter.keys))))
+    print(metrics)
