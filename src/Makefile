@@ -368,6 +368,17 @@ speedup:	trace_lex_embeds.id	\
 		trace_lex_embeds.sl	\
 		trace_lex_embeds.sv
 
+speedup3:	trace_lex.hi	\
+		trace_lex.id	\
+		trace_lex.it	\
+		trace_lex.nl	\
+		trace_lex.no	\
+		trace_lex.pl	\
+		trace_lex.pt	\
+		trace_lex.sl	\
+		trace_lex.sv
+
+
 csspeedup:	trace_lex_embeds.cs		\
 		trace_lex2_embeds.cs		\
 		trace_lex.cs			\
