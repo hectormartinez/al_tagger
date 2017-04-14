@@ -34,8 +34,8 @@ test_data = BASE + args.lang + "-ud-test.conllu"
 lexfile = LEXBASE + args.lang + ".lex"
 
 train_counter = getwords(train_data)
-dev_counter = getwords(train_data)
-test_counter = getwords(train_data)
+dev_counter = getwords(dev_data)
+test_counter = getwords(test_data)
 traintest_counter = train_counter + test_counter
 
 def cover_instance(lexicon,wordcounter):
