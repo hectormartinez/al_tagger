@@ -424,7 +424,6 @@ speedup4:	trace_lex2.la	\
 		trace_lex2.sl	\
 		trace_lex2.sv
 
-
 speedup5:	trace_lex.fi	\
 		trace_lex.fr	\
 		trace_lex.he
@@ -433,6 +432,10 @@ speedup6:	trace_lexcoarse.pl	\
 		trace_lexcoarse.pt	\
 		trace_lexcoarse.sl	\
 		trace_lexcoarse.sv
+
+speedup7:	trace_lex2.gl		\
+		trace_lexcoarse.no	\
+		trace_lexcoarse.ru
 
 
 allnochar: lexnochar lex2nochar lexcoarsenochar lexbnochar lex2bnochar lexcoarsebnochar
