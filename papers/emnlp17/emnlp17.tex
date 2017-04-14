@@ -241,7 +241,7 @@ corpora for languages for which we had neither a lexicon nor Polyglot embeddings
 
 \section{Results and discussion}
 
-For each language, there are as many as twelve variants of the tagger to compare. These variants are defined by the presents of character embeddings, the usage of pretrained word embeddings, or the usage of a lexicon, be it \textsc{Lex}, \textsc{Lex2} or \textsc{Lexcoarse}. For ease of comparison, we provide a summarized overview in Table \ref{tbl:PENDING}, where the baseline system without lexicon with the best per-language system that uses a lexicon and maybe pre-trained embeddings. We determine the per-language best lexicon system on the development set.
+For each language, there are as many as twelve variants of the tagger to compare. These variants are defined by the presents of character embeddings, the usage of pretrained word embeddings, or the usage of a lexicon, be it \textsc{Lex}, \textsc{Lex2} or \textsc{Lexcoarse}. For ease of comparison, we provide a summarized overview in Table \ref{tbl:results}, where the baseline system without lexicon with the best per-language system that uses a lexicon and maybe pre-trained embeddings. We determine the per-language best lexicon system on the development set.
 
 In absence of character and word embeddings, using a lexicon improves the prediction quality of almost all datasets, except 2; Basque and Estonian, which have very high type-token ratios (0.23 compared to 0.09 for English).
 
@@ -250,6 +250,56 @@ The improvements are particularly important for the smaller datasets. Indeed, in
 Further work includes using lexicons to tag finer-grained tag inventories, as well as a more thorough analysis on the relation between lexicon and training data properties, including the perplexity of the character language model.
 %}
 
+\begin{table*}
+\centering\footnotesize
+\begin{tabular}{l|rrr|rrr|rrr}
+\toprule
+Language & \multicolumn{3}{c}{Baseline} & \multicolumn{3}{c}{With best lexicon} & \multicolumn{3}{c}{Gain when using} \\
+Language & \multicolumn{3}{c}{(no lexicon)} & \multicolumn{3}{c}{(selected on dev)} & \multicolumn{3}{c}{best lexicon} \\
+ & \multicolumn{1}{c}{$\vec{w}$} & \multicolumn{1}{c}{$\vec{w}+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}_P+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}$} & \multicolumn{1}{c}{$\vec{w}+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}_P+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}$} & \multicolumn{1}{c}{$\vec{w}+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}_P+\vec{c}$} \\
+\midrule
+Arabic (ar) & 93.90 & 95.99 & 96.20 & 94.58 & 96.05 & 96.22 & +0.68 & +0.06 & +0.02\\
+Bulgarian (bg) & 94.50 & 98.11 & 97.62 & 96.29 & 98.30 & 97.86 & +1.79 & +0.18 & +0.24\\
+Catalan (ca) & 96.14 & 98.03 & 98.17 & 97.58 & 98.21 & 98.26 & +1.44 & +0.18 & +0.09\\
+Czech (cs) & 95.93 & 98.03 & 98.10 & 97.47 &  & 98.52 & +1.54 &  & +0.42\\
+Danish (da) & 90.16 & 95.41 & 95.62 & 94.20 & 96.24 & 96.14 & +4.04 & +0.83 & +0.53\\
+German (de) & 87.94 & 92.64 & 92.96 & 91.52 & 93.08 & 93.18 & +3.58 & +0.44 & +0.23\\
+Greek (el) & 95.62 & 97.76 & 98.22 & 96.03 & 97.67 & 98.17 & +0.41 & --0.09 & --0.05\\
+English (en) & 91.12 & 94.38 & 94.56 & 92.97 & 94.63 & 94.70 & +1.85 & +0.25 & +0.14\\
+Spanish (es) & 93.10 & 94.96 & 95.27 & 94.62 & 94.84 & 95.07 & +1.52 & --0.11 & --0.20\\
+Estonian (et) & 90.73 & 96.10 & 96.40 & 90.07 & 96.14 & 96.66 & --0.65 & +0.04 & +0.26\\
+Basque (eu) & 88.54 & 94.34 & 95.07 & 88.52 & 94.78 & 95.03 & --0.02 & +0.44 & --0.04\\
+Persian (fa) & 95.57 & 96.39 & 97.35 & 96.22 & 97.09 & 97.35 & +0.65 & +0.71 & +0.00\\
+Finnish (fi) & 87.26 & 94.84 & 95.12 & 88.67 & 94.87 & 95.13 & +1.40 & +0.03 & +0.01\\
+French (fr) & 94.30 & 95.97 & 96.32 & 95.92 & 96.71 & 96.28 & +1.62 & +0.74 & --0.04\\
+Irish (ga) & 86.94 & 89.87 & 91.91 & 88.88 & 91.18 & 91.76 & +1.94 & +1.31 & --0.16\\
+Galician (gl) & 94.78 & 96.94 & --- & 95.72 & 97.18 & --- & +0.94 & +0.24 & ---\\
+Ancient Greek (grc) & 88.69 & 94.40 & --- & 89.76 &  & --- & +1.07 &  & ---\\
+Hebrew (he) & 92.82 & 95.05 & 96.57 & 94.11 & 95.53 & 96.76 & +1.29 & +0.48 & +0.19\\
+Hindi (hi) & 95.55 & 96.22 & 95.93 & 96.22 & 96.50 & 96.95 & +0.67 & +0.28 & +1.02\\
+Croatian (hr) & 86.62 & 95.01 & 95.93 & 93.53 & 96.29 & 96.34 & +6.91 & +1.28 & +0.41\\
+Hungarian (hu) & 78.87 & 94.17 & --- & 80.09 & 94.29 & --- & +1.23 & +0.12 & ---\\
+Indonesian (id) & 89.07 & 92.78 & 93.27 & 91.17 & 92.79 & 92.89 & +2.11 & +0.02 & --0.38\\
+Italian (it) & 95.29 & 97.48 & 97.77 & 97.54 & 97.81 & 97.88 & +2.26 & +0.33 & +0.11\\
+Kazakh (kk) & 72.74 & 76.32 & --- & 82.28 & 82.79 & --- & +9.54 & +6.47 & ---\\
+Latin (la) & 85.18 & 92.18 & --- & 90.63 & 93.29 & --- & +5.44 & +1.12 & ---\\
+Latvian (lv) & 78.22 & 89.39 & --- & 83.56 & 91.07 & --- & +5.35 & +1.68 & ---\\
+Dutch (nl) & 84.91 & 89.97 & 87.80 & 85.20 & 90.69 & 89.85 & +0.29 & +0.72 & +2.05\\
+Norwegian (no) & 93.65 & 97.50 & 97.90 & 95.80 & 97.72 & 97.96 & +2.15 & +0.22 & +0.07\\
+Polish (pl) & 87.99 & 96.21 & 96.90 & 90.81 & 96.40 & 97.02 & +2.83 & +0.18 & +0.13\\
+Portuguese (pt) & 93.61 & 97.00 & 97.27 & 94.76 & 96.79 & 97.11 & +1.15 & --0.21 & --0.16\\
+Romanian (ro) & 92.63 & 95.76 & --- & 94.49 & 96.26 & --- & +1.86 & +0.51 & ---\\
+Russian (ru) & 84.72 & 95.73 & --- & 93.50 & 96.32 & --- & +8.79 & +0.60 & ---\\
+Slovene (sl) & 83.96 & 97.30 & 95.27 & 94.07 & 97.74 & 95.44 & 10.11 & +0.44 & +0.17\\
+Swedish (sv) & 92.06 & 96.26 & 96.56 & 95.61 & 97.03 & 97.00 & +3.55 & +0.77 & +0.44\\
+Turkish (tr) & 87.02 & 93.98 & --- & 90.03 & 93.90 & --- & +3.01 & --0.08 & ---\\
+Chinese (zh) & 89.17 & 92.99 & --- & 89.29 & 93.04 & --- & +0.12 & +0.05 & ---\\
+\midrule
+Macro-avg. & 89.70 & 94.59 & --- & 92.27 & 95.09 & --- & +2.57 & +0.50 & ---\\
+Macro-avg.~w/embed & 91.43 & 95.52 & 95.77 & 93.55 & 95.80 & 95.98 & +2.12 & +0.28 & +0.21\\
+\end{tabular}
+\caption{XXX}\label{tbl:results}
+\end{table*}
 
 %\section*{Acknowledgments}
 
