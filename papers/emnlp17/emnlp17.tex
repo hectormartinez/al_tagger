@@ -54,7 +54,7 @@
 \maketitle
 
 \begin{abstract}
-  Abstract
+  Neural part-of-speech tagging has achieved very competitive results with the incorporation of character embeddings and pre-trained word embeddings. In this paper, we investigate whether a bi-LSTM tagger can benefit from using information from morphosyntactic lexicons as additional input. The tagger shows a consistent, average improvement of 2.6\% tagging accuracy for systems without character embeddings, but also an improvement of 0.5\% in the presence of character embeddings, which indicates that morphosyntactic lexicons do indeed provide information that is not captured by the embeddings themselves.
 \end{abstract}
 
 
@@ -241,15 +241,10 @@ corpora for languages for which we had neither a lexicon nor Polyglot embeddings
 
 For each language, there are as many as twelve variants of the tagger to compare. These variants are defined by the presents of character embeddings, the usage of pretrained word embeddings, or the usage of a lexicon, be it \textsc{Lex}, \textsc{Lex2} or \textsc{Lexcoarse}. For ease of comparison, we provide a summarized overview in Table \ref{tbl:PENDING}, where the baseline system without lexicon with the best per-language system that uses a lexicon and maybe pre-trained embeddings. We determine the per-language best lexicon system on the development set.
 
-\textcolor{blue}{
-\begin{enumerate}
-\item We compare the overall contrib of lexicons over a no-char system and over a char-system.
-\item We compare the overall contrib of lexicons over a no-char system and over a char-system.
-\item We compare the performance on OOV maybe perform some confusion matrix analysis for some languages with the biggest relative difference.
-\item Maybe Table 1 can also have two colums for lexicon coverage for Lex and Lex2?
-\end{enumerate}
+In absence of character and word embeddings, using a lexicon improves the prediction quality of almost all datasets, except 2; Basque and Estonian, which have very high type-token ratios (0.23 compared to 0.09 for English).
+
 In terms of further work, we should say something about trying not only with UPOS, but also with the native, often larger tagset for the treebanks that also have it.
-}
+%}
 
 
 %\section*{Acknowledgments}
