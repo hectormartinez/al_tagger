@@ -223,6 +223,23 @@ zh & {\em ap.lex} & 7,617 & 14/13 &  &  &  &  & \\
 \caption{Information about lexical informations used in this paper.}\label{tbl:lex}
 \end{table*}
 
+\begin{table}
+\centering
+\scriptsize
+\begin{tabular}{llrrr|rr}
+\toprule
+ & Name & \#entries & \#tags  & coverage & TTR & PG \\
+\midrule 
+ar &   Apertium\textsubscript{coarse} & 651k & 15 & 45.88\% &0.09& yes \\
+bg & MULTEXT-East & 53k &12 & 67.59\% & 0.18 & yes \\
+ca &  Apertium\textsubscript{coarse} & 379k & 13 & 80.06\% & 0.06 & yes \\
+cs & Morfflex (filtered)  & 2,094k & 65 & 68.38\% & 0.10 & yes \\
+da & Apertium\textsubscript{coarse} & 683k & 15 & 71.93\% & 0.19 & yes \\
+\bottomrule
+\end{tabular}
+\caption{Dataset information. Best lexicon for its language along with its size, number of tags and coverage over the UD1.3 data. We also provide the}\label{tbl:lex}
+\end{table}
+
 \subsection{Experimental setup}
 
 We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
