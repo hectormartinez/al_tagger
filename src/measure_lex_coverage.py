@@ -41,6 +41,10 @@ traintest_counter = train_counter + test_counter
 
 if os.path.isfile(lexfile):
     lex = getwords(lexfile)
-    metrics = []
-    metrics.append(len(set(lex.keys()).intersection(set(train_counter.keys()))))
+    metrics = dict()
+    metrics["_lang"] = args.lang + "_lex"
+    metrics["cover_type_train"] = len(set(lex.keys()).intersection(set(train_counter.keys()))) / len(set(train_counter.keys()))
+    metrics["cover_type_dev"] = len(set(lex.keys()).intersection(set(train_counter.keys()))) / len(set(train_counter.keys()))
+    metrics["cover_type_test"] = len(set(lex.keys()).intersection(set(train_counter.keys()))) / len(set(train_counter.keys()))
+    metrics["cover_type_traintest"] = len(set(lex.keys()).intersection(set(train_counter.keys()))) / len(set(train_counter.keys()))
     print(metrics)
