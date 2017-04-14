@@ -9,26 +9,16 @@ import random
 ### Use --dynet-seed $SEED
 
 import os.path
-os.path.isfile("/Users/hector/data/basquebible/Ab_99")
 
 from collections import Counter
 
 def getwords(infile):
-    C = Counter
+    C = Counter()
     for line in open(infile,encoding="utf-8"):
         line = line.strip()
         if line:
-            w,p = line.split("\t")
-            C[w]+=1
-    return C
-
-def getlex(infile):
-    C = Counter
-    for line in open(infile,encoding="utf-8"):
-        line = line.strip()
-        if line:
-            w,p,l = line.split("\t")
-            C[w]+=1
+            a = line.split("\t")
+            C[a[0]]+=1
     return C
 
 parser = argparse.ArgumentParser(description="""Run the NN tagger""")
@@ -51,6 +41,6 @@ test_counter = getwords(train_data)
 traintest_counter = train_counter + test_counter
 
 if os.path.isfile(lexfile):
-    lex = getlex(lexfile)
+    lex = getwords(lexfile)
     metrics = []
     metrics.append(set(lex.keys).intersection(set(train_counter.e)))
