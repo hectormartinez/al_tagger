@@ -376,6 +376,39 @@ csspeedup:	trace_lex_embeds.cs		\
 		trace_lex_nolex.cs		\
 		trace_lexcoarse_nolex.cs
 
+lexcoarsenocharall:	trace_lexcoarse_nochar.ar	\
+		trace_lexcoarse_nochar.bg	\
+		trace_lexcoarse_nochar.ca	\
+		trace_lexcoarse_nochar.cs	\
+		trace_lexcoarse_nochar.da	\
+		trace_lexcoarse_nochar.de	\
+		trace_lexcoarse_nochar.el	\
+		trace_lexcoarse_nochar.en	\
+		trace_lexcoarse_nochar.es	\
+		trace_lexcoarse_nochar.et	\
+		trace_lexcoarse_nochar.eu	\
+		trace_lexcoarse_nochar.fi	\
+		trace_lexcoarse_nochar.fr	\
+		trace_lexcoarse_nochar.he	\
+		trace_lexcoarse_nochar.hi	\
+		trace_lexcoarse_nochar.id	\
+		trace_lexcoarse_nochar.it	\
+		trace_lexcoarse_nochar.nl	\
+		trace_lexcoarse_nochar.no	\
+		trace_lexcoarse_nochar.pl	\
+		trace_lexcoarse_nochar.pt	\
+		trace_lexcoarse_nochar.sl	\
+		trace_lexcoarse_nochar.sv	\
+		trace_lexcoarse_nochar.gl	\
+		trace_lexcoarse_nochar.hu	\
+		trace_lexcoarse_nochar.kk	\
+		trace_lexcoarse_nochar.lv	\
+		trace_lexcoarse_nochar.ro	\
+		trace_lexcoarse_nochar.ru	\
+		trace_lexcoarse_nochar.tr	\
+		trace_lexcoarse_nochar.zh
+
+
 allnochar: lexnochar lex2nochar lexcoarsenochar lexbnochar lex2bnochar lexcoarsebnochar
 
 infos:
