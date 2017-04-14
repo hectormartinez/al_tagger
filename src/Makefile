@@ -155,7 +155,12 @@ lex2nochar:	trace_lex2_nochar.bg	\
 		trace_lex2_nochar.pl	\
 		trace_lex2_nochar.pt	\
 		trace_lex2_nochar.sl	\
-		trace_lex2_nochar.sv
+		trace_lex2_nochar.sv	\
+		trace_lex2_nochar.gl	\
+		trace_lex2_nochar.grc	\
+		trace_lex2_nochar.hu	\
+		trace_lex2_nochar.la	\
+		trace_lex2_nochar.ro
 
 lexnochar:	trace_lex_nochar.ar	\
 		trace_lex_nochar.bg	\
@@ -228,12 +233,6 @@ lexcoarseb:	trace_lexcoarse.gl	\
 		trace_lexcoarse.ru	\
 		trace_lexcoarse.tr	\
 		trace_lexcoarse.zh
-
-lex2bnochar:	trace_lex2_nochar.gl	\
-		trace_lex2_nochar.grc	\
-		trace_lex2_nochar.hu	\
-		trace_lex2_nochar.la	\
-		trace_lex2_nochar.ro
 
 lexbnochar:	trace_lex_nochar.gl	\
 		trace_lex_nochar.hu	\
