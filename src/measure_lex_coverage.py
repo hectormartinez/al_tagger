@@ -52,7 +52,7 @@ def cover_type(lexicon,wordcounter):
 
 def getmetrics(lang, lexicon, lexfile,train_counter,dev_counter,test_counter,traintest_counter):
     metrics = dict()
-    metrics["lang\tlex"] = lang + "\t" + lexicon
+    metrics["_lang\t_lex"] = lang + "\t" + lexicon
     metrics["cover_type_train"] = "_"
     metrics["cover_type_dev"] = "_"
     metrics["cover_type_test"] = "_"
@@ -61,7 +61,6 @@ def getmetrics(lang, lexicon, lexfile,train_counter,dev_counter,test_counter,tra
     metrics["cover_instance_dev"] = "_"
     metrics["cover_instance_test"] = "_"
     metrics["cover_instance_traintest"] = "_"
-    
     if os.path.isfile(lexfile):
             lex = set(getwords(lexfile).keys())
             metrics["cover_type_train"] = cover_type(lex, train_counter)
