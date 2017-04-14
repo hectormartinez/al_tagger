@@ -419,6 +419,11 @@ lexcoarsenocharall:	trace_lexcoarse_nochar.ar	\
 		trace_lexcoarse_nochar.tr	\
 		trace_lexcoarse_nochar.zh
 
+speedup4:	trace_lex2.la	\
+		trace_lex2.ro	\
+		trace_lex2.sl	\
+		trace_lex2.sv
+
 
 allnochar: lexnochar lex2nochar lexcoarsenochar lexbnochar lex2bnochar lexcoarsebnochar
 
