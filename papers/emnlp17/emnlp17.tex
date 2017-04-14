@@ -103,7 +103,7 @@ the word's characters, called its {\em character-based embedding} built using a 
 trained jointly with the word-level layers. Further improvements can be obtained on most but not all languages by
 initialising the word embedding layer with pre-computed word embeddings. We refer to \citet{plank16} for further details.
 
-Note that we do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s
+We do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s
 (\citeyear{plank16}), and that we use a single bi-LSTM layer instead of multi-layer stacking. While such systems can
 improve the overall results,\footnote{Note however that \citeauthor{plank16}'s (\citeyear{plank16})
     secondary task ---predicting the frequency class of each word--- results in better OOV scores but virtually identical
@@ -146,26 +146,31 @@ at the time of the submission, we performed our experiments on a previous versio
 precisely, in order to facilitate comparison with \citeauthor{plank16}'s (\citeyear{plank16}), we performed all
 experiments on the version 1.3 of UD \cite{ud13}.
 
-We used two sets of sources for lexical morphosyntactic information, which we will refer to respectively as {\sc lex}
-and {\sc lex2}. Quantitative information about these lexicons is provided in Table~\ref{tbl:lex}.
+In our experiments, we have used two types of lexical information sources, thus creating one to three lexicons for each
+language, in the way sketched below. Tagging accuracy results on the development sets were used to select the best
+performing lexicon for each language. In the remained or this paper, quantitative information about the lexicons we used
+(Table~\ref{tbl:lex}) and accuracy results are restricted to these best performing lexicons.
 
-The {\sc lex} series of lexicons have been extracted from freely available morphological lexicons or analysers developed
-for the Apertium\footnote{\url{https://svn.code.sf.net/p/apertium/svn/languages}} and the
-Giellatekno\footnote{\url{https://victorio.uit.no/langtech/trunk/langs}} projects. For languages for which an Apertium
-morphological lexicon is available, this lexicon was used. For other languages, we downloaded from the OPUS corpus
-collection the corresponding monolingual part of OpenSubtitles2016, tokenised it, extracted the 1 million most frequent
-tokens, and retrieved all their morphological analyser by the Apertium morphological transducer ---or by the Giellatekno
-morphological transducer when none was available from Apertium. All these analyses were then gathered in the form of a
-lexicon. In a second step, we converted all lexicons obtained using manually crafted rules, so that each lexical entry
-contains a (inflected) wordform, a lemma, a PoS from the Universal POS
-tagset,\footnote{\url{http://universaldependencies.org/u/pos/all.html}} and a set of attribute-value pairs from the
-Universal Features.\footnote{\url{http://universaldependencies.org/u/feat/all.html}} In Table~\ref{tbl:lex}, lexicons
-directly converted from Apertium lexicons have type {\em ap.lex}, lexicons obtained via Apertium morphological analysers
-have type {\em ap.ma}, and lexicons obtained via Giellatekno morphological analysers have type {\em gt.ma}.
+The sources of lexical information we used are twofold:
+\begin{itemize}
+\item Lexical information extracted from freely available morphological lexicons or analysers developed for the
+  Apertium\footnote{\url{https://svn.code.sf.net/p/apertium/svn/languages}} and the
+  Giellatekno\footnote{\url{https://victorio.uit.no/langtech/trunk/langs}} projects. For languages for which an Apertium
+  morphological lexicon is available, this lexicon was used. For other languages, we downloaded from the OPUS corpus
+  collection the corresponding monolingual part of OpenSubtitles2016, tokenised it, extracted the 1 million most
+  frequent tokens, and retrieved all their morphological analyser by the Apertium morphological transducer ---or by the
+  Giellatekno morphological transducer when none was available from Apertium. All these analyses were then gathered in
+  the form of a lexicon (indicated as ``morph.ana." in Table~\ref{tbl:lex}). In a second step, we converted all lexicons
+  obtained using manually crafted rules, so that each lexical entry contains a (inflected) wordform, a lemma, a PoS from
+  the Universal PoS tagset,\footnote{\url{http://universaldependencies.org/u/pos/all.html}} and a set of attribute-value
+  pairs from the Universal Features.\footnote{\url{http://universaldependencies.org/u/feat/all.html}} We then created
+  two variants of the lexicons obtained: a {\em full} variant in which labels are universal PoS, and a {\em coarse}
+  variant in which labels are the concatenation of the universal PoS and morphological feature-value pairs.
+\item Lexicons developed independently of Apertium and Giellatekno. For space reasons, we are not able to describe here
+  the language-specific transformations we applied to some of these lexicons. References are given in the caption of
+  Table~\ref{tbl:lex}.
+\end{itemize}
 
-The {\sc lex2} series of lexicons have been gathered from numerous sources. For space reasons, we are not able to describe
-here the language-specific transformations we applied to some of these lexicons. References are given in
-Table~\ref{tbl:lex}. 
 Finally, whenever available and following \citet{plank16}, we performed experiments using Polyglot pre-computed
 embeddings published by \citet{alrfou13}. Languages for which Polyglot embeddings are available are indicated in Table~\ref{tbl:lex}.
 
