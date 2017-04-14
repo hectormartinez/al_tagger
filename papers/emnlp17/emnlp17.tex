@@ -182,21 +182,21 @@ embeddings published by \citet{alrfou13}. Languages for which Polyglot embedding
 Lang. & \multicolumn{3}{c}{\sc lex} & \multicolumn{3}{|c}{\sc lex2} & Polyglot\\
 code & type & \#entries & \#tags (full/coarse) & name & reference & \#entries & \#tags & embeds\\
 \midrule
-ar & {\em ap.lex} & 650,592 & 658/15 &  &  &  &  & yes\\
-bg & {\em ap.lex} & 93,186 & 286/16 & MULTEXT-East V4 & \citep{erjavec10} & 53,056 & 12 & yes\\
-ca & {\em ap.lex} & 369,927 & 188/13 &  &  &  &  & yes\\
-cs & {\em ap.lex} & 1,874,737 & 1119/15 & Morfflex (filtered) & \citep{hajic13} & 2,094,860 & 65 & yes\\
-da & {\em ap.lex} & 683,456 & 164/15 & STO & \citep{braasch08} & 591,035 & 45 & yes\\
-de & {\em ap.lex} & 2,179,689 & 536/16 & DeLex & \citep{sagot14delex} & 465,434 & 52 & yes\\
-el & {\em ap.lex} & 47,131 & 190/12 & DELA\_gr & \citep{symeonidis99} & 1,988,898 & 25 & yes\\
-en & {\em ap.lex} & 126,928 & 108/15 & EnLex & \citep{sagot10lefff} & 490,511 & 47 & yes\\
-es & {\em ap.lex} & 324,517 & 157/12 & Le{\it ff}e & \citep{molinero09} & 755,858 & 34 & yes\\
-et & {\em gt.ma} & 43,553 & 202/12 & MULTEXT-East V4 & \citep{erjavec10} & 133,804 & 11 & yes\\
-eu & {\em ap.lex} & 52,618 & 37/14 &  &  &  &  & yes\\
-fa &  &  &  & PerLex & \citep{sagot10perlex} & 511,840 & 37 & yes\\
-fi & {\em gt.ma} & 227,530 & 202/13 &  &  &  &  & yes\\
-fr & {\em ap.lex} & 136,025 & 135/13 & Le{\it fff} & \citep{sagot10lefff} & 539,278 & 25 & yes\\
-ga &  &  &  & inmdb & \citep{mechura14} & 113,975 & 32 & yes\\
+%ar & {\em ap.lex} & 650,592 & 658/15 &  &  &  &  & yes\\
+%bg & {\em ap.lex} & 93,186 & 286/16 & MULTEXT-East V4 & \citep{erjavec10} & 53,056 & 12 & yes\\
+%ca & {\em ap.lex} & 369,927 & 188/13 &  &  &  &  & yes\\
+%cs & {\em ap.lex} & 1,874,737 & 1119/15 & Morfflex (filtered) & \citep{hajic13} & 2,094,860 & 65 & yes\\
+%da & {\em ap.lex} & 683,456 & 164/15 & STO & \citep{braasch08} & 591,035 & 45 & yes\\
+%de & {\em ap.lex} & 2,179,689 & 536/16 & DeLex & \citep{sagot14delex} & 465,434 & 52 & yes\\
+%el & {\em ap.lex} & 47,131 & 190/12 & DELA\_gr & \citep{symeonidis99} & 1,988,898 & 25 & yes\\
+%en & {\em ap.lex} & 126,928 & 108/15 & EnLex & \citep{sagot10lefff} & 490,511 & 47 & yes\\
+%es & {\em ap.lex} & 324,517 & 157/12 & Le{\it ff}e & \citep{molinero09} & 755,858 & 34 & yes\\
+%et & {\em gt.ma} & 43,553 & 202/12 & MULTEXT-East V4 & \citep{erjavec10} & 133,804 & 11 & yes\\
+%eu & {\em ap.lex} & 52,618 & 37/14 &  &  &  &  & yes\\
+%fa &  &  &  & PerLex & \citep{sagot10perlex} & 511,840 & 37 & yes\\
+%fi & {\em gt.ma} & 227,530 & 202/13 &  &  &  &  & yes\\
+%fr & {\em ap.lex} & 136,025 & 135/13 & Le{\it fff} & \citep{sagot10lefff} & 539,278 & 25 & yes\\
+%ga &  &  &  & inmdb & \citep{mechura14} & 113,975 & 32 & yes\\
 gl & {\em ap.lex} & 240,698 & 165/13 & LeffGa & \citep{sagot10lefff} & 742,954 & 28 & \\
 grc &  &  &  & Diogenes (Greek) & \citep{heslin07} & 1,313,962 & 18 & \\
 he & {\em ap.lex} & 267,533 & 107/16 &  &  &  &  & yes\\
@@ -235,6 +235,17 @@ bg & MULTEXT-East & 53k &12 & 67.59\% & 0.18 & yes \\
 ca &  Apertium\textsubscript{coarse} & 379k & 13 & 80.06\% & 0.06 & yes \\
 cs & Morfflex (filtered)  & 2,094k & 65 & 68.38\% & 0.10 & yes \\
 da & Apertium\textsubscript{coarse} & 683k & 15 & 71.93\% & 0.19 & yes \\
+de & DeLex & 465k & 52 & 78.78\% & 0.18 &yes\\
+el & Apertium\textsubscript{coarse} & 47k & 12 & 48.22\% & 0.20 & yes \\
+en & Apertium\textsubscript{coarse} & 127k & 12 & 77.61\% & 0.09& yes \\
+es & Le{\it ff}e &  756K & 34 & 87.02\% & 0.12 &yes\\
+et & Morph\textsubscript{coarse} & 44k & 12 & 51.55\% & 0.23 & yes \\
+eu & Apertium\textsubscript{full} & 53k &  14 & 42.14\% & 0.22 &  yes \\
+fa  & PerLex &  512k & 37 & 69.41\% & 0.10 & yes\\
+fi & Morph\textsubscript{coarse} & 228k & 13 & 53.54\% & 0.29 & yes \\
+fr & Le{\it fff} & 539k & 25 & 87.59\% &0.11 &yes\\
+ga & inmdb & 114k & 32 & 34.57\% & 0.26& yes\\
+gl & Apertium\textsubscript{coarse} & 241k & 12 & 85.35\%  & 0.12 &no\\
 \bottomrule
 \end{tabular}
 \caption{Dataset information. Best lexicon for its language along with its size, number of tags and coverage over the UD1.3 data. We also provide the}\label{tbl:lex}
