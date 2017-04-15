@@ -314,10 +314,9 @@ zh & Apertium & 8 & 13 & 34 & 0.16 & no \\
 \bottomrule
 \end{tabular}
 \caption{Dataset information. Best per-language lexicon along with its size, number of tags and coverage (``cov.'') over the UD1.3
-  corpus. ``MA'' stands for morphological-analyser-based lexicon (see text). Lexicons based on Apertium and Giellatekno
-  lexicons or morphological analysers are in their {\em coarse} version unless {\em full} is indicated. Other lexicons
-  have been adapted from available resources.\footnotemark
-  We also provide the type-token ratio of the 
+  corpus. ``MA'' stands for morphological-analyser-based lexicon. Lexicons based on Apertium and Giellatekno
+  data are in their {\em coarse} version unless {\em full} is indicated. Other lexicons
+  have been adapted from available resources.\footnotemark{} We also provide the type-token ratio of the 
   corpus (TTR) and whether there were available polyglot embeddings (PG) to initialize $\vec{w}$.}\label{tbl:lex}
 \end{table}
 
@@ -383,7 +382,8 @@ lexicon-enabled configurations perform significantly better than the baseline.\f
 
 We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
 available\footnote{https://github.com/bplank/bilstm-aux} and ``significantly refactored version of the code
-originally used'' by \citet{plank16}. We use its standard configuration, with only one bi-LSTM layer.
+originally used'' by \citet{plank16}. We use its standard configuration, with only one bi-LSTM layer, character
+embeddings size of 100, word embedding size of 64 (same as Polyglot embeddings), and 20 iterations for training.
 
 We extended \texttt{bilty} for enabling integration of lexical morphosyntactic information, in the way described in the
 previous section.\footnote{We also performed experiments in which the mapping between words and lexical labels was not
