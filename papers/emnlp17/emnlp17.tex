@@ -414,14 +414,14 @@ morphosyntactic information provided by the lexicon is a useful addition to the 
 improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}+\vec{c}$ setup, the three
 languages with the highest improvements when using a lexicon are exactly the ones with smallest datasets.
 
-In terms of choice of best lexicon, there is a clear tendency for lexicons with a small number of tags, arguably because
-the information is more similar to the 17-tag inventory of UPOS, but also because larger sets are bound to be sparser
-and less useful as additional information.
+Best performing lexicons often have a reduced tagset. It might come from the fact that fine-grained distinctions can be
+made using characters embeddings, whereas lexical information is useful for disambiguating between coarse-grained
+PoS. Moreover, larger sets are bound to be sparser and less useful as additional information.
 
 
-While lexicon coverage is important, the best lexicon for a language is not always the one with the highest coverage,
-e.g.~an alternative lexicon for Italian had a coverage of 90\% instead of 78\%. We attribute this variation to
-properties of the tagset but also properties of which words are indeed covered by the lexicon.
+%While lexicon coverage is important, the best lexicon for a language is not always the one with the highest coverage,
+%e.g.~an alternative lexicon for Italian had a coverage of 90\% instead of 78\%. We attribute this variation to
+%properties of the tagset but also properties of which words are indeed covered by the lexicon.
 
 Further work includes using lexicons to tag finer-grained tag inventories, as well as a more thorough analysis on the
 relation between lexicon and training data properties, including the perplexity of the character language model.
