@@ -122,10 +122,10 @@ on an already very competitive single-layer baseline.
 We extend the bi-LSTM architecture from Section \ref{sec:baselinearchitecture} with an additional input layer that
 contains token-wise features obtained from lexica. The input vector $\vec{l}$ for a given word is an $n$-hot vector
 where each active value corresponds to one of the possible labels in the lexicon. For instance, the English word
-\textit{house}, which is both a singular noun and a verb in its base form, is likely to be associated with a 2-hot input
+\textit{house}, which is both a singular noun and a verb in its base form, will be associated to a 2-hot input
 vector.  Note that this way of incorporating lexicon information as new features in an input layer is label-set
 agnostic, and no explicit relation is needed between the morphosyntactic inventory of the lexicon and the label set we
-are aiming at predicting, namely the 17-label tagset from UD.
+are aiming at predicting, namely the 17-label UD tagset.
 
 Figure~\ref{fig:schema} shows how the output of this input layer is concatenated to that of the two baseline input
 layers, namely the word embedding $\vec{w}$ and (if enabled) the character-based embedding $\vec{c}$. The result of this
