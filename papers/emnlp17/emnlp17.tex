@@ -158,16 +158,15 @@ morphological lexicon is available, this lexicon was used. For other languages, 
 collection the corresponding monolingual part of OpenSubtitles2016, tokenised it, extracted the 1 million most frequent
 tokens, and retrieved all their morphological analyser by the Apertium morphological transducer ---or by the Giellatekno
 morphological transducer when none was available from Apertium. All these analyses were then gathered in the form of a
-lexicon (indicated as ``morph.ana." in Table~\ref{tbl:lex}). In a second step, we converted all lexicons obtained using
-manually crafted rules, so that each lexical entry contains a (inflected) wordform, a lemma, a PoS from the Universal
-PoS tagset,\footnote{http://universaldependencies.org/u/pos/all.html} and a set of attribute-value pairs from the
-Universal Features.\footnote{http://universaldependencies.org/u/feat/all.html} We then created two variants of the
-lexicons obtained: a {\em full} variant in which labels are universal PoS, and a {\em coarse} variant in which labels
-are the concatenation of the universal PoS and morphological feature-value pairs.
+lexicon. In a second step, we converted all lexicons obtained using manually crafted rules, so that each lexical entry
+contains a (inflected) wordform, a lemma, a PoS from the Universal PoS
+tagset,\footnote{http://universaldependencies.org/u/pos/all.html} and a set of attribute-value pairs from the Universal
+Features.\footnote{http://universaldependencies.org/u/feat/all.html} We then created two variants of the lexicons
+obtained: a {\em full} variant in which labels are universal PoS, and a {\em coarse} variant in which labels are the
+concatenation of the universal PoS and morphological feature-value pairs.
 
-Other lexical resources served as our second source of lexical information. For space reasons, we are not able to
-describe here the language-specific transformations we applied to some of these lexicons. See Table~\ref{tbl:lex} and
-its caption for more information.
+We also took advantage of other existing lexicons. For space reasons, we are not able to describe here the language-specific
+transformations we applied to some of these lexicons. See Table~\ref{tbl:lex} and its caption for more information.
 
 
 Finally, whenever available and following \citet{plank16}, we performed experiments using Polyglot pre-computed
@@ -307,9 +306,13 @@ zh & Apertium & 8 & 13 & 34 & 0.16 & no \\
 \end{tabular}
 \caption{Dataset information. Best per-language lexicon along with its size, number of tags and coverage (``cov.'') over the UD1.3
   corpus. ``MA'' stands for morphological-analyser-based lexicon (see text). Lexicons based on Apertium and Giellatekno
-  lexicons or morphological analysers are in their {\em coarse} version unless {\em full} is indicated. We also provide the type-token ratio of the 
+  lexicons or morphological analysers are in their {\em coarse} version unless {\em full} is indicated. Other lexicons
+  have been adapted from available resources.\footnotemark
+  We also provide the type-token ratio of the 
   corpus (TTR) and whether there were available polyglot embeddings (PG) to initialize $\vec{w}$.}\label{tbl:lex}
 \end{table}
+
+\footnotetext{\citealp{bouma00,oliver04,heslin07,borin08,molinero09,sagot10lefff,erjavec10,sagot10perlex,mechura14,sagot14delex}.}
 
 \section{Experimental setup}
 
@@ -385,10 +388,9 @@ character-based embeddings and standard (zero) initialisation of word embeddings
 character-based embeddings and standard initialisation of word embeddings, and (iii)~when Polyglot embeddings are
 available for the language at hand, a variant with character-based embeddings and initialisation of the word embeddings
 with the Polyglot embeddings. This is deliberately similar to \citeauthor{plank16}'s (\citeyear{plank16}) experimental
-setup, in order to facilitate the comparison of results.
-
-Note that we discarded alternative UD 1.3 corpora (e.g.~{\tt nl\_lassysmall} as opposed to {\tt nl}), as well as
-corpora for languages for which we had neither a lexicon nor Polyglot embeddings (Old Church Slavonic, Hungarian, Gothic and Tamil).
+setup, in order to facilitate the comparison of results.\footnote{Note that we discarded alternative UD 1.3 corpora
+  (e.g.~{\tt nl\_lassysmall} vs.~{\tt nl}), as well as corpora for languages for which we had neither a
+  lexicon nor Polyglot embeddings (Old Church Slavonic, Hungarian, Gothic, Tamil).}
 
 
 \section{Results and discussion}
