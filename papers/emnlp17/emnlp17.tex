@@ -403,6 +403,15 @@ setup, in order to facilitate the comparison of results.\footnote{Note that we d
 
 \section{Results and discussion}
 
+Our results show that using lexical information as an additional input layer to a bi-LSTM PoS tagging architecture
+results in consistent improvements over 35 corpora for as many languages. The improvement is observed on all
+configurations on almost all corpora. Greatest improvements are obtained when character-based embeddings are not
+used. This confirms our expectations that both lexical information and character-based embeddings capture morphological
+information and are particularly helpful at tagging unknown words ---although for space reasons, we could not provide a
+detailed analysis of tagging accuracy on unknown words. Yet, improvements are also observed when character-based
+embeddings are included, and even when pre-computed word embeddings are used for initialisation. This shows that the
+morphosyntactic information provided by the lexicon is a useful addition to the other information sources.
+
 In terms of choice of best lexicon, there is a clear tendency for lexicons with a small number of tags, arguably because
 the information is more similar to the 17-tag inventory of UPOS, but also because larger sets are bound to be sparser
 and less useful as additional information.
