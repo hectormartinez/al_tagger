@@ -250,7 +250,7 @@ grc  & Diogenes & 1,314 & 18 & 46 & 0.20 &no\\
 he & Apertium & 268 & 16 & 71 & 0.12 & yes\\
 hi & Apertium & 159 & 14 & 83 & 0.05 & yes\\
 hr  & HML   & 1,361 & 22 & 85 & 0.21 & yes \\
-hu & GillateknoMA & 3 & 3 & 1 & 0.33 &no \\
+%hu & GillateknoMA & 3 & 3 & 1 & 0.33 &no \\
 id & Apertium\textsubscript{full}& 12 & 38 &61 &0.18 & no   \\
 it & Apertium & 278 &14 & 78 & 0.10 & yes\\
 kk & ApertiumMA& 434 & 16 &  79 & 0.48 & no\\
@@ -313,44 +313,7 @@ zh & Apertium & 8 & 13 & 34 & 0.16 & no \\
 
 \subsection{Experimental setup}
 
-We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
-available\footnote{https://github.com/bplank/bilstm-aux} and ``significantly refactored version of the code
-originally used in'' \cite{plank16}. We use its standard configuration, with only one bi-LSTM layer.
-
-We extended \texttt{bilty} for enabling integration of lexical morphosyntactic information, in the way described in the
-previous section.\footnote{We also performed experiments in which the mapping between words and lexical labels was not
-  fixed, but was initialised using the lexical information and then updated during training, as for a standard embedding
-  layer. This resulted in slightly better accuracy scores, but also in a massively increased memory usage, to the extent
-  that it was not intractable in practice for most languages. We therefore decided to stick to a fixed
-  word-to-set-of-lexical-labels mapping.}
-
-For each lexicon-related configuration, we trained three variants of the tagger: (i)~a variant without using
-character-based embeddings and standard (zero) initialisation of word embeddings before training, (ii)~a variant with
-character-based embeddings and standard initialisation of word embeddings, and (iii)~when Polyglot embeddings are
-available for the language at hand, a variant with character-based embeddings and initialisation of the word embeddings
-with the Polyglot embeddings. This is deliberately similar to \citeauthor{plank16}'s (\citeyear{plank16}) experimental
-setup, in order to facilitate the comparison of results.
-
-Note that we discarded alternative UD 1.3 corpora (e.g., {\tt nl\_lassysmall} as opposed to {\tt nl}), as well as
-corpora for languages for which we had neither a lexicon nor Polyglot embeddings (Old Church Slavonic, Gothic and Tamil).
-
-
-\section{Results and discussion}
-
-For each language, there are as many as twelve variants of the tagger to compare. These variants are defined by the presents of character embeddings, the usage of pretrained word embeddings, or the usage of a lexicon, be it \textsc{Lex}, \textsc{Lex2} or \textsc{Lexcoarse}. For ease of comparison, we provide a summarized overview in Table \ref{tbl:results}, where the baseline system without lexicon with the best per-language system that uses a lexicon and maybe pre-trained embeddings. We determine the per-language best lexicon system on the development set.
-
-In terms of choice of best lexicon, there is a clear tendency for lexicons with a small number of tags, arguably because the information is more similar to the 17-tag inventory of UPOS, but also because larger sets are bound to be sparser and less useful as additional information.
-
-In absence of character and word embeddings, using a lexicon improves the prediction quality of almost all datasets, except 2; Basque and Estonian, which have very high type-token ratios (0.23 compared to 0.09 for English).
-
-The improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}$ + $\vec{c}$ setup, the three languages with the highest improvements when using a lexicon are exactly the ones with smallest datasets.
-
-While lexicon coverage is important, the best lexicon for a language is not always the one with the highest coverage, e.g. an alternative lexicon for Italian had a coverage of 90\% instead of 78\%. We attribute this variation to properties of the tagset but also properties of which words are indeed covered by the lexicon.
-
-Further work includes using lexicons to tag finer-grained tag inventories, as well as a more thorough analysis on the relation between lexicon and training data properties, including the perplexity of the character language model.
-%}
-
-\begin{table*}
+\begin{table*}[t]
 \centering\scriptsize
 \begin{tabular}{l|rrr|rrr|rrr}
 \toprule
@@ -378,7 +341,6 @@ Ancient Greek (grc) & 88.69 & 94.40 & --- & 89.76 & 93.75 & --- & +1.07 & -0.65 
 Hebrew (he) & 92.82 & 95.05 & 96.57 & 94.11 & 95.53 & 96.76 & +1.29 & +0.48 & +0.19\\
 Hindi (hi) & 95.55 & 96.22 & 95.93 & 96.22 & 96.50 & 96.95 & +0.67 & +0.28 & +1.02\\
 Croatian (hr) & 86.62 & 95.01 & 95.93 & 93.53 & 96.29 & 96.34 & +6.91 & +1.28 & +0.41\\
-Hungarian (hu) & 78.87 & 94.17 & --- & 80.09 & 94.29 & --- & +1.23 & +0.12 & ---\\
 Indonesian (id) & 89.07 & 92.78 & 93.27 & 91.17 & 92.79 & 92.89 & +2.11 & +0.02 & --0.38\\
 Italian (it) & 95.29 & 97.48 & 97.77 & 97.54 & 97.81 & 97.88 & +2.26 & +0.33 & +0.11\\
 Kazakh (kk) & 72.74 & 76.32 & --- & 82.28 & 82.79 & --- & +9.54 & +6.47 & ---\\
@@ -395,11 +357,48 @@ Swedish (sv) & 92.06 & 96.26 & 96.56 & 95.61 & 97.03 & 97.00 & +3.55 & +0.77 & +
 Turkish (tr) & 87.02 & 93.98 & --- & 90.03 & 93.90 & --- & +3.01 & --0.08 & ---\\
 Chinese (zh) & 89.17 & 92.99 & --- & 89.29 & 93.04 & --- & +0.12 & +0.05 & ---\\
 \midrule
-Macro-avg. & 89.70 & 94.59 & --- & 92.27 & 95.09 & --- & +2.55 & +0.56 & ---\\
-Macro-avg.~w/embed & 91.43 & 95.52 & 95.77 & 93.55 & 95.80 & 95.98 & +2.09 & +0.38 & +0.21\\
+Macro-avg. & 90.01 & 94.61 & --- & 92.60 & 95.18 & --- & +2.59 & +0.57 & ---\\
+Macro-avg.~w/embed & 91.43 & 95.52 & 95.77 & 93.52 & 95.91 & 95.98 & +2.09 & +0.38 & +0.21\\
 \end{tabular}
 \caption{XXX}\label{tbl:results}
 \end{table*}
+
+We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
+available\footnote{https://github.com/bplank/bilstm-aux} and ``significantly refactored version of the code
+originally used in'' \cite{plank16}. We use its standard configuration, with only one bi-LSTM layer.
+
+We extended \texttt{bilty} for enabling integration of lexical morphosyntactic information, in the way described in the
+previous section.\footnote{We also performed experiments in which the mapping between words and lexical labels was not
+  fixed, but was initialised using the lexical information and then updated during training, as for a standard embedding
+  layer. This resulted in slightly better accuracy scores, but also in a massively increased memory usage, to the extent
+  that it was not intractable in practice for most languages. We therefore decided to stick to a fixed
+  word-to-set-of-lexical-labels mapping.}
+
+For each lexicon-related configuration, we trained three variants of the tagger: (i)~a variant without using
+character-based embeddings and standard (zero) initialisation of word embeddings before training, (ii)~a variant with
+character-based embeddings and standard initialisation of word embeddings, and (iii)~when Polyglot embeddings are
+available for the language at hand, a variant with character-based embeddings and initialisation of the word embeddings
+with the Polyglot embeddings. This is deliberately similar to \citeauthor{plank16}'s (\citeyear{plank16}) experimental
+setup, in order to facilitate the comparison of results.
+
+Note that we discarded alternative UD 1.3 corpora (e.g., {\tt nl\_lassysmall} as opposed to {\tt nl}), as well as
+corpora for languages for which we had neither a lexicon nor Polyglot embeddings (Old Church Slavonic, Hungarian, Gothic and Tamil).
+
+
+\section{Results and discussion}
+
+For each language, there are as many as twelve variants of the tagger to compare. These variants are defined by the presents of character embeddings, the usage of pretrained word embeddings, or the usage of a lexicon, be it \textsc{Lex}, \textsc{Lex2} or \textsc{Lexcoarse}. For ease of comparison, we provide a summarized overview in Table \ref{tbl:results}, where the baseline system without lexicon with the best per-language system that uses a lexicon and maybe pre-trained embeddings. We determine the per-language best lexicon system on the development set.
+
+In terms of choice of best lexicon, there is a clear tendency for lexicons with a small number of tags, arguably because the information is more similar to the 17-tag inventory of UPOS, but also because larger sets are bound to be sparser and less useful as additional information.
+
+In absence of character and word embeddings, using a lexicon improves the prediction quality of almost all datasets, except 2; Basque and Estonian, which have very high type-token ratios (0.23 compared to 0.09 for English).
+
+The improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}$ + $\vec{c}$ setup, the three languages with the highest improvements when using a lexicon are exactly the ones with smallest datasets.
+
+While lexicon coverage is important, the best lexicon for a language is not always the one with the highest coverage, e.g. an alternative lexicon for Italian had a coverage of 90\% instead of 78\%. We attribute this variation to properties of the tagset but also properties of which words are indeed covered by the lexicon.
+
+Further work includes using lexicons to tag finer-grained tag inventories, as well as a more thorough analysis on the relation between lexicon and training data properties, including the perplexity of the character language model.
+%}
 
 %\section*{Acknowledgments}
 
