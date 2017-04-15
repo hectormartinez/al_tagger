@@ -222,53 +222,93 @@ embeddings \cite{alrfou13}. Languages for which Polyglot embeddings are availabl
 %\caption{Information about lexical informations used in this paper.}\label{tbl:lex}
 %\end{table*}
 
-\begin{table}
+\begin{table}[t]
 \centering
 \scriptsize
 \begin{tabular}{llrrr|rr}
 \toprule
- & Name & \#entries & \#tags  & coverage & TTR & PG \\
+ & Name & \#entries & \#tags  & cov.& TTR & PG \\
+ &  & ($\times 10^3$) &   & (\%)&  &  \\
 \midrule 
-ar &   Apertium\textsubscript{coarse} & 651k & 15 & 45.88\% &0.09& yes \\
-bg & MULTEXT-East & 53k &12 & 67.59\% & 0.18 & yes \\
-ca &  Apertium\textsubscript{coarse} & 379k & 13 & 80.06\% & 0.06 & yes \\
-cs &  Apertium\textsubscript{coarse} & 1,875k & 15  & 0.10 & yes \\
-da & Apertium\textsubscript{coarse} & 683k & 15 & 71.93\% & 0.19 & yes \\
-de & DeLex & 465k & 52 & 78.78\% & 0.18 &yes\\
-el & Apertium\textsubscript{coarse} & 47k & 12 & 48.22\% & 0.20 & yes \\
-en & Apertium\textsubscript{coarse} & 127k & 12 & 77.61\% & 0.09& yes \\
-es & Le{\it ff}e &  756K & 34 & 87.02\% & 0.12 &yes\\
-et & Morph\textsubscript{coarse} & 44k & 12 & 51.55\% & 0.23 & yes \\
-eu & Apertium\textsubscript{full} & 53k &  14 & 42.14\% & 0.22 &  yes \\
-fa  & PerLex &  512k & 37 & 69.41\% & 0.10 & yes\\
-fi & Morph\textsubscript{coarse} & 228k & 13 & 53.54\% & 0.29 & yes \\
-fr & Le{\it fff} & 539k & 25 & 87.59\% &0.11 &yes\\
-ga & inmdb & 114k & 32 & 34.57\% & 0.26& yes\\
-gl & Apertium\textsubscript{coarse} & 241k & 12 & 85.35\%  & 0.12 &no\\
-grc  & Diogenes & 1,314k & 18 & 45.93\% & 0.20 &no\\
-he & Apertium\textsubscript{coarse} & 268k & 16 & 71.04\% & 0.12 & yes\\
-hi & Apertium\textsubscript{coarse} & 159k & 14 & 82.87\% & 0.05 & yes\\
-hr  & HML   & 1,361k & 22 & 84.81\% & 0.21 & yes \\
-hu & Morpho\textsubscript{coarse} & 3k & 3 & 1.11\% & 0.33 &no \\
-id & Apertium\textsubscript{full }& 12k & 38 &61.37\% &0.18 & no   \\
-it & Apertium\textsubscript{coarse} & 278k &14 & 78.37\% & 0.10 & yes\\
-kk & Morph\textsubscript{coarse}& 434k & 16 &  79.06\% & 0.48 & no\\
-la  & Diogenes & 562k & 16 & 83.25\% & 0.31 &no\\
-lv & Apertium\textsubscript{coarse} & 314k & 14  & 58.05\%  & 0.33& no \\
-nl &  Alpino lexicon  & 81k & 65 & 76.80\% & 0.14&yes\\
-no & Apertium\textsubscript{coarse} & 2,470k & 13 & 66.16\% & 0.11 & yes\\
-pl & Apertium\textsubscript{coarse} & 1,316k &  15 & 61.30\% & 0.31 & yes\\
-pt & Apertium\textsubscript{coarse} & 159k & 155 & 71.63\% & 0.13 & yes\\
-ro &  MULTEXT-East  & 378k & 14 & 66.46\% & 0.18 & no \\
-ru & Apertium\textsubscript{coarse} & 4,401k &16& 60.85\% & 0.32 & 16  \\
-sl & Apertium\textsubscript{coarse} & 654k & 14 & 70.00\% & 0.24 &yes\\
-sv & Saldo & 1,215k & 214 & 88.33\% & 0.17 & yes\\
-tr & Morphp\textsubscript{coarse} & 417k & 14 & 73.60\% & 0.32  &no \\
-zh & Apertium\textsubscript{coarse} & 8k & 13 & 33.91\% & 0.16 & no \\
+ar &   Apertium & 651 & 15 & 46 &0.09& yes \\
+bg & Multext-East & 53 &12 & 68 & 0.18 & yes \\
+ca &  Apertium & 379 & 13 & 80 & 0.06 & yes \\
+cs &  Apertium & 1,875 & 15 & 68 & 0.10 & yes \\
+da & Apertium & 683 & 15 & 72 & 0.19 & yes \\
+de & DeLex & 465 & 52 & 79 & 0.18 &yes\\
+el & Apertium & 47 & 12 & 48 & 0.20 & yes \\
+en & Apertium & 127 & 12 & 78 & 0.09& yes \\
+es & Le{\it ff}e &  756 & 34 & 87 & 0.12 &yes\\
+et & GiellateknoMA & 44 & 12 & 52 & 0.23 & yes \\
+eu & Apertium\textsubscript{full} & 53 &  14 & 42 & 0.22 &  yes \\
+fa  & PerLex &  512 & 37 & 69 & 0.10 & yes\\
+fi & GiellateknoMA & 228 & 13 & 54 & 0.29 & yes \\
+fr & Le{\it fff} & 539 & 25 & 88 &0.11 &yes\\
+ga & inmdb & 114 & 32 & 35 & 0.26& yes\\
+gl & Apertium & 241 & 12 & 85  & 0.12 &no\\
+grc  & Diogenes & 1,314 & 18 & 46 & 0.20 &no\\
+he & Apertium & 268 & 16 & 71 & 0.12 & yes\\
+hi & Apertium & 159 & 14 & 83 & 0.05 & yes\\
+hr  & HML   & 1,361 & 22 & 85 & 0.21 & yes \\
+hu & GillateknoMA & 3 & 3 & 1 & 0.33 &no \\
+id & Apertium\textsubscript{full}& 12 & 38 &61 &0.18 & no   \\
+it & Apertium & 278 &14 & 78 & 0.10 & yes\\
+kk & ApertiumMA& 434 & 16 &  79 & 0.48 & no\\
+la  & Diogenes & 562 & 16 & 83 & 0.31 &no\\
+lv & Apertium & 314 & 14  & 58  & 0.33& no \\
+nl &  Alpino lexicon  & 81 & 65 & 77 & 0.14&yes\\
+no & Apertium & 2,470 & 13 & 66 & 0.11 & yes\\
+pl & Apertium & 1,316 &  15 & 61 & 0.31 & yes\\
+pt & Apertium & 159 & 155 & 72 & 0.13 & yes\\
+ro &  MULTEXT-East  & 378 & 14 & 66 & 0.18 & no \\
+ru & Apertium & 4,401 &16& 61 & 0.32 & 16  \\
+sl & Apertium & 654 & 14 & 70 & 0.24 &yes\\
+sv & Saldo & 1,215 & 214 & 88 & 0.17 & yes\\
+tr & ApertiumMA & 417 & 14 & 74 & 0.32  &no \\
+zh & Apertium & 8 & 13 & 34 & 0.16 & no \\
+% ar &   Apertium & 651k & 15 & 45.88\% &0.09& yes \\
+% bg & Multext-East & 53k &12 & 67.59\% & 0.18 & yes \\
+% ca &  Apertium & 379k & 13 & 80.06\% & 0.06 & yes \\
+% cs &  Apertium & 1,875k & 15  & 0.10 & yes \\
+% da & Apertium & 683k & 15 & 71.93\% & 0.19 & yes \\
+% de & DeLex & 465k & 52 & 78.78\% & 0.18 &yes\\
+% el & Apertium & 47k & 12 & 48.22\% & 0.20 & yes \\
+% en & Apertium & 127k & 12 & 77.61\% & 0.09& yes \\
+% es & Le{\it ff}e &  756K & 34 & 87.02\% & 0.12 &yes\\
+% et & GiellateknoMA & 44k & 12 & 51.55\% & 0.23 & yes \\
+% eu & Apertium\textsubscript{full} & 53k &  14 & 42.14\% & 0.22 &  yes \\
+% fa  & PerLex &  512k & 37 & 69.41\% & 0.10 & yes\\
+% fi & GiellateknoMA & 228k & 13 & 53.54\% & 0.29 & yes \\
+% fr & Le{\it fff} & 539k & 25 & 87.59\% &0.11 &yes\\
+% ga & inmdb & 114k & 32 & 34.57\% & 0.26& yes\\
+% gl & Apertium & 241k & 12 & 85.35\%  & 0.12 &no\\
+% grc  & Diogenes & 1,314k & 18 & 45.93\% & 0.20 &no\\
+% he & Apertium & 268k & 16 & 71.04\% & 0.12 & yes\\
+% hi & Apertium & 159k & 14 & 82.87\% & 0.05 & yes\\
+% hr  & HML   & 1,361k & 22 & 84.81\% & 0.21 & yes \\
+% hu & GillateknoMA & 3k & 3 & 1.11\% & 0.33 &no \\
+% id & Apertium\textsubscript{full}& 12k & 38 &61.37\% &0.18 & no   \\
+% it & Apertium & 278k &14 & 78.37\% & 0.10 & yes\\
+% kk & ApertiumMA& 434k & 16 &  79.06\% & 0.48 & no\\
+% la  & Diogenes & 562k & 16 & 83.25\% & 0.31 &no\\
+% lv & Apertium & 314k & 14  & 58.05\%  & 0.33& no \\
+% nl &  Alpino lexicon  & 81k & 65 & 76.80\% & 0.14&yes\\
+% no & Apertium & 2,470k & 13 & 66.16\% & 0.11 & yes\\
+% pl & Apertium & 1,316k &  15 & 61.30\% & 0.31 & yes\\
+% pt & Apertium & 159k & 155 & 71.63\% & 0.13 & yes\\
+% ro &  MULTEXT-East  & 378k & 14 & 66.46\% & 0.18 & no \\
+% ru & Apertium & 4,401k &16& 60.85\% & 0.32 & 16  \\
+% sl & Apertium & 654k & 14 & 70.00\% & 0.24 &yes\\
+% sv & Saldo & 1,215k & 214 & 88.33\% & 0.17 & yes\\
+% tr & ApertiumMA & 417k & 14 & 73.60\% & 0.32  &no \\
+% zh & Apertium & 8k & 13 & 33.91\% & 0.16 & no \\
 
 \bottomrule
 \end{tabular}
-\caption{Dataset information. Best per-language lexicon along with its size, number of tags and coverage over the UD1.3 corpus. We also provide the type-token ratio of the corpus (TTR) and whether there were available polyglot embeddings (PG) to initialize $\vec{w}$.}\label{tbl:lex}
+\caption{Dataset information. Best per-language lexicon along with its size, number of tags and coverage (``cov.'') over the UD1.3
+  corpus. ``MA'' stands for morphological-analyser-based lexicon (see text). Lexicons based on Apertium and Giellatekno
+  lexicons or morphological analysers are in their {\em coarse} version unless {\em full} is indicated. We also provide the type-token ratio of the 
+  corpus (TTR) and whether there were available polyglot embeddings (PG) to initialize $\vec{w}$.}\label{tbl:lex}
 \end{table}
 
 \subsection{Experimental setup}
