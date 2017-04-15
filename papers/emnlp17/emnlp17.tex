@@ -269,7 +269,7 @@ zh & Apertium\textsubscript{coarse} & 8k & 13 & 33.91\% & 0.16 & no \\
 
 \bottomrule
 \end{tabular}
-\caption{Dataset information. Best lexicon for its language along with its size, number of tags and coverage over the UD1.3 data. We also provide the}\label{tbl:lex}
+\caption{Dataset information. Best per-language lexicon along with its size, number of tags and coverage over the UD1.3 corpus. We also provide the type-token ratio of the corpus (TTR) and whether there were available polyglot embeddings (PG) to initialize $\vec{w}$.}\label{tbl:lex}
 \end{table}
 
 \subsection{Experimental setup}
@@ -299,6 +299,8 @@ corpora for languages for which we had neither a lexicon nor Polyglot embeddings
 \section{Results and discussion}
 
 For each language, there are as many as twelve variants of the tagger to compare. These variants are defined by the presents of character embeddings, the usage of pretrained word embeddings, or the usage of a lexicon, be it \textsc{Lex}, \textsc{Lex2} or \textsc{Lexcoarse}. For ease of comparison, we provide a summarized overview in Table \ref{tbl:results}, where the baseline system without lexicon with the best per-language system that uses a lexicon and maybe pre-trained embeddings. We determine the per-language best lexicon system on the development set.
+
+In terms of choice of best lexicon, there is a clear tendency for lexicons with a small number of tags, arguably because the information is more similar to the 17-tag inventory of UPOS, but also because larger sets are bound to be sparser and less useful as additional information.
 
 In absence of character and word embeddings, using a lexicon improves the prediction quality of almost all datasets, except 2; Basque and Estonian, which have very high type-token ratios (0.23 compared to 0.09 for English).
 
