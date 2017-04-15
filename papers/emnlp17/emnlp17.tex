@@ -146,9 +146,9 @@ at the time of the submission, we performed our experiments on a previous versio
 precisely, in order to facilitate comparison with \citeauthor{plank16}'s (\citeyear{plank16}), we performed all
 experiments on the version 1.3 of UD \cite{ud13}.
 
-In our experiments, we have used two types of lexical information sources, thus creating one to three lexicons for each
-language, in the way sketched below. Tagging accuracy results on the development sets were used to select the best
-performing lexicon for each language. In the remained or this paper, quantitative information about the lexicons we used
+In our experiments, we have used two types of lexical information sources, thereby obtaining one to three lexicons for each
+language, in the way sketched below. We determine the best best
+performing lexicon for each language on the development set based on tagging accuracy. In the remainder of this paper, all information about the lexicons
 (Table~\ref{tbl:lex}) and accuracy results are restricted to these best performing lexicons.
 
 The sources of lexical information we used are twofold. The first one is the
@@ -389,7 +389,7 @@ corpora for languages for which we had neither a lexicon nor Polyglot embeddings
 
 For each language, there are as many as twelve variants of the tagger to compare. These variants are defined by the
 presents of character embeddings, the usage of pretrained word embeddings, or the usage of a lexicon, be it
-\textsc{Lex}, \textsc{Lex2} or \textsc{Lexcoarse}. For ease of comparison, we provide a summarized overview in Table
+\textsc{Lex}, \textsc{Lex2} or \textsc{Lexcoarse}. For ease of comparison, we provide an overview in Table
 \ref{tbl:results}, where the baseline system without lexicon with the best per-language system that uses a lexicon and
 maybe pre-trained embeddings. We determine the per-language best lexicon system on the development set.
 
@@ -398,9 +398,7 @@ the information is more similar to the 17-tag inventory of UPOS, but also becaus
 and less useful as additional information.
 
 In absence of character and word embeddings, using a lexicon improves the prediction quality of almost all datasets,
-except 2; Basque and Estonian, which have very high type-token ratios (0.23 compared to 0.09 for English).
-
-The improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}$ + $\vec{c}$ setup, the
+except two; Basque and Estonian, which have very high type-token ratios (0.23 compared to 0.09 for English). The improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}$ + $\vec{c}$ setup, the
 three languages with the highest improvements when using a lexicon are exactly the ones with smallest datasets.
 
 While lexicon coverage is important, the best lexicon for a language is not always the one with the highest coverage,
