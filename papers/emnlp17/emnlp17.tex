@@ -126,7 +126,7 @@ concatenation serves as an input to the bi-LSTM layer.
 We do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s
 (\citeyear{plank16}), and we use a single bi-LSTM layer instead of multi-layer stacking. While such systems can
 improve the overall results,\footnote{Note however that \citeauthor{plank16}'s (\citeyear{plank16})
-    secondary task ---predicting the frequency class of each word--- results in better OOV scores but virtually identical
+    secondary task---predicting the frequency class of each word---results in better OOV scores but virtually identical
     overall scores when averaged over all tested languages/corpora.} our goal is to clearly assess the relative
 contribution of information provided by an external morphosyntactic lexicon in contrast to word and character embeddings
 on an already very competitive single-layer baseline.
@@ -164,7 +164,7 @@ Apertium\footnote{https://svn.code.sf.net/p/apertium/svn/languages} and the
 Giellatekno\footnote{https://victorio.uit.no/langtech/trunk/langs} projects. For languages for which an Apertium
 morphological lexicon is available, this lexicon was used. For other languages, we downloaded from the OPUS corpus
 collection the corresponding monolingual part of OpenSubtitles2016, tokenised it, extracted the 1 million most frequent
-tokens, and retrieved all their morphological analyser by the Apertium morphological transducer ---or by the Giellatekno
+tokens, and retrieved all their morphological analyser by the Apertium morphological transducer---or by the Giellatekno
 morphological transducer when none was available from Apertium. All these analyses were then gathered in the form of a
 lexicon. In a second step, we converted all lexicons obtained using manually crafted rules, so that each lexical entry
 contains a (inflected) wordform, a lemma, a PoS from the Universal PoS
@@ -406,12 +406,12 @@ setup, in order to facilitate the comparison of results.\footnote{Note that we d
 Our results show that using lexical information as an additional input layer to a bi-LSTM PoS tagger results in
 consistent improvements over 35 corpora. The improvement holds for all configurations on almost all corpora. Greatest
 improvements are obtained without character embeddings. This confirms our expectations that both lexical information and
-character embeddings capture morphological information and are particularly helpful at tagging unknown words ---a
-detailed analysis of tagging accuracy on unknown words will be provided in the final version of this paper. Yet,
-improvements are also observed with character embeddings, and even when initialising with pre-computed word
-embeddings. This shows that the morphosyntactic information in the lexicon is a useful addition to the other information
-sources. The improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}+\vec{c}$ setup,
-the three languages with the highest improvements when using a lexicon are exactly the ones with smallest datasets.
+character embeddings capture morphological information and help tagging unknown words---a detailed analysis of tagging
+accuracy on unknown words will be provided in the final version of this paper. Yet improvements are also observed with
+character embeddings, and even when initialising with pre-computed word embeddings. This shows that the morphosyntactic
+information in the lexicon is a useful addition to the other information sources. The improvements are particularly
+important for the smaller datasets. Indeed, in the $\vec{w}+\vec{c}$ setup, the three languages with the highest
+improvements when using a lexicon are exactly the ones with smallest datasets.
 
 Best performing lexicons often have a reduced tagset. It could be that fine-grained distinctions are
 made using characters embeddings, whereas lexical information is useful for disambiguating between coarse-grained
