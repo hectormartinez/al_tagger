@@ -410,15 +410,14 @@ used. This confirms our expectations that both lexical information and character
 information and are particularly helpful at tagging unknown words ---although for space reasons, we could not provide a
 detailed analysis of tagging accuracy on unknown words. Yet, improvements are also observed when character-based
 embeddings are included, and even when pre-computed word embeddings are used for initialisation. This shows that the
-morphosyntactic information provided by the lexicon is a useful addition to the other information sources.
+morphosyntactic information provided by the lexicon is a useful addition to the other information sources. The
+improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}+\vec{c}$ setup, the three
+languages with the highest improvements when using a lexicon are exactly the ones with smallest datasets.
 
 In terms of choice of best lexicon, there is a clear tendency for lexicons with a small number of tags, arguably because
 the information is more similar to the 17-tag inventory of UPOS, but also because larger sets are bound to be sparser
 and less useful as additional information.
 
-In absence of character and word embeddings, using a lexicon improves the prediction quality of almost all datasets,
-except two; Basque and Estonian, which have very high type-token ratios (0.23 compared to 0.09 for English). The improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}$ + $\vec{c}$ setup, the
-three languages with the highest improvements when using a lexicon are exactly the ones with smallest datasets.
 
 While lexicon coverage is important, the best lexicon for a language is not always the one with the highest coverage,
 e.g.~an alternative lexicon for Italian had a coverage of 90\% instead of 78\%. We attribute this variation to
