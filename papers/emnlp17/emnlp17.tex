@@ -126,15 +126,15 @@ layers, namely the word embedding $\vec{w}$ and (if enabled) the character-based
 concatenation serves as an input to the bi-LSTM layer.
 
 \begin{figure}
-\includegraphics[width=\columnwidth]{emnlp17schemaB}
+\includegraphics[width=\columnwidth]{emnlp17schemaB2}
 %\caption{Schematic representation of the architecture of (a)~\citeauthor{plank16}'s (\citeyear{plank16}) bi-LSTM tagger,
 %and (b)~our extension thereof for integrating external morphosyntactic lexical information. Each of these two schemas
 %concerns a single word. Connections of the word-level LSTM cells to their counterparts for the preceeding and
 %following word are represented with grey arrows.}\label{fig:schema}
 \caption{Schematic representation of the architecture of our extension of \citeauthor{plank16}'s (\citeyear{plank16})
   bi-LSTM tagging architecture for integrating external morphosyntactic lexical information. This schema concerns a
-  single word. Connections of the word-level LSTM cell to its counterparts for the preceeding and following word are
-  represented with grey arrows.}\label{fig:schema}
+  single word, here ``this.'' Connections of the word-level LSTM cell to its counterparts for the preceeding and
+  following word are represented with grey arrows.}\label{fig:schema}
 \end{figure}
 
 \section{Experiments}
@@ -151,28 +151,27 @@ language, in the way sketched below. Tagging accuracy results on the development
 performing lexicon for each language. In the remained or this paper, quantitative information about the lexicons we used
 (Table~\ref{tbl:lex}) and accuracy results are restricted to these best performing lexicons.
 
-The sources of lexical information we used are twofold:
-\begin{itemize}
-\item Lexical information extracted from freely available morphological lexicons or analysers developed for the
-  Apertium\footnote{\url{https://svn.code.sf.net/p/apertium/svn/languages}} and the
-  Giellatekno\footnote{\url{https://victorio.uit.no/langtech/trunk/langs}} projects. For languages for which an Apertium
-  morphological lexicon is available, this lexicon was used. For other languages, we downloaded from the OPUS corpus
-  collection the corresponding monolingual part of OpenSubtitles2016, tokenised it, extracted the 1 million most
-  frequent tokens, and retrieved all their morphological analyser by the Apertium morphological transducer ---or by the
-  Giellatekno morphological transducer when none was available from Apertium. All these analyses were then gathered in
-  the form of a lexicon (indicated as ``morph.ana." in Table~\ref{tbl:lex}). In a second step, we converted all lexicons
-  obtained using manually crafted rules, so that each lexical entry contains a (inflected) wordform, a lemma, a PoS from
-  the Universal PoS tagset,\footnote{\url{http://universaldependencies.org/u/pos/all.html}} and a set of attribute-value
-  pairs from the Universal Features.\footnote{\url{http://universaldependencies.org/u/feat/all.html}} We then created
-  two variants of the lexicons obtained: a {\em full} variant in which labels are universal PoS, and a {\em coarse}
-  variant in which labels are the concatenation of the universal PoS and morphological feature-value pairs.
-\item Lexicons developed independently of Apertium and Giellatekno. For space reasons, we are not able to describe here
-  the language-specific transformations we applied to some of these lexicons. References are given in the caption of
-  Table~\ref{tbl:lex}.
-\end{itemize}
+The sources of lexical information we used are twofold. The first one is the
+Apertium\footnote{https://svn.code.sf.net/p/apertium/svn/languages} and the
+Giellatekno\footnote{https://victorio.uit.no/langtech/trunk/langs} projects. For languages for which an Apertium
+morphological lexicon is available, this lexicon was used. For other languages, we downloaded from the OPUS corpus
+collection the corresponding monolingual part of OpenSubtitles2016, tokenised it, extracted the 1 million most frequent
+tokens, and retrieved all their morphological analyser by the Apertium morphological transducer ---or by the Giellatekno
+morphological transducer when none was available from Apertium. All these analyses were then gathered in the form of a
+lexicon (indicated as ``morph.ana." in Table~\ref{tbl:lex}). In a second step, we converted all lexicons obtained using
+manually crafted rules, so that each lexical entry contains a (inflected) wordform, a lemma, a PoS from the Universal
+PoS tagset,\footnote{http://universaldependencies.org/u/pos/all.html} and a set of attribute-value pairs from the
+Universal Features.\footnote{http://universaldependencies.org/u/feat/all.html} We then created two variants of the
+lexicons obtained: a {\em full} variant in which labels are universal PoS, and a {\em coarse} variant in which labels
+are the concatenation of the universal PoS and morphological feature-value pairs.
+
+Other lexical resources served as our second source of lexical information. For space reasons, we are not able to
+describe here the language-specific transformations we applied to some of these lexicons. See Table~\ref{tbl:lex} and
+its caption for more information.
+
 
 Finally, whenever available and following \citet{plank16}, we performed experiments using Polyglot pre-computed
-embeddings published by \citet{alrfou13}. Languages for which Polyglot embeddings are available are indicated in Table~\ref{tbl:lex}.
+embeddings \cite{alrfou13}. Languages for which Polyglot embeddings are available are indicated in Table~\ref{tbl:lex}.
 
 %\begin{table*}
 %\centering
@@ -275,15 +274,15 @@ zh & Apertium\textsubscript{coarse} & 8k & 13 & 33.91\% & 0.16 & no \\
 \subsection{Experimental setup}
 
 We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
-available\footnote{\url{https://github.com/bplank/bilstm-aux}} and ``significantly refactored version of the code
+available\footnote{https://github.com/bplank/bilstm-aux} and ``significantly refactored version of the code
 originally used in'' \cite{plank16}. We use its standard configuration, with only one bi-LSTM layer.
 
 We extended \texttt{bilty} for enabling integration of lexical morphosyntactic information, in the way described in the
-previous section.\footnote{We also performed alternative experiments in which the word-to-set-of-lexical-labels mapping
-  was not fixed, but was initialised using the lexical information and then updated in the same way as a standard
-  embedding layer. This resulted in slightly better accuracy scores, but also in a massively increased memory
-  usage. Because such a setting is therefore not tractable in practice for most language and most users, we decided to
-  stick to a fixed word-to-set-of-lexical-labels mapping.}
+previous section.\footnote{We also performed experiments in which the mapping between words and lexical labels was not
+  fixed, but was initialised using the lexical information and then updated during training, as for a standard embedding
+  layer. This resulted in slightly better accuracy scores, but also in a massively increased memory usage, to the extent
+  that it was not intractable in practice for most languages. We therefore decided to stick to a fixed
+  word-to-set-of-lexical-labels mapping.}
 
 For each lexicon-related configuration, we trained three variants of the tagger: (i)~a variant without using
 character-based embeddings and standard (zero) initialisation of word embeddings before training, (ii)~a variant with
@@ -316,13 +315,13 @@ Further work includes using lexicons to tag finer-grained tag inventories, as we
 \begin{tabular}{l|rrr|rrr|rrr}
 \toprule
 Language & \multicolumn{3}{c}{Baseline} & \multicolumn{3}{c}{With best lexicon} & \multicolumn{3}{c}{Gain when using} \\
- & \multicolumn{3}{c}{(no lexicon)} & \multicolumn{3}{c}{(selected on dev)} & \multicolumn{3}{c}{best lexicon} \\
+ & \multicolumn{3}{c}{(no lexicon)} & \multicolumn{3}{c}{(selected on dev, cf.~Tab.~\ref{tbl:lex})} & \multicolumn{3}{c}{best lexicon} \\
  & \multicolumn{1}{c}{$\vec{w}$} & \multicolumn{1}{c}{$\vec{w}+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}_P+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}$} & \multicolumn{1}{c}{$\vec{w}+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}_P+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}$} & \multicolumn{1}{c}{$\vec{w}+\vec{c}$} & \multicolumn{1}{c}{$\vec{w}_P+\vec{c}$} \\
 \midrule
 Arabic (ar) & 93.90 & 95.99 & 96.20 & 94.58 & 96.05 & 96.22 & +0.68 & +0.06 & +0.02\\
 Bulgarian (bg) & 94.50 & 98.11 & 97.62 & 96.29 & 98.30 & 97.86 & +1.79 & +0.18 & +0.24\\
 Catalan (ca) & 96.14 & 98.03 & 98.17 & 97.58 & 98.21 & 98.26 & +1.44 & +0.18 & +0.09\\
-Czech (cs) & 95.93 & 98.03 & 98.10 & 97.47 & 98.60 & 98.52 & +1.54 & +0.57 & +0.42\\
+Czech (cs) & 95.93 & 98.03 & 98.10 & 96.74 & 98.46 & 98.41 & +0.81 & +0.43 & +0.31\\
 Danish (da) & 90.16 & 95.41 & 95.62 & 94.20 & 96.24 & 96.14 & +4.04 & +0.83 & +0.53\\
 German (de) & 87.94 & 92.64 & 92.96 & 91.52 & 93.08 & 93.18 & +3.58 & +0.44 & +0.23\\
 Greek (el) & 95.62 & 97.76 & 98.22 & 96.03 & 97.67 & 98.17 & +0.41 & --0.09 & --0.05\\
@@ -356,8 +355,8 @@ Swedish (sv) & 92.06 & 96.26 & 96.56 & 95.61 & 97.03 & 97.00 & +3.55 & +0.77 & +
 Turkish (tr) & 87.02 & 93.98 & --- & 90.03 & 93.90 & --- & +3.01 & --0.08 & ---\\
 Chinese (zh) & 89.17 & 92.99 & --- & 89.29 & 93.04 & --- & +0.12 & +0.05 & ---\\
 \midrule
-Macro-avg. & 89.70 & 94.59 & --- & 92.27 & 95.09 & --- & +2.57 & +0.56 & ---\\
-Macro-avg.~w/embed & 91.43 & 95.52 & 95.77 & 93.55 & 95.80 & 95.98 & +2.12 & +0.39 & +0.21\\
+Macro-avg. & 89.70 & 94.59 & --- & 92.27 & 95.09 & --- & +2.55 & +0.56 & ---\\
+Macro-avg.~w/embed & 91.43 & 95.52 & 95.77 & 93.55 & 95.80 & 95.98 & +2.09 & +0.38 & +0.21\\
 \end{tabular}
 \caption{XXX}\label{tbl:results}
 \end{table*}
