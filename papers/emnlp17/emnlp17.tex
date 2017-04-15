@@ -174,14 +174,14 @@ The sources of lexical information we used are twofold:
 Finally, whenever available and following \citet{plank16}, we performed experiments using Polyglot pre-computed
 embeddings published by \citet{alrfou13}. Languages for which Polyglot embeddings are available are indicated in Table~\ref{tbl:lex}.
 
-\begin{table*}
-\centering
-\scriptsize
-\begin{tabular}{l|lrr|llrrc}
-\toprule
-Lang. & \multicolumn{3}{c}{\sc lex} & \multicolumn{3}{|c}{\sc lex2} & Polyglot\\
-code & type & \#entries & \#tags (full/coarse) & name & reference & \#entries & \#tags & embeds\\
-\midrule
+%\begin{table*}
+%\centering
+%\scriptsize
+%\begin{tabular}{l|lrr|llrrc}
+%\toprule
+%Lang. & \multicolumn{3}{c}{\sc lex} & \multicolumn{3}{|c}{\sc lex2} & Polyglot\\
+%code & type & \#entries & \#tags (full/coarse) & name & reference & \#entries & \#tags & embeds\\
+%\midrule
 %ar & {\em ap.lex} & 650,592 & 658/15 &  &  &  &  & yes\\
 %bg & {\em ap.lex} & 93,186 & 286/16 & MULTEXT-East V4 & \citep{erjavec10} & 53,056 & 12 & yes\\
 %ca & {\em ap.lex} & 369,927 & 188/13 &  &  &  &  & yes\\
@@ -207,21 +207,21 @@ code & type & \#entries & \#tags (full/coarse) & name & reference & \#entries & 
 %it & {\em ap.lex} & 278,356 & 154/14 & Morph it! & \citep{zanchetta05} & 422,756 & 16 & yes\\
 %kk & {\em gt.ma} & 434,119 & 1274/16 &  &  &  &  & \\
 %la &  &  &  & Diogenes (Latin) & \citep{heslin07} & 562,409 & 16 & \\
-lv & {\em ap.lex} & 313,642 & 583/14 &  &  &  &  & \\
-nl & {\em ap.lex} & 167,302 & 85/14 & Alpino lexicon V1 & \citep{bouma00} & 80,928 & 65 & yes\\
-no & {\em ap.lex} & 2,469,905 & 158/13 & OrdBank & \citep{hagen10} & 880,503 & 224 & yes\\
-pl & {\em ap.lex} & 1,316,112 & 1592/15 & PolLex & \citep{sagot07ltc} & 1,399,697 & 1,082 & yes\\
-pt & {\em ap.lex} & 158,504 & 155/14 & Labellex\_pt & \citep{ranchhod99} & 1,258,205 & 281 & yes\\
-ro & {\em ap.lex} & 229,341 & 247/13 & MULTEXT-East V4 & \citep{erjavec10} & 378,113 & 14 & \\
-ru & {\em ap.lex} & 4,400,935 & 847/16 &  &  &  &  & \\
-sl & {\em ap.lex} & 653,965 & 1110/14 & SloLeks & \citep{krek08} & 957,525 & 25 & yes\\
-sv & {\em ap.lex} & 2,378,232 & 205/12 & Saldo & \citep{borin08} & 1,214,971 & 214 & yes\\
-tr & {\em gt.ma} & 417,340 & 1764/14 &  &  &  &  & \\
-zh & {\em ap.lex} & 7,617 & 14/13 &  &  &  &  & \\
-\bottomrule
-\end{tabular}
-\caption{Information about lexical informations used in this paper.}\label{tbl:lex}
-\end{table*}
+%lv & {\em ap.lex} & 313,642 & 583/14 &  &  &  &  & \\
+%nl & {\em ap.lex} & 167,302 & 85/14 & Alpino lexicon V1 & \citep{bouma00} & 80,928 & 65 & yes\\
+%no & {\em ap.lex} & 2,469,905 & 158/13 & OrdBank & \citep{hagen10} & 880,503 & 224 & yes\\
+%pl & {\em ap.lex} & 1,316,112 & 1592/15 & PolLex & \citep{sagot07ltc} & 1,399,697 & 1,082 & yes\\
+%pt & {\em ap.lex} & 158,504 & 155/14 & Labellex\_pt & \citep{ranchhod99} & 1,258,205 & 281 & yes\\
+%ro & {\em ap.lex} & 229,341 & 247/13 & MULTEXT-East V4 & \citep{erjavec10} & 378,113 & 14 & \\
+%ru & {\em ap.lex} & 4,400,935 & 847/16 &  &  &  &  & \\
+%sl & {\em ap.lex} & 653,965 & 1110/14 & SloLeks & \citep{krek08} & 957,525 & 25 & yes\\
+%sv & {\em ap.lex} & 2,378,232 & 205/12 & Saldo & \citep{borin08} & 1,214,971 & 214 & yes\\
+%tr & {\em gt.ma} & 417,340 & 1764/14 &  &  &  &  & \\
+%zh & {\em ap.lex} & 7,617 & 14/13 &  &  &  &  & \\
+%\bottomrule
+%\end{tabular}
+%\caption{Information about lexical informations used in this paper.}\label{tbl:lex}
+%\end{table*}
 
 \begin{table}
 \centering
@@ -233,7 +233,7 @@ zh & {\em ap.lex} & 7,617 & 14/13 &  &  &  &  & \\
 ar &   Apertium\textsubscript{coarse} & 651k & 15 & 45.88\% &0.09& yes \\
 bg & MULTEXT-East & 53k &12 & 67.59\% & 0.18 & yes \\
 ca &  Apertium\textsubscript{coarse} & 379k & 13 & 80.06\% & 0.06 & yes \\
-cs & Morfflex (filtered)  & 2,094k & 65 & 68.38\% & 0.10 & yes \\
+cs &  Apertium\textsubscript{coarse} & 1,875k & 15  & 0.10 & yes \\
 da & Apertium\textsubscript{coarse} & 683k & 15 & 71.93\% & 0.19 & yes \\
 de & DeLex & 465k & 52 & 78.78\% & 0.18 &yes\\
 el & Apertium\textsubscript{coarse} & 47k & 12 & 48.22\% & 0.20 & yes \\
@@ -250,12 +250,23 @@ grc  & Diogenes & 1,314k & 18 & 45.93\% & 0.20 &no\\
 he & Apertium\textsubscript{coarse} & 268k & 16 & 71.04\% & 0.12 & yes\\
 hi & Apertium\textsubscript{coarse} & 159k & 14 & 82.87\% & 0.05 & yes\\
 hr  & HML   & 1,361k & 22 & 84.81\% & 0.21 & yes \\
-%hu & {\em gt.ma} & 2,937 & 4/3 & MULTEXT-East V4 & \citep{erjavec10} & 75,354 & 834 & \\
+hu & Morpho\textsubscript{coarse} & 3k & 3 & 1.11\% & 0.33 &no \\
 id & Apertium\textsubscript{full }& 12k & 38 &61.37\% &0.18 & no   \\
 it & Apertium\textsubscript{coarse} & 278k &14 & 78.37\% & 0.10 & yes\\
 kk & Morph\textsubscript{coarse}& 434k & 16 &  79.06\% & 0.48 & no\\
 la  & Diogenes & 562k & 16 & 83.25\% & 0.31 &no\\
 lv & Apertium\textsubscript{coarse} & 314k & 14  & 58.05\%  & 0.33& no \\
+nl &  Alpino lexicon  & 81k & 65 & 76.80\% & 0.14&yes\\
+no & Apertium\textsubscript{coarse} & 2,470k & 13 & 66.16\% & 0.11 & yes\\
+pl & Apertium\textsubscript{coarse} & 1,316k &  15 & 61.30\% & 0.31 & yes\\
+pt & Apertium\textsubscript{coarse} & 159k & 155 & 71.63\% & 0.13 & yes\\
+ro &  MULTEXT-East  & 378k & 14 & 66.46\% & 0.18 & no \\
+ru & Apertium\textsubscript{coarse} & 4,401k &16& 60.85\% & 0.32 & 16  \\
+sl & Apertium\textsubscript{coarse} & 654k & 14 & 70.00\% & 0.24 &yes\\
+sv & Saldo & 1,215k & 214 & 88.33\% & 0.17 & yes\\
+tr & Morphp\textsubscript{coarse} & 417k & 14 & 73.60\% & 0.32  &no \\
+zh & Apertium\textsubscript{coarse} & 8k & 13 & 33.91\% & 0.16 & no \\
+
 \bottomrule
 \end{tabular}
 \caption{Dataset information. Best lexicon for its language along with its size, number of tags and coverage over the UD1.3 data. We also provide the}\label{tbl:lex}
