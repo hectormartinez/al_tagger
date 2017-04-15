@@ -111,7 +111,7 @@ initialising the word embedding layer with pre-computed word embeddings. We refe
 
 \section{Integrating lexical information}
 
-We extend the bi-LSTM architecture from Section \ref{sec:baselinearchitecture} with an additional input layer that
+We extend this bi-LSTM architecture with an additional input layer that
 contains token-wise features obtained from a lexicon. The input vector $\vec{l}$ for a given word is an $n$-hot vector
 where each active value corresponds to one of the possible labels in the lexicon. For instance, the English word
 \textit{house}, which is both a singular noun and a verb in its base form, will be associated to a 2-hot input
@@ -137,7 +137,7 @@ on an already very competitive single-layer baseline.
 %and (b)~our extension thereof for integrating external morphosyntactic lexical information. Each of these two schemas
 %concerns a single word. Connections of the word-level LSTM cells to their counterparts for the preceeding and
 %following word are represented with grey arrows.}\label{fig:schema}
-\caption{Schematic representation of the architecture of our extension of \citeauthor{plank16}'s (\citeyear{plank16})
+\caption{Schema of our extension of \citeauthor{plank16}'s (\citeyear{plank16})
   bi-LSTM tagging architecture for integrating external morphosyntactic lexical information. This schema concerns a
   single word, here ``this.'' Connections of the word-level LSTM cell to its counterparts for the preceeding and
   following word are represented with grey arrows.}\label{fig:schema}
