@@ -25,7 +25,7 @@
 
 
 %\title{Including lexical morphosyntactic information\\in a neural PoS tagging architecture}
-\title{Improving neural taggers with lexical information}
+\title{Improving neural tagging with lexical information}
 
 % Author information can be set in various styles:
 % For several authors from the same institution:
@@ -58,10 +58,11 @@
 \begin{abstract}
   Neural part-of-speech tagging has achieved very competitive results with the incorporation of character embeddings and
   pre-trained word embeddings. In this paper, we investigate whether a state-of-the-art bi-LSTM tagger can benefit from
-  using information from morphosyntactic lexicons as additional input. The tagger shows a consistent, average
-  improvement of 2.6\% tagging accuracy for systems without character embeddings, but also an improvement of 0.5\% in
-  the presence of character embeddings, which indicates that morphosyntactic lexicons do indeed provide information that
-  is not captured by the embeddings themselves. The improvements are particularly important for the smaller datasets.
+  using information from morphosyntactic lexicons as additional input. The tagger, trained on several dozen languages,
+  shows a consistent, average improvement of 2.6\% tagging accuracy for systems without character embeddings, but also
+  an improvement of 0.6\% in the presence of character embeddings, which indicates that morphosyntactic lexicons do
+  indeed provide information that is not captured by the embeddings themselves. The improvements are particularly
+  important for the smaller datasets.
 \end{abstract}
 
 
@@ -93,10 +94,10 @@ word-level and/or character-level long short-term memory networks (LSTMs)
 \cite{hochreiter97,ling15,ballesteros15,plank16}.
 
 However, the inclusion of lexical information from morphosyntactic lexicons into neural PoS tagging architecture, as a
-replacement or complement to pre-computed word embeddings, remains to be investigated. In this paper, we describe how
-such an inclusion can be achieved and show, based on experiments on all corpora from the Universal Dependencies
-repository (version 1.3), that it leads to significant improvements over \citeauthor{plank16}'s (\citeyear{plank16}).
-state-of-the-art results. 
+replacement or complement to character-based or pre-computed word embeddings, remains to be investigated. In this paper,
+we describe how such an inclusion can be achieved and show, based on experiments on corpora from the Universal
+Dependencies repository (version 1.3), that it leads to significant improvements over \citeauthor{plank16}'s
+(\citeyear{plank16}) state-of-the-art results.
 
 %\textcolor{blue}{Moreover, lexicon information is qualitatively different from word and character embedding information in that it improves the prediction of A CERTAIN CLASS OF WORDS}
 
@@ -109,18 +110,10 @@ the word's characters, called its {\em character-based embedding} built using a 
 trained jointly with the word-level layers. Further improvements can be obtained on most but not all languages by
 initialising the word embedding layer with pre-computed word embeddings. We refer to \citet{plank16} for further details.
 
-We do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s
-(\citeyear{plank16}), and that we use a single bi-LSTM layer instead of multi-layer stacking. While such systems can
-improve the overall results,\footnote{Note however that \citeauthor{plank16}'s (\citeyear{plank16})
-    secondary task ---predicting the frequency class of each word--- results in better OOV scores but virtually identical
-    overall scores when averaged over all tested languages/corpora.} our goal is to clearly assess the relative
-contribution of information provided by an external morphosyntactic lexicon in contrast to word and character embeddings
-on an already very competitive single-layer baseline.
-
 \section{Integrating lexical information}
 
 We extend the bi-LSTM architecture from Section \ref{sec:baselinearchitecture} with an additional input layer that
-contains token-wise features obtained from lexica. The input vector $\vec{l}$ for a given word is an $n$-hot vector
+contains token-wise features obtained from a lexicon. The input vector $\vec{l}$ for a given word is an $n$-hot vector
 where each active value corresponds to one of the possible labels in the lexicon. For instance, the English word
 \textit{house}, which is both a singular noun and a verb in its base form, will be associated to a 2-hot input
 vector.  Note that this way of incorporating lexicon information as new features in an input layer is label-set
@@ -130,6 +123,14 @@ are aiming at predicting, namely the 17-label UD tagset.
 Figure~\ref{fig:schema} shows how the output of this input layer is concatenated to that of the two baseline input
 layers, namely the word embedding $\vec{w}$ and (if enabled) the character-based embedding $\vec{c}$. The result of this
 concatenation serves as an input to the bi-LSTM layer.
+
+We do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s
+(\citeyear{plank16}), and we use a single bi-LSTM layer instead of multi-layer stacking. While such systems can
+improve the overall results,\footnote{Note however that \citeauthor{plank16}'s (\citeyear{plank16})
+    secondary task ---predicting the frequency class of each word--- results in better OOV scores but virtually identical
+    overall scores when averaged over all tested languages/corpora.} our goal is to clearly assess the relative
+contribution of information provided by an external morphosyntactic lexicon in contrast to word and character embeddings
+on an already very competitive single-layer baseline.
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{emnlp17schemaB2}
@@ -147,15 +148,18 @@ concatenation serves as an input to the bi-LSTM layer.
 
 \section{Data}
 
-We use the Universal Dependencies (UD) datasets for our experiments. However, the test data of UD 2.0 was not available
-at the time of the submission, we performed our experiments on a previous version of this corpus collection. More
-precisely, in order to facilitate comparison with \citeauthor{plank16}'s (\citeyear{plank16}), we performed all
-experiments on the version 1.3 of UD \cite{ud13}.
+We use the Universal Dependencies (UD) datasets for our experiments. However, as the test data of UD 2.0 was not
+available at the time of the submission, we performed our experiments on a previous version of this corpus
+collection. More precisely, in order to facilitate comparison with \citeauthor{plank16}'s (\citeyear{plank16}), we
+performed all experiments on the version 1.3 of UD \cite{ud13}.
 
-In our experiments, we have used two types of lexical information sources, thereby obtaining one to three lexicons for each
-language, in the way sketched below. We determine the best best
-performing lexicon for each language on the development set based on tagging accuracy. In the remainder of this paper, all information about the lexicons
-(Table~\ref{tbl:lex}) and accuracy results are restricted to these best performing lexicons.
+In our experiments, we have used two types of lexical information sources, thereby obtaining one to three lexicons for
+each language, in the way sketched below. We trained our tagger with and without character-based embeddings, and with or
+without Polyglot-based initialisation (when available), both without lexical information and with lexicon information
+from all available lexicons, resulting in 4 to 12 training configurations. We determine the best performing lexicon for
+each language based on tagging accuracy of these taggers on the development set. In the remainder of this paper, all
+information about the lexicons (Table~\ref{tbl:lex}) and accuracy results are restricted to these best performing
+lexicons.
 
 The sources of lexical information we used are twofold. The first one is the
 Apertium\footnote{https://svn.code.sf.net/p/apertium/svn/languages} and the
@@ -400,12 +404,6 @@ setup, in order to facilitate the comparison of results.\footnote{Note that we d
 
 
 \section{Results and discussion}
-
-For each language, there are as many as twelve variants of the tagger to compare. These variants are defined by the
-presents of character embeddings, the usage of pretrained word embeddings, or the usage of a lexicon, be it
-\textsc{Lex}, \textsc{Lex2} or \textsc{Lexcoarse}. For ease of comparison, we provide an overview in Table
-\ref{tbl:results}, where contrast the baseline system (without lexicon) against the best system that uses a lexicon and
-maybe pre-trained embeddings. We determine the per-language best lexicon system on the development set.
 
 In terms of choice of best lexicon, there is a clear tendency for lexicons with a small number of tags, arguably because
 the information is more similar to the 17-tag inventory of UPOS, but also because larger sets are bound to be sparser
