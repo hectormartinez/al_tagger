@@ -137,9 +137,9 @@ concatenation serves as an input to the bi-LSTM layer.
   following word are represented with grey arrows.}\label{fig:schema}
 \end{figure}
 
-\section{Experiments}
+%\section{Experiments}
 
-\subsection{Data}
+\section{Data}
 
 We use the Universal Dependencies (UD) datasets for our experiments. However, the test data of UD 2.0 was not available
 at the time of the submission, we performed our experiments on a previous version of this corpus collection. More
@@ -311,7 +311,7 @@ zh & Apertium & 8 & 13 & 34 & 0.16 & no \\
   corpus (TTR) and whether there were available polyglot embeddings (PG) to initialize $\vec{w}$.}\label{tbl:lex}
 \end{table}
 
-\subsection{Experimental setup}
+\section{Experimental setup}
 
 \begin{table*}[t]
 \centering\scriptsize
@@ -360,7 +360,13 @@ Chinese (zh) & 89.17 & 92.99 & --- & 89.29 & 93.04 & --- & +0.12 & +0.05 & ---\\
 Macro-avg. & 90.01 & 94.61 & --- & 92.60 & 95.18 & --- & +2.59 & +0.57 & ---\\
 Macro-avg.~w/embed & 91.43 & 95.52 & 95.77 & 93.52 & 95.91 & 95.98 & +2.09 & +0.38 & +0.21\\
 \end{tabular}
-\caption{XXX}\label{tbl:results}
+\caption{Overall results. PoS accuracy scores are given for each language in the baseline
+  configuration (the same as \citealp{plank16}) and in the lexicon-enabled configuration. For each configuration, scores
+are given when using word embeddings only ($\vec{w}$), word and character-based embeddings ($\vec{w}+\vec{c}$), and word
+and character-based embeddings with initialisation of word embeddings with Polyglot vectors ($\vec{w}_P+\vec{c}$). The
+ last columns show the difference between lexicon-enabled and baseline configurations.\iffalse As can be seen from the
+macro-averaged results, both on all languages and on languages for which Polyglot embeddings were available,
+lexicon-enabled configurations perform significantly better than the baseline.\fi{}}\label{tbl:results}
 \end{table*}
 
 We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
