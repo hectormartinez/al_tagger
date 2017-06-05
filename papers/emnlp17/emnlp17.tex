@@ -128,8 +128,8 @@ agnostic, and no explicit relation is needed between the morphosyntactic invento
 are aiming at predicting, namely the 17-label UD tagset.
 
 Figure~\ref{fig:schema} shows how the output of this input layer is concatenated to that of the two baseline input
-layers, namely the word embedding $\vec{w}$ and (if enabled) the character-based embedding $\vec{c}$. The result of this
-concatenation serves as an input to the bi-LSTM layer.
+layers, i.e.~the word embedding $\vec{w}$ and (if enabled) the character-based embedding $\vec{c}$. The result of this
+concatenation feeds the bi-LSTM layer.
 
 % We do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s
 % (\citeyear{plank16}), and we use a single bi-LSTM layer instead of multi-layer stacking. While such systems can
@@ -169,17 +169,16 @@ on tagging accuracy on the development set. In the remainder of this paper, all 
 
 The sources of lexical information we used are twofold. The first one is the
 Apertium\footnote{https://svn.code.sf.net/p/apertium/svn/languages} and the
-Giellatekno\footnote{https://victorio.uit.no/langtech/trunk/langs} projects. For languages for which an Apertium
-morphological lexicon is available, this lexicon was used. For other languages, we downloaded from the OPUS corpus
-collection the corresponding monolingual part of OpenSubtitles2016, tokenised it, extracted the 1 million most frequent
-tokens, and retrieved all their morphological analyser by the Apertium morphological transducer---or by the Giellatekno
-morphological transducer when none was available from Apertium. All these analyses were then gathered in the form of a
-lexicon. In a second step, we converted all lexicons obtained using manually crafted rules, so that each lexical entry
-contains a (inflected) wordform, a lemma, a PoS from the Universal PoS
-tagset,\footnote{http://universaldependencies.org/u/pos/all.html} and a set of attribute-value pairs from the Universal
+Giellatekno\footnote{https://victorio.uit.no/langtech/trunk/langs} projects. We used Apertium morphological lexicons
+whenever available. For other languages, we downloaded the corresponding monolingual part of OPUS's OpenSubtitles2016
+corpus, tokenised it, extracted the 1 million most frequent tokens, and retrieved all their morphological analyses by
+the corresponding morphological analyser provided by Apertium (or, failing that, Giellatekno). All these analyses were
+then gathered in the form of a lexicon. In a second step, we converted all lexicons obtained using manually crafted
+rules, so that each lexical entry contains a (inflected) wordform, a lemma, a Universal
+PoS,\footnote{http://universaldependencies.org/u/pos/all.html} and morphological features from the Universal
 Features.\footnote{http://universaldependencies.org/u/feat/all.html} We then created two variants of the lexicons
-obtained: a {\em full} variant in which labels are universal PoS, and a {\em coarse} variant in which labels are the
-concatenation of the universal PoS and morphological feature-value pairs.
+obtained: a {\em coarse} variant in which labels are Universal PoS, and a {\em full} variant in which labels are the
+concatenation of the Universal PoS and Universal Features.
 
 We also took advantage of other existing lexicons. For space reasons, we are not able to describe here the language-specific
 transformations we applied to some of these lexicons. See Table~\ref{tbl:lex} and its caption for more information.
@@ -417,20 +416,19 @@ setup, in order to facilitate the comparison of results.\footnote{Note that we d
 
 Our results show that using lexical information as an additional input layer to a bi-LSTM PoS tagger results in
 consistent improvements over 35 corpora. The improvement holds for all configurations on almost all corpora. As
-expected, greatest improvements are obtained without character-based embeddings. It shows that word embeddings and external
-lexical information are complementary sources of morphological information. It also confirms our expectations that both
-lexical information and character-based embeddings capture morphological information and help PoS tagging, especially for
-unknown words.
+expected, the greatest improvements are obtained without character-based embeddings. It shows that word embeddings and
+external lexical information are complementary sources of morphological information. It also confirms our expectations
+that both lexical information and character-based embeddings capture morphological information and help PoS tagging,
+especially for unknown words.
 
-Yet we also observe improvements when using external lexical information in configurations where character-based
-embeddings are used, and even when initialising with pre-computed word embeddings. This shows that the use of
-character-based embeddings is not sufficient for addressing the problem of out-of-vocabulary words. As mentioned in the
-introduction, external lexical information can straightforwardly cover words with an irregular morphology. As a result,
-morphosyntactic information from an external lexicon is a useful addition to character-based embeddings.
+Yet we also observe improvements when using external lexical information together with character-based embeddings, and
+even when initialising with pre-computed word embeddings. This shows that the use of character-based embeddings is not
+sufficient for addressing the problem of out-of-vocabulary words. As mentioned in the introduction, external lexical
+information can straightforwardly cover words with an irregular morphology. As a result, morphosyntactic information
+from an external lexicon is a useful addition to character-based embeddings.
 
-As expected, the improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}+\vec{c}$
-setup, the three languages with the highest improvements when using a lexicon are exactly the ones with smallest
-datasets.
+The improvements are particularly high for the smaller datasets; in the $\vec{w}+\vec{c}$ setup, the three
+languages with the highest improvements when using a lexicon are those with smallest datasets.
 
 % Best performing lexicons often have a reduced tagset. It could be that fine-grained distinctions are made using
 % character-based embeddings, whereas lexical information is useful for disambiguating between coarse-grained
