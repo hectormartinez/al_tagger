@@ -416,14 +416,21 @@ setup, in order to facilitate the comparison of results.\footnote{Note that we d
 \section{Results and discussion}
 
 Our results show that using lexical information as an additional input layer to a bi-LSTM PoS tagger results in
-consistent improvements over 35 corpora. The improvement holds for all configurations on almost all corpora. Greatest
-improvements are obtained without character embeddings. This confirms our expectations that both lexical information and
-character embeddings capture morphological information and help tagging unknown words---a detailed analysis of tagging
-accuracy on unknown words will be provided in the final version of this paper. Yet improvements are also observed with
-character embeddings, and even when initialising with pre-computed word embeddings. This shows that the morphosyntactic
-information in the lexicon is a useful addition to the other information sources. The improvements are particularly
-important for the smaller datasets. Indeed, in the $\vec{w}+\vec{c}$ setup, the three languages with the highest
-improvements when using a lexicon are exactly the ones with smallest datasets.
+consistent improvements over 35 corpora. The improvement holds for all configurations on almost all corpora. As
+expected, greatest improvements are obtained without character embeddings. It shows that word embeddings and external
+lexical information are complementary sources of morphological information. It also confirms our expectations that both
+lexical information and character embeddings capture morphological information and help PoS tagging, especially for
+unknown words.
+
+Yet we also observe improvements when using external lexical information in configurations where character-based
+embeddings are used, and even when initialising with pre-computed word embeddings. This shows that the use of
+character-based embeddings is not sufficient for addressing the problem of out-of-vocabulary words. As mentioned in the
+introduction, external lexical information can straightforwardly cover words with an irregular morphology. As a result,
+morphosyntactic information from an external lexicon is a useful addition to character-based embeddings.
+
+As expected, the improvements are particularly important for the smaller datasets. Indeed, in the $\vec{w}+\vec{c}$
+setup, the three languages with the highest improvements when using a lexicon are exactly the ones with smallest
+datasets.
 
 Best performing lexicons often have a reduced tagset. It could be that fine-grained distinctions are
 made using characters embeddings, whereas lexical information is useful for disambiguating between coarse-grained
