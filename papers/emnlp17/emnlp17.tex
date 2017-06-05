@@ -92,12 +92,12 @@ extracted from large amounts of raw text, have proved very useful for numerous t
 particular when used in recurrent neural networks (RNNs) and more specifically in mono- or bi-directional, word-level or
 character-level long short-term memory networks (LSTMs) \cite{hochreiter97,ling15,ballesteros15,plank16}.
 
-Another way to create word embeddings is to rely on a character-level model---typically, a bi-directional LSTM---, which
-can generate for each word a vector representation that results from the internal character-level make-up of the
-word. It can generalise over relevant sub-parts such as prefixes or suffixes, thus directly addressing the problem of
-unknown words. However, unknown words do not always follow such generalisations. In such cases, character-level models
-cannot bring any advantage. This is a difference with external lexicons, which provides information about any
-word it contains, yet without any quantitative distinction between relevant and less relevant information.
+Character-level embeddings are of particular interest for PoS tagging as they generate vector representations that
+result from the internal character-level make-up of each word. It can generalise over relevant sub-parts such as
+prefixes or suffixes, thus directly addressing the problem of unknown words. However, unknown words do not always follow
+such generalisations. In such cases, character-level models cannot bring any advantage. This is a difference with
+external lexicons, which provides information about any word it contains, yet without any quantitative distinction
+between relevant and less relevant information.
 
 Therefore, a comparative assessment of the advantages of using character-level embeddings and external lexical
 information is an interesting idea to follow. However, the inclusion of morphosyntactic information from lexicons
