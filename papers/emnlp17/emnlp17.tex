@@ -56,13 +56,13 @@
 \maketitle
 
 \begin{abstract}
-  Neural part-of-speech tagging has achieved competitive results with the incorporation of character embeddings and
-  pre-trained word embeddings. In this paper, we investigate whether a state-of-the-art bi-LSTM tagger can benefit from
-  using information from morphosyntactic lexicons as additional input. The tagger, trained on several dozen languages,
-  shows a consistent, average improvement of 2.6\% tagging accuracy for systems without character embeddings, but also
-  an improvement of 0.6\% in the presence of character embeddings, which indicates that morphosyntactic lexicons do
-  indeed provide information that is not captured by the embeddings themselves. The improvements are particularly
-  important for the smaller datasets.
+  Neural part-of-speech tagging has achieved competitive results with the incorporation of character-based and
+  pre-trained word embeddings. In this paper, we show that a state-of-the-art bi-LSTM tagger can benefit from using
+  information from morphosyntactic lexicons as additional input. The tagger, trained on several dozen languages, shows a
+  consistent, average improvement of 2.6\% tagging accuracy for systems without character-based embeddings, and an
+  improvement of 0.6\% in the presence of character-based embeddings, which indicates that morphosyntactic lexicons do
+  indeed provide information that is not captured by the embeddings themselves, both character-based and word-level. The
+  improvements are particularly important for the smaller datasets.
 \end{abstract}
 
 
@@ -87,16 +87,24 @@ during the training process as additional features combined with standard featur
 \cite{chrupala08,goldberg09,denis12}.
 
 Second, lexical information encoded in vector representations, known as word embeddings, have emerged more
-recently \cite{bengio03,collobert08,chrupala13,ling15,ballesteros15,muller15}. Such representations, generally
+recently \cite{bengio03,collobert08,chrupala13,ling15,ballesteros15,muller15}. Such representations, often
 extracted from large amounts of raw text, have proved very useful for numerous tasks including PoS tagging, in
 particular when used in recurrent neural networks (RNNs) and more specifically in mono- or bi-directional, word-level or
 character-level long short-term memory networks (LSTMs) \cite{hochreiter97,ling15,ballesteros15,plank16}.
 
-However, the inclusion of morphosyntactic information from  lexicons into neural PoS tagging architecture, as a
-replacement or complement to character-based or pre-computed word embeddings, remains to be investigated. In this paper,
-we describe how such an inclusion can be achieved and show, based on experiments on corpora from the Universal
-Dependencies repository (version 1.3), that it leads to significant improvements over \citeauthor{plank16}'s
-(\citeyear{plank16}) state-of-the-art results.
+Another way to create word embeddings is to rely on a character-level model---typically, a bi-directional LSTM---, which
+can generate for each word a vector representation that results from the internal character-level make-up of the
+word. It can generalise over relevant sub-parts such as prefixes or suffixes, thus directly addressing the problem of
+unknown words. However, unknown words do not always follow such generalisations. In such cases, character-level models
+cannot bring any advantage. This is a difference with external lexicons, which provides information about any
+word it contains, yet without any quantitative distinction between relevant and less relevant information.
+
+Therefore, a comparative assessment of the advantages of using character-level embeddings and external lexical
+information is an interesting idea to follow. However, the inclusion of morphosyntactic information from lexicons
+into neural PoS tagging architecture, as a replacement or complement to character-based or pre-computed word embeddings,
+remains to be investigated. In this paper, we describe how such an inclusion can be achieved and show, based on
+experiments on corpora from the Universal Dependencies repository (version 1.3), that it leads to significant
+improvements over \citeauthor{plank16}'s (\citeyear{plank16}) state-of-the-art results.
 
 %\textcolor{blue}{Moreover, lexicon information is qualitatively different from word and character embedding information in that it improves the prediction of A CERTAIN CLASS OF WORDS}
 
@@ -123,13 +131,13 @@ Figure~\ref{fig:schema} shows how the output of this input layer is concatenated
 layers, namely the word embedding $\vec{w}$ and (if enabled) the character-based embedding $\vec{c}$. The result of this
 concatenation serves as an input to the bi-LSTM layer.
 
-We do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s
-(\citeyear{plank16}), and we use a single bi-LSTM layer instead of multi-layer stacking. While such systems can
-improve the overall results,\footnote{Note however that \citeauthor{plank16}'s (\citeyear{plank16})
-    secondary task---predicting the frequency class of each word---results in better OOV scores but virtually identical
-    overall scores when averaged over all tested languages/corpora.} our goal is to clearly assess the relative
-contribution of information provided by an external morphosyntactic lexicon in contrast to word and character embeddings
-on an already very competitive single-layer baseline.
+% We do not use the option of multitask learning of the tagger presented by \citeauthor{plank16}'s
+% (\citeyear{plank16}), and we use a single bi-LSTM layer instead of multi-layer stacking. While such systems can
+% improve the overall results,\footnote{Note however that \citeauthor{plank16}'s (\citeyear{plank16})
+%     secondary task---predicting the frequency class of each word---results in better OOV scores but virtually identical
+%     overall scores when averaged over all tested languages/corpora.} our goal is to clearly assess the relative
+% contribution of information provided by an external morphosyntactic lexicon in contrast to word and character embeddings
+% on an already very competitive single-layer baseline.
 
 \begin{figure}
 \includegraphics[width=\columnwidth]{emnlp17schemaB2}
@@ -179,6 +187,8 @@ transformations we applied to some of these lexicons. See Table~\ref{tbl:lex} an
 
 Finally, whenever available and following \citet{plank16}, we performed experiments using Polyglot pre-computed
 embeddings \cite{alrfou13}. Languages for which Polyglot embeddings are available are indicated in Table~\ref{tbl:lex}.
+
+\addtocounter{footnote}{-1}
 
 %\begin{table*}
 %\centering
@@ -268,7 +278,7 @@ no & Apertium & 2,470 & 13 & 66 & 0.11 & yes\\
 pl & Apertium & 1,316 &  15 & 61 & 0.31 & yes\\
 pt & Apertium & 159 & 155 & 72 & 0.13 & yes\\
 ro &  MULTEXT-East  & 378 & 14 & 66 & 0.18 & no \\
-ru & Apertium & 4,401 &16& 61 & 0.32 & 16  \\
+ru & Apertium & 4,401 &16& 61 & 0.32 & no  \\
 sl & Apertium & 654 & 14 & 70 & 0.24 &yes\\
 sv & Saldo & 1,215 & 214 & 88 & 0.17 & yes\\
 tr & ApertiumMA & 417 & 14 & 74 & 0.32  &no \\
@@ -380,16 +390,18 @@ lexicon-enabled configurations perform significantly better than the baseline.\f
 \end{table*}
 
 We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
-available\footnote{https://github.com/bplank/bilstm-aux} and ``significantly refactored version of the code
-originally used'' by \citet{plank16}. We use its standard configuration, with only one bi-LSTM layer, character
-embeddings size of 100, word embedding size of 64 (same as Polyglot embeddings), and 20 iterations for training.
+available\footnote{https://github.com/bplank/bilstm-aux} and ``significantly refactored version of the code originally
+used'' by \citet{plank16}. We use its standard configuration, with one bi-LSTM layer, character embeddings size of 100,
+word embedding size of 64 (same as Polyglot embeddings), no multitask learning,\footnote{\citeauthor{plank16}'s
+  (\citeyear{plank16}) secondary task---predicting the frequency class of each word---results in better OOV scores but
+  virtually identical overall scores when averaged over all tested languages/corpora.} and 20 iterations for training.
 
 We extended \texttt{bilty} for enabling integration of lexical morphosyntactic information, in the way described in the
-previous section.\footnote{We also performed experiments in which the mapping between words and lexical labels was not
-  fixed, but was initialised using the lexical information and then updated during training, as for a standard embedding
-  layer. This resulted in slightly better accuracy scores, but also in a massively increased memory usage, to the extent
-  that it was not intractable in practice for most languages. We therefore decided to stick to a fixed
-  word-to-set-of-lexical-labels mapping.}
+previous section.%\footnote{We also performed experiments in which the mapping between words and lexical labels was not
+%  fixed, but was initialised using the lexical information and then updated during training, as for a standard embedding
+%  layer. This resulted in slightly better accuracy scores, but also in a massively increased memory usage, to the extent
+%  that it was not intractable in practice for most languages. We therefore decided to stick to a fixed
+%  word-to-set-of-lexical-labels mapping.}
 
 For each lexicon-related configuration, we trained three variants of the tagger: (i)~a variant without using
 character-based embeddings and standard (zero) initialisation of word embeddings before training, (ii)~a variant with
