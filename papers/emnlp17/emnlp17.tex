@@ -391,8 +391,8 @@ lexicon-enabled configurations perform significantly better than the baseline.\f
 
 We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
 available\footnote{https://github.com/bplank/bilstm-aux} and ``significantly refactored version of the code originally
-used'' by \citet{plank16}. We use its standard configuration, with one bi-LSTM layer, character embeddings size of 100,
-word embedding size of 64 (same as Polyglot embeddings), no multitask learning,\footnote{\citeauthor{plank16}'s
+used'' by \citet{plank16}. We use its standard configuration, with one bi-LSTM layer, character-based embeddings size of
+100, word embedding size of 64 (same as Polyglot embeddings), no multitask learning,\footnote{\citeauthor{plank16}'s
   (\citeyear{plank16}) secondary task---predicting the frequency class of each word---results in better OOV scores but
   virtually identical overall scores when averaged over all tested languages/corpora.} and 20 iterations for training.
 
@@ -417,9 +417,9 @@ setup, in order to facilitate the comparison of results.\footnote{Note that we d
 
 Our results show that using lexical information as an additional input layer to a bi-LSTM PoS tagger results in
 consistent improvements over 35 corpora. The improvement holds for all configurations on almost all corpora. As
-expected, greatest improvements are obtained without character embeddings. It shows that word embeddings and external
+expected, greatest improvements are obtained without character-based embeddings. It shows that word embeddings and external
 lexical information are complementary sources of morphological information. It also confirms our expectations that both
-lexical information and character embeddings capture morphological information and help PoS tagging, especially for
+lexical information and character-based embeddings capture morphological information and help PoS tagging, especially for
 unknown words.
 
 Yet we also observe improvements when using external lexical information in configurations where character-based
@@ -432,9 +432,9 @@ As expected, the improvements are particularly important for the smaller dataset
 setup, the three languages with the highest improvements when using a lexicon are exactly the ones with smallest
 datasets.
 
-Best performing lexicons often have a reduced tagset. It could be that fine-grained distinctions are
-made using characters embeddings, whereas lexical information is useful for disambiguating between coarse-grained
-PoS. Moreover, larger sets are bound to be sparser and therefore less easily exploitable as additional information.
+% Best performing lexicons often have a reduced tagset. It could be that fine-grained distinctions are made using
+% character-based embeddings, whereas lexical information is useful for disambiguating between coarse-grained
+% PoS. Moreover, larger sets are bound to be sparser and therefore less easily exploitable as additional information.
 
 
 %While lexicon coverage is important, the best lexicon for a language is not always the one with the highest coverage,
