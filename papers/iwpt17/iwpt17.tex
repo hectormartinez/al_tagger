@@ -18,6 +18,8 @@
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{color}
+
 
 %\aclfinalcopy % Uncomment this line for the final submission
 %\def\aclpaperid{***} %  Enter the acl Paper ID here
@@ -61,18 +63,18 @@
 \begin{abstract}
   Neural part-of-speech tagging has achieved competitive results with the incorporation of character-based and
   pre-trained word embeddings. In this paper, we show that a state-of-the-art bi-LSTM tagger can benefit from using
-  information from morphosyntactic lexicons as additional input. The tagger, trained on several dozen languages, shows a
-  consistent, average improvement of 2.6\% tagging accuracy for systems without character-based embeddings, and an
+  information from morphosyntactic lexicons as additional input. The tagger, trained on several dozen languages, shows an
+  consistent, \textcolor{blue}{\textbf{HM what follows could be shortened:} average improvement of 2.6\% tagging accuracy for systems without character-based embeddings, and an
   improvement of 0.6\% in the presence of character-based embeddings, which indicates that morphosyntactic lexicons do
-  indeed provide information that is not captured by the embeddings themselves, both character-based and word-level. The
+  indeed provide information that is not captured by the embeddings themselves, both character-based and word-level.} The
   improvements are particularly important for the smaller datasets.
 \end{abstract}
 
 
 \section{Introduction}
 
-Part-of-speech tagging is now a classic task in natural language processing, for which many systems have been developed
-or adapted for a large variety of languages. Its aim is to associate each ``word'' with a morphosyntactic tag, whose
+Part-of-speech tagging is now a classic task in natural language processing,  \textcolor{blue}{\textbf{HM candidate for deleletion/compression:} for which many systems have been developed
+or adapted for a large variety of languages.} Its aim is to associate each ``word'' with a morphosyntactic tag, whose
 granularity can range from a simple morphosyntactic category, or part-of-speech (hereafter PoS), to finer categories
 enriched with morphological features (gender, number, case, tense, mood, etc.).
 
@@ -105,8 +107,9 @@ between relevant and less relevant information.
 Therefore, a comparative assessment of the advantages of using character-level embeddings and external lexical
 information is an interesting idea to follow. However, the inclusion of morphosyntactic information from lexicons
 into neural PoS tagging architecture, as a replacement or complement to character-based or pre-computed word embeddings,
-remains to be investigated. In this paper, we describe how such an inclusion can be achieved and show, based on
-experiments on corpora from the Universal Dependencies repository (version 1.3), that it leads to significant
+remains to be investigated. In this paper, we describe how such an inclusion can be achieved and show, %HM: widow line -- based on experiments on corpora from the Universal Dependencies repository (version 1.3), 
+ based onexperiments using the Universal Dependencies corpora (version 1.3), 
+that it leads to significant
 improvements over \citeauthor{plank16}'s (\citeyear{plank16}) state-of-the-art results.
 
 %\textcolor{blue}{Moreover, lexicon information is qualitatively different from word and character embedding information in that it improves the prediction of A CERTAIN CLASS OF WORDS}
@@ -126,7 +129,7 @@ We extend this bi-LSTM architecture with an additional input layer that
 contains token-wise features obtained from a lexicon. The input vector $\vec{l}$ for a given word is an $n$-hot vector
 where each active value corresponds to one of the possible labels in the lexicon. For instance, the English word
 \textit{house}, which is both a singular noun and a verb in its base form, will be associated to a 2-hot input
-vector.  Note that this way of incorporating lexicon information as new features in an input layer is label-set
+vector.  \textcolor{blue}{\textbf{HM I think some reviewers didn't like the word agnostic, what about a succint...:} Note there is no need for the morphosyntactic features to be harmonized with the tagset to predict.} Note that this way of incorporating lexicon information as new features in an input layer is label-set
 agnostic, and no explicit relation is needed between the morphosyntactic inventory of the lexicon and the label set we
 are aiming at predicting, namely the 17-label UD tagset.
 
@@ -158,7 +161,7 @@ concatenation feeds the bi-LSTM layer.
 
 \section{Data}
 
-We use the Universal Dependencies (UD) datasets for our experiments. However, as the test data of UD 2.0 was not
+\textcolor{blue}{\textbf{HM if space is an issue we can do away with the explaination on why not 2.0 and just say were repliacate Plank16}} We use the Universal Dependencies (UD) datasets for our experiments. However, as the test data of UD 2.0 was not
 available at the time of the submission, we performed our experiments on a previous version of this corpus
 collection. More precisely, in order to facilitate comparison with \citeauthor{plank16}'s (\citeyear{plank16}), we
 performed all experiments on the version 1.3 of UD \cite{ud13}.
@@ -174,7 +177,7 @@ The sources of lexical information we used are twofold. The first one is the
 Apertium\footnote{https://svn.code.sf.net/p/apertium/svn/languages} and the
 Giellatekno\footnote{https://victorio.uit.no/langtech/trunk/langs} projects. We used Apertium morphological lexicons
 whenever available. For other languages, we downloaded the corresponding monolingual part of OPUS's OpenSubtitles2016
-corpus, tokenised it, extracted the 1 million most frequent tokens, and retrieved all their morphological analyses by
+corpus, tokenised it, extracted the 1 million most frequent tokens, and retrieved all their morphological \textcolor{blue}{analyses} by
 the corresponding morphological analyser provided by Apertium (or, failing that, Giellatekno). All these analyses were
 then gathered in the form of a lexicon. In a second step, we converted all lexicons obtained using manually crafted
 rules, so that each lexical entry contains a (inflected) wordform, a lemma, a Universal
@@ -391,7 +394,7 @@ macro-averaged results, both on all languages and on languages for which Polyglo
 lexicon-enabled configurations perform significantly better than the baseline.\fi{}}\label{tbl:results}
 \end{table*}
 
-We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
+\textcolor{blue}{\textbf{HM What about "We use the bi-LSTM system described in Section 2"?}} We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
 available\footnote{https://github.com/bplank/bilstm-aux} and ``significantly refactored version of the code originally
 used'' by \citet{plank16}. We use its standard configuration, with one bi-LSTM layer, character-based embeddings size of
 100, word embedding size of 64 (same as Polyglot embeddings), no multitask learning,\footnote{\citeauthor{plank16}'s
@@ -417,16 +420,15 @@ setup, in order to facilitate the comparison of results.\footnote{Note that we d
 
 \section{Results and discussion}
 
-Our results show that using lexical information as an additional input layer to a bi-LSTM PoS tagger results in
+\textcolor{blue}{HM I have marked in blue the content we could displace to a new Conclusions section after this. It might be boring but I would prefer to have Sec 6 Results and Sec 7 Conclusions, even if they are short} Our results show that using lexical information as an additional input layer to a bi-LSTM PoS tagger results in
 consistent improvements over 35 corpora. The improvement holds for all configurations on almost all corpora. As
-expected, the greatest improvements are obtained without character-based embeddings. It shows that word embeddings and
+expected, the greatest improvements are obtained without character-based embeddings. \textcolor{blue}{ It shows that word embeddings and
 external lexical information are complementary sources of morphological information. It also confirms our expectations
 that both lexical information and character-based embeddings capture morphological information and help PoS tagging,
 especially for unknown words.
-
 Yet we also observe improvements when using external lexical information together with character-based embeddings, and
 even when initialising with pre-computed word embeddings. This shows that the use of character-based embeddings is not
-sufficient for addressing the problem of out-of-vocabulary words. As mentioned in the introduction, external lexical
+sufficient for addressing the problem of out-of-vocabulary words. } As mentioned in the introduction, external lexical
 information can straightforwardly cover words with an irregular morphology. As a result, morphosyntactic information
 from an external lexicon is a useful addition to character-based embeddings.
 
