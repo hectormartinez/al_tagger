@@ -36,11 +36,11 @@
 \newcommand\bs[1]{\textcolor{red}{#1}}
 
 %%%%% DISCUSSION MODE
-\newcommand\discussion[1]{#1}
-\newcommand\final[1]{}
+%\newcommand\discussion[1]{#1}
+%\newcommand\final[1]{}
 %%%%% FINAL MODE
-%\newcommand\discussion[1]{}
-%\newcommand\final[1]{#1}
+\newcommand\discussion[1]{}
+\newcommand\final[1]{#1}
 
 \title{Improving neural tagging with lexical information}
 
@@ -445,12 +445,10 @@ setup, in order to facilitate the comparison of results.\footnote{Note that we d
 
 Our results show that using lexical information as an additional input layer to a bi-LSTM PoS tagger results in
 consistent improvements over 35 corpora. The improvement holds for all configurations on almost all corpora. As
-expected, the greatest improvements are obtained without character-based embeddings. 
-
-
-As mentioned in the introduction, external lexical information can straightforwardly cover words with an irregular
-morphology. As a result, morphosyntactic information from an external lexicon is a useful addition to character-based
-embeddings.
+expected, the greatest improvements are obtained without character-based embeddings, with a macro-averaged improvement
+of +2.56, versus +0.57 points when also using character-based embeddings. When also using pre-computed embeddings,
+improvements are only slightly lower. External lexical information is useful as it covers both words with an irregular
+morphology and words not present in the training data.
 
 The improvements are particularly high for the smaller datasets; in the $\vec{w}+\vec{c}$ setup, the three
 languages with the highest improvements when using a lexicon are those with smallest datasets.
@@ -460,24 +458,24 @@ languages with the highest improvements when using a lexicon are those with smal
 % PoS. Moreover, larger sets are bound to be sparser and therefore less easily exploitable as additional information.
 
 
-%While lexicon coverage is important, the best lexicon for a language is not always the one with the highest coverage,
-%e.g.~an alternative lexicon for Italian had a coverage of 90\% instead of 78\%. We attribute this variation to
-%properties of the tagset but also properties of which words are indeed covered by the lexicon.
-
-Further work includes using lexicons to tag finer-grained tag inventories, as well as a more thorough analysis on the
-relation between lexicon and training data properties.
+% While lexicon coverage is important, the best lexicon for a language is not always the one with the highest coverage,
+% e.g.~an alternative lexicon for Italian had a coverage of 90\% instead of 78\%. We attribute this variation to
+% properties of the tagset but also to properties of which words are indeed covered by the lexicon.
 
 
 \section{Conclusion}
 
-It shows that word embeddings and
-external lexical information are complementary sources of morphological information. It also confirms our expectations
-that both lexical information and character-based embeddings capture morphological information and help PoS tagging,
-especially for unknown words.
+Our work shows that word embeddings and external lexical information are complementary sources of morphological
+information, which both improve the accuracy of a state-of-the-art neural part-of-speech tagger. It also confirms that
+both lexical information and character-based embeddings capture morphological information and help part-of-speech
+tagging, especially for unknown words.
 
-Yet we also observe improvements when using external lexical information together with character-based embeddings, and
-even when initialising with pre-computed word embeddings. This shows that the use of character-based embeddings is not
-sufficient for addressing the problem of out-of-vocabulary words.
+Interestingly, we also observe improvements when using external lexical information together with character-based
+embeddings, and even when initialising with pre-computed word embeddings. This shows that the use of character-based
+embeddings is not sufficient for addressing the problem of out-of-vocabulary words.
+
+Further work includes using lexicons to tag finer-grained tag inventories, as well as a more thorough analysis on the
+relation between lexicon and training data properties.
 
 %\section*{Acknowledgments}
 
