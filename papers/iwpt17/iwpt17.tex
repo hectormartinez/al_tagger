@@ -150,6 +150,60 @@ We use the Universal Dependencies (UD) datasets for our experiments. In order to
 
 \paragraph{Lexicons}
 
+\addtocounter{footnote}{-1}
+
+\begin{table}[t]
+\centering
+\scriptsize
+\begin{tabular}{llrr|rr}
+\toprule
+ & Name & \#entries & \#tags  & TTR & PG \\
+ &  & ($\times 10^3$) &  &  &  \\
+\midrule 
+ar &   Apertium & 651 & 15 &  yes \\
+bg & Multext-East & 53 &12 &  0.18 & yes \\
+ca &  Apertium & 379 & 13 &  0.06 & yes \\
+cs &  Apertium & 1,875 & 15 &  0.10 & yes \\
+da & Apertium & 683 & 15 &  0.19 & yes \\
+de & DeLex & 465 & 52 &  0.18 &yes\\
+el & Apertium & 47 & 12 &  0.20 & yes \\
+en & Apertium & 127 & 12 &  0.09& yes \\
+es & Le{\it ff}e &  756 & 34 &  0.12 &yes\\
+et & GiellateknoMA & 44 & 12 &  0.23 & yes \\
+eu & Apertium\textsubscript{full} & 53 &  14 &  0.22 &  yes \\
+fa  & PerLex &  512 & 37 &  0.10 & yes\\
+fi & GiellateknoMA & 228 & 13 &  0.29 & yes \\
+fr & Le{\it fff} & 539 & 25 & 0.11 &yes\\
+ga & inmdb & 114 & 32 &  0.26& yes\\
+gl & Apertium & 241 & 12 &  0.12 &no\\
+grc  & Diogenes & 1,314 & 18 &  0.20 &no\\
+he & Apertium & 268 & 16 &  0.12 & yes\\
+hi & Apertium & 159 & 14 &  0.05 & yes\\
+hr  & HML   & 1,361 & 22 &  0.21 & yes \\
+id & Apertium\textsubscript{full}& 12 & 38 & 0.18 & no   \\
+it & Apertium & 278 &14 &  0.10 & yes\\
+kk & ApertiumMA& 434 & 16 &  0.48 & no\\
+la  & Diogenes & 562 & 16 &  0.31 &no\\
+lv & Apertium & 314 & 14  &  0.33& no \\
+nl &  Alpino lexicon  & 81 & 65 &  0.14&yes\\
+no & Apertium & 2,470 & 13 &  0.11 & yes\\
+pl & Apertium & 1,316 &  15 &  0.31 & yes\\
+pt & Apertium & 159 & 155 &  0.13 & yes\\
+ro &  Multext-East  & 378 & 14 &  0.18 & no \\
+ru & Apertium & 4,401 &16&  0.32 & no  \\
+sl & Apertium & 654 & 14 &  0.24 &yes\\
+sv & Saldo & 1,215 & 214 &  0.17 & yes\\
+tr & ApertiumMA & 417 & 14 &  0.32  &no \\
+zh & Apertium & 8 & 13 &  0.16 & no \\
+\bottomrule
+\end{tabular}
+\caption{Dataset information. Best per-language lexicon along with its size and number of tags over the UD1.3
+  corpora. ``MA'' stands for morphological-analyser-based lexicon. Lexicons based on Apertium and Giellatekno
+  data are in their {\em coarse} version unless {\em full} is indicated. Other lexicons
+  have been adapted from available resources.\footnotemark{} We also provide the type-token ratio of the 
+  corpus (TTR) and whether there were available Polyglot embeddings (PG) to initialize $\vec{w}$.}\label{tbl:lex}
+\end{table}
+
 Our sources of lexical information we used are twofold. The first one is the
 Apertium\footnote{https://svn.code.sf.net/p/apertium/svn/languages} and the
 Giellatekno\footnote{https://victorio.uit.no/langtech/trunk/langs} projects. We used Apertium morphological lexicons
@@ -161,11 +215,17 @@ rules, so that each lexical entry contains a (inflected) wordform, a lemma, a Un
 PoS,\footnote{http://universaldependencies.org/u/pos/all.html} and morphological features from the Universal
 Features.\footnote{http://universaldependencies.org/u/feat/all.html} We then created two variants of the lexicons
 obtained: a {\em coarse} variant in which labels are Universal PoS, and a {\em full} variant in which labels are the
-concatenation of the Universal PoS and Universal Features. We also took advantage of other existing lexicons. For space
-reasons, we are not able to describe here the language-specific transformations we applied to some of these
-lexicons. See Table~\ref{tbl:lex} and its caption for more information. We determine the best performing lexicon for
-each language based on tagging accuracy on the development set. In the remainder of this paper, all information about
-the lexicons (Table~\ref{tbl:lex}) and accuracy results are restricted to these best performing lexicons.
+concatenation of the Universal PoS and Universal Features.
+
+We also took advantage of other existing lexicons. For space reasons, we are not able to describe here the
+language-specific transformations we applied to some of these lexicons. See Table~\ref{tbl:lex} and its caption for more
+information. We determine the best performing lexicon for each language based on tagging accuracy on the development
+set. In the remainder of this paper, all information about the lexicons (Table~\ref{tbl:lex}) and accuracy results are
+restricted to these best performing lexicons.
+
+Coverage information on the test sets for both the training data and the best external lexicon for each dataset is
+provided in Table~\ref{tbl:coverage}.
+
 
 \paragraph{Pre-computed embeddings}
 
@@ -177,145 +237,56 @@ We trained our tagger with and without character-based embeddings, and with or w
 initialisation (when available), both without lexical information and with lexicon information from all available
 lexicons, resulting in 4 to 12 training configurations. 
 
-\addtocounter{footnote}{-1}
-
-%\begin{table*}
-%\centering
-%\scriptsize
-%\begin{tabular}{l|lrr|llrrc}
-%\toprule
-%Lang. & \multicolumn{3}{c}{\sc lex} & \multicolumn{3}{|c}{\sc lex2} & Polyglot\\
-%code & type & \#entries & \#tags (full/coarse) & name & reference & \#entries & \#tags & embeds\\
-%\midrule
-%ar & {\em ap.lex} & 650,592 & 658/15 &  &  &  &  & yes\\
-%bg & {\em ap.lex} & 93,186 & 286/16 & MULTEXT-East V4 & \citep{erjavec10} & 53,056 & 12 & yes\\
-%ca & {\em ap.lex} & 369,927 & 188/13 &  &  &  &  & yes\\
-%cs & {\em ap.lex} & 1,874,737 & 1119/15 & Morfflex (filtered) & \citep{hajic13} & 2,094,860 & 65 & yes\\
-%da & {\em ap.lex} & 683,456 & 164/15 & STO & \citep{braasch08} & 591,035 & 45 & yes\\
-%de & {\em ap.lex} & 2,179,689 & 536/16 & DeLex & \citep{sagot14delex} & 465,434 & 52 & yes\\
-%el & {\em ap.lex} & 47,131 & 190/12 & DELA\_gr & \citep{symeonidis99} & 1,988,898 & 25 & yes\\
-%en & {\em ap.lex} & 126,928 & 108/15 & EnLex & \citep{sagot10lefff} & 490,511 & 47 & yes\\
-%es & {\em ap.lex} & 324,517 & 157/12 & Le{\it ff}e & \citep{molinero09} & 755,858 & 34 & yes\\
-%et & {\em gt.ma} & 43,553 & 202/12 & MULTEXT-East V4 & \citep{erjavec10} & 133,804 & 11 & yes\\
-%eu & {\em ap.lex} & 52,618 & 37/14 &  &  &  &  & yes\\
-%fa &  &  &  & PerLex & \citep{sagot10perlex} & 511,840 & 37 & yes\\
-%fi & {\em gt.ma} & 227,530 & 202/13 &  &  &  &  & yes\\
-%fr & {\em ap.lex} & 136,025 & 135/13 & Le{\it fff} & \citep{sagot10lefff} & 539,278 & 25 & yes\\
-%ga &  &  &  & inmdb & \citep{mechura14} & 113,975 & 32 & yes\\
-%gl & {\em ap.lex} & 240,698 & 165/13 & LeffGa & \citep{sagot10lefff} & 742,954 & 28 & \\
-%grc &  &  &  & Diogenes (Greek) & \citep{heslin07} & 1,313,962 & 18 & \\
-%he & {\em ap.lex} & 267,533 & 107/16 &  &  &  &  & yes\\
-%hi & {\em ap.lex} & 158,605 & 201/14 &  &  &  &  & yes\\
-%hr &  &  &  & HML & \citep{oliver04} & 1,360,687 & 22 & yes\\
-%hu & {\em gt.ma} & 2,937 & 4/3 & MULTEXT-East V4 & \citep{erjavec10} & 75,354 & 834 & \\
-%id & {\em ap.lex} & 12,199 & 38/14 & Kateglo & \scalebox{0.9}{\url{github.com/ivanlanin/kateglo}} & 72,217 & 118 & yes\\
-%it & {\em ap.lex} & 278,356 & 154/14 & Morph it! & \citep{zanchetta05} & 422,756 & 16 & yes\\
-%kk & {\em gt.ma} & 434,119 & 1274/16 &  &  &  &  & \\
-%la &  &  &  & Diogenes (Latin) & \citep{heslin07} & 562,409 & 16 & \\
-%lv & {\em ap.lex} & 313,642 & 583/14 &  &  &  &  & \\
-%nl & {\em ap.lex} & 167,302 & 85/14 & Alpino lexicon V1 & \citep{bouma00} & 80,928 & 65 & yes\\
-%no & {\em ap.lex} & 2,469,905 & 158/13 & OrdBank & \citep{hagen10} & 880,503 & 224 & yes\\
-%pl & {\em ap.lex} & 1,316,112 & 1592/15 & PolLex & \citep{sagot07ltc} & 1,399,697 & 1,082 & yes\\
-%pt & {\em ap.lex} & 158,504 & 155/14 & Labellex\_pt & \citep{ranchhod99} & 1,258,205 & 281 & yes\\
-%ro & {\em ap.lex} & 229,341 & 247/13 & MULTEXT-East V4 & \citep{erjavec10} & 378,113 & 14 & \\
-%ru & {\em ap.lex} & 4,400,935 & 847/16 &  &  &  &  & \\
-%sl & {\em ap.lex} & 653,965 & 1110/14 & SloLeks & \citep{krek08} & 957,525 & 25 & yes\\
-%sv & {\em ap.lex} & 2,378,232 & 205/12 & Saldo & \citep{borin08} & 1,214,971 & 214 & yes\\
-%tr & {\em gt.ma} & 417,340 & 1764/14 &  &  &  &  & \\
-%zh & {\em ap.lex} & 7,617 & 14/13 &  &  &  &  & \\
-%\bottomrule
-%\end{tabular}
-%\caption{Information about lexical informations used in this paper.}\label{tbl:lex}
-%\end{table*}
 
 \begin{table}[t]
 \centering
 \scriptsize
-\begin{tabular}{llrrr|rr}
+\begin{tabular}{lrrr}
 \toprule
- & Name & \#entries & \#tags  & cov.& TTR & PG \\
- &  & ($\times 10^3$) &   & (\%)&  &  \\
+Lang & \multicolumn{3}{c}{Coverage (\%)}\\
+ & OOTC & OOTC, in Lex. & OOLex\\
 \midrule 
-ar &   Apertium & 651 & 15 & 46 &0.09& yes \\
-bg & Multext-East & 53 &12 & 68 & 0.18 & yes \\
-ca &  Apertium & 379 & 13 & 80 & 0.06 & yes \\
-cs &  Apertium & 1,875 & 15 & 68 & 0.10 & yes \\
-da & Apertium & 683 & 15 & 72 & 0.19 & yes \\
-de & DeLex & 465 & 52 & 79 & 0.18 &yes\\
-el & Apertium & 47 & 12 & 48 & 0.20 & yes \\
-en & Apertium & 127 & 12 & 78 & 0.09& yes \\
-es & Le{\it ff}e &  756 & 34 & 87 & 0.12 &yes\\
-et & GiellateknoMA & 44 & 12 & 52 & 0.23 & yes \\
-eu & Apertium\textsubscript{full} & 53 &  14 & 42 & 0.22 &  yes \\
-fa  & PerLex &  512 & 37 & 69 & 0.10 & yes\\
-fi & GiellateknoMA & 228 & 13 & 54 & 0.29 & yes \\
-fr & Le{\it fff} & 539 & 25 & 88 &0.11 &yes\\
-ga & inmdb & 114 & 32 & 35 & 0.26& yes\\
-gl & Apertium & 241 & 12 & 85  & 0.12 &no\\
-grc  & Diogenes & 1,314 & 18 & 46 & 0.20 &no\\
-he & Apertium & 268 & 16 & 71 & 0.12 & yes\\
-hi & Apertium & 159 & 14 & 83 & 0.05 & yes\\
-hr  & HML   & 1,361 & 22 & 85 & 0.21 & yes \\
-%hu & GillateknoMA & 3 & 3 & 1 & 0.33 &no \\
-id & Apertium\textsubscript{full}& 12 & 38 &61 &0.18 & no   \\
-it & Apertium & 278 &14 & 78 & 0.10 & yes\\
-kk & ApertiumMA& 434 & 16 &  79 & 0.48 & no\\
-la  & Diogenes & 562 & 16 & 83 & 0.31 &no\\
-lv & Apertium & 314 & 14  & 58  & 0.33& no \\
-nl &  Alpino lexicon  & 81 & 65 & 77 & 0.14&yes\\
-no & Apertium & 2,470 & 13 & 66 & 0.11 & yes\\
-pl & Apertium & 1,316 &  15 & 61 & 0.31 & yes\\
-pt & Apertium & 159 & 155 & 72 & 0.13 & yes\\
-ro &  Multext-East  & 378 & 14 & 66 & 0.18 & no \\
-ru & Apertium & 4,401 &16& 61 & 0.32 & no  \\
-sl & Apertium & 654 & 14 & 70 & 0.24 &yes\\
-sv & Saldo & 1,215 & 214 & 88 & 0.17 & yes\\
-tr & ApertiumMA & 417 & 14 & 74 & 0.32  &no \\
-zh & Apertium & 8 & 13 & 34 & 0.16 & no \\
-% ar &   Apertium & 651k & 15 & 45.88\% &0.09& yes \\
-% bg & Multext-East & 53k &12 & 67.59\% & 0.18 & yes \\
-% ca &  Apertium & 379k & 13 & 80.06\% & 0.06 & yes \\
-% cs &  Apertium & 1,875k & 15  & 0.10 & yes \\
-% da & Apertium & 683k & 15 & 71.93\% & 0.19 & yes \\
-% de & DeLex & 465k & 52 & 78.78\% & 0.18 &yes\\
-% el & Apertium & 47k & 12 & 48.22\% & 0.20 & yes \\
-% en & Apertium & 127k & 12 & 77.61\% & 0.09& yes \\
-% es & Le{\it ff}e &  756K & 34 & 87.02\% & 0.12 &yes\\
-% et & GiellateknoMA & 44k & 12 & 51.55\% & 0.23 & yes \\
-% eu & Apertium\textsubscript{full} & 53k &  14 & 42.14\% & 0.22 &  yes \\
-% fa  & PerLex &  512k & 37 & 69.41\% & 0.10 & yes\\
-% fi & GiellateknoMA & 228k & 13 & 53.54\% & 0.29 & yes \\
-% fr & Le{\it fff} & 539k & 25 & 87.59\% &0.11 &yes\\
-% ga & inmdb & 114k & 32 & 34.57\% & 0.26& yes\\
-% gl & Apertium & 241k & 12 & 85.35\%  & 0.12 &no\\
-% grc  & Diogenes & 1,314k & 18 & 45.93\% & 0.20 &no\\
-% he & Apertium & 268k & 16 & 71.04\% & 0.12 & yes\\
-% hi & Apertium & 159k & 14 & 82.87\% & 0.05 & yes\\
-% hr  & HML   & 1,361k & 22 & 84.81\% & 0.21 & yes \\
-% hu & GillateknoMA & 3k & 3 & 1.11\% & 0.33 &no \\
-% id & Apertium\textsubscript{full}& 12k & 38 &61.37\% &0.18 & no   \\
-% it & Apertium & 278k &14 & 78.37\% & 0.10 & yes\\
-% kk & ApertiumMA& 434k & 16 &  79.06\% & 0.48 & no\\
-% la  & Diogenes & 562k & 16 & 83.25\% & 0.31 &no\\
-% lv & Apertium & 314k & 14  & 58.05\%  & 0.33& no \\
-% nl &  Alpino lexicon  & 81k & 65 & 76.80\% & 0.14&yes\\
-% no & Apertium & 2,470k & 13 & 66.16\% & 0.11 & yes\\
-% pl & Apertium & 1,316k &  15 & 61.30\% & 0.31 & yes\\
-% pt & Apertium & 159k & 155 & 71.63\% & 0.13 & yes\\
-% ro &  MULTEXT-East  & 378k & 14 & 66.46\% & 0.18 & no \\
-% ru & Apertium & 4,401k &16& 60.85\% & 0.32 & 16  \\
-% sl & Apertium & 654k & 14 & 70.00\% & 0.24 &yes\\
-% sv & Saldo & 1,215k & 214 & 88.33\% & 0.17 & yes\\
-% tr & ApertiumMA & 417k & 14 & 73.60\% & 0.32  &no \\
-% zh & Apertium & 8k & 13 & 33.91\% & 0.16 & no \\
-
+ar & 8,0 & 1,0 & 55,0\\
+bg & 12,3 & 4,6 & 32,6\\
+ca & 4,9 & 2,5 & 20,5\\
+cs & 7,0 & 2,9 & 31,7\\
+da & 15,6 & 7,3 & 29,0\\
+de & 11,9 & 5,3 & 15,1\\
+el & 13,4 & 2,0 & 52,7\\
+en & 9,1 & 2,6 & 26,1\\
+es & 7,3 & 3,5 & 11,3\\
+et & 16,9 & 1,4 & 48,9\\
+eu & 17,8 & 2,3 & 57,7\\
+fa & 8,2 & 2,9 & 31,0\\
+fi & 24,4 & 4,0 & 46,0\\
+fr & 5,7 & 3,0 & 9,9\\
+ga & 22,8 & 7,2 & 66,5\\
+gl & 9,9 & 5,9 & 14,9\\
+grc & 17,9 & 13,6 & 57,6\\
+he & 10,9 & 5,1 & 28,4\\
+hi & 4,6 & 1,6 & 17,4\\
+hr & 20,9 & 15,1 & 16,5\\
+id & 13,8 & 2,4 & 38,3\\
+it & 5,7 & 3,4 & 21,4\\
+kk & 40,5 & 30,7 & 23,0\\
+la & 26,4 & 23,4 & 3,5\\
+lv & 36,3 & 16,9 & 42,6\\
+nl & 18,8 & 4,4 & 27,6\\
+no & 11,2 & 4,0 & 33,0\\
+pl & 23,1 & 9,1 & 38,9\\
+pt & 8,6 & 3,0 & 29,2\\
+ro & 12,1 & 6,8 & 33,1\\
+ru & 26,0 & 15,5 & 38,7\\
+sl & 19,9 & 11,1 & 28,7\\
+sv & 14,9 & 10,4 & 10,4\\
+tr & 24,8 & 13,3 & 25,6\\
+zh & 12,5 & 0,5 & 66,5\\
 \bottomrule
 \end{tabular}
-\caption{Dataset information. Best per-language lexicon along with its size, number of tags and coverage (``cov.'') over the UD1.3
-  corpus. ``MA'' stands for morphological-analyser-based lexicon. Lexicons based on Apertium and Giellatekno
-  data are in their {\em coarse} version unless {\em full} is indicated. Other lexicons
-  have been adapted from available resources.\footnotemark{} We also provide the type-token ratio of the 
-  corpus (TTR) and whether there were available Polyglot embeddings (PG) to initialize $\vec{w}$.}\label{tbl:lex}
+\caption{Coverage of the training set and of the best lexicon on the test set for each dataset of the UD~1.3
+  corpora. ``OOTC'' stands for ``out of training corpus'' and OOLex for ``out of (external) lexicon''. The ``OOTC, in
+  Lex.'' column displays the percentage of words that are not in the training corpus but are covered by the
+  lexicon. Best improvements are expected for these words.\label{tbl:coverage}}
 \end{table}
 
 \footnotetext{\citealp{bouma00,oliver04,heslin07,borin08,molinero09,sagot10lefff,erjavec10,sagot10perlex,mechura14,sagot14delex}.}
@@ -400,6 +371,55 @@ with the Polyglot embeddings. This is deliberately similar to \citeauthor{plank1
 setup, in order to facilitate the comparison of results.\footnote{Note that we discarded alternative UD 1.3 corpora
   (e.g.~{\tt nl\_lassysmall} vs.~{\tt nl}), as well as corpora for languages for which we had neither a
   lexicon nor Polyglot embeddings (Old Church Slavonic, Hungarian, Gothic, Tamil).}
+
+\begin{table}[th]
+\centering\scriptsize
+\begin{tabular}{lrrrr}
+\toprule
+lang & \multicolumn{2}{c}{$\vec{w_{(P)}}+\vec{c}+\vec{l}$}& \multicolumn{2}{c}{$\Delta$ w.r.t.$\vec{w_{(P)}}+\vec{c}$}\\[1mm]
+ & OOTC & OOTC in Lex. & OOTC & OOTC in Lex.\\
+\midrule
+ar & 82,09 & 94,78 & -0,53 & -0,51\\
+bg & 92,79 & 96,84 & 4,67 & 0,98\\
+ca & 94,21 & 98,38 & 0,31 & -0,11\\
+cs & 90,84 & 96,82 & 5,21 & 0,57\\
+da & 88,54 & 95,03 & 3,17 & 0,70\\
+de & 86,05 & 87,00 & 3,32 & 0,41\\
+el & 89,22 & 96,52 & -1,97 & -0,90\\
+en & 78,23 & 89,31 & 3,89 & 1,02\\
+es & 76,34 & 79,33 & -1,21 & -1,12\\
+et & 88,24 & 94,80 & -1,62 & -0,70\\
+eu & 82,02 & 93,26 & -0,09 & -0,41\\
+fa & 84,94 & 95,34 & -1,22 & -0,76\\
+fi & 85,31 & 92,03 & -0,76 & -0,95\\
+fr & 85,50 & 86,35 & 2,25 & 0,43\\
+ga & 77,43 & 89,09 & -0,34 & -1,77\\
+gl & 85,20 & 91,21 & 21,73 & 5,60\\
+grc & 83,71 & 94,40 & 25,16 & 2,00\\
+he & 81,36 & 92,25 & -5,81 & -2,61\\
+hi & 78,91 & 93,84 & -4,22 & -0,78\\
+hr & 90,74 & 88,66 & 1,50 & 0,44\\
+id & 86,07 & 90,72 & -1,29 & -0,55\\
+it & 89,15 & 96,46 & 1,12 & -0,43\\
+kk & 76,89 & 52,59 & 23,53 & -2,96\\
+la & 84,51 & 88,89 & 28,95 & 10,53\\
+lv & 80,98 & 83,64 & 35,13 & 15,83\\
+nl & 69,49 & 78,60 & 12,75 & 8,19\\
+no & 92,44 & 96,97 & -0,24 & -0,48\\
+pl & 90,48 & 93,95 & -2,65 & -2,04\\
+pt & 88,13 & 95,69 & 0,19 & -0,60\\
+ro & 88,39 & 95,47 & 23,18 & 3,71\\
+ru & 90,49 & 93,80 & 40,87 & 13,05\\
+sl & 93,31 & 95,77 & 11,56 & 4,41\\
+sv & 92,43 & 93,31 & 3,88 & -0,47\\
+tr & 85,33 & 87,33 & 26,68 & 9,13\\
+zh & 78,30 & 92,08 & 24,97 & 5,07\\
+\midrule
+Macro avg. & 85,37 & 90,87 & 8,06 & 1,83\\
+\bottomrule
+\end{tabular}
+\caption{toto}
+\end{table}
 
 
 \section{Results}
