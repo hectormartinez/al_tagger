@@ -380,45 +380,45 @@ lang & \multicolumn{2}{c}{$\vec{w_{(P)}}+\vec{c}+\vec{l}$}& \multicolumn{2}{c}{$
  & OOTC & OOTC in Lex. & OOTC & OOTC in Lex.\\
 \midrule
 ar & 82,09 & 94,78 & -0,53 & -0,51\\
-bg & 92,79 & 96,84 & 4,67 & 0,98\\
-ca & 94,21 & 98,38 & 0,31 & -0,11\\
-cs & 90,84 & 96,82 & 5,21 & 0,57\\
-da & 88,54 & 95,03 & 3,17 & 0,70\\
-de & 86,05 & 87,00 & 3,32 & 0,41\\
+bg & 92,79 & 96,84 & +4,67 & +0,98\\
+ca & 94,21 & 98,38 & +0,31 & -0,11\\
+cs & 90,84 & 96,82 & +5,21 & +0,57\\
+da & 88,54 & 95,03 & +3,17 & +0,70\\
+de & 86,05 & 87,00 & +3,32 & +0,41\\
 el & 89,22 & 96,52 & -1,97 & -0,90\\
-en & 78,23 & 89,31 & 3,89 & 1,02\\
+en & 78,23 & 89,31 & +3,89 & +1,02\\
 es & 76,34 & 79,33 & -1,21 & -1,12\\
 et & 88,24 & 94,80 & -1,62 & -0,70\\
 eu & 82,02 & 93,26 & -0,09 & -0,41\\
 fa & 84,94 & 95,34 & -1,22 & -0,76\\
 fi & 85,31 & 92,03 & -0,76 & -0,95\\
-fr & 85,50 & 86,35 & 2,25 & 0,43\\
+fr & 85,50 & 86,35 & +2,25 & +0,43\\
 ga & 77,43 & 89,09 & -0,34 & -1,77\\
-gl & 85,20 & 91,21 & 21,73 & 5,60\\
-grc & 83,71 & 94,40 & 25,16 & 2,00\\
+gl & 85,20 & 91,21 & +21,73 & +5,60\\
+grc & 83,71 & 94,40 & +25,16 & +2,00\\
 he & 81,36 & 92,25 & -5,81 & -2,61\\
 hi & 78,91 & 93,84 & -4,22 & -0,78\\
-hr & 90,74 & 88,66 & 1,50 & 0,44\\
+hr & 90,74 & 88,66 & +1,50 & +0,44\\
 id & 86,07 & 90,72 & -1,29 & -0,55\\
-it & 89,15 & 96,46 & 1,12 & -0,43\\
-kk & 76,89 & 52,59 & 23,53 & -2,96\\
-la & 84,51 & 88,89 & 28,95 & 10,53\\
-lv & 80,98 & 83,64 & 35,13 & 15,83\\
-nl & 69,49 & 78,60 & 12,75 & 8,19\\
+it & 89,15 & 96,46 & +1,12 & -0,43\\
+kk & 76,89 & 52,59 & +23,53 & -2,96\\
+la & 84,51 & 88,89 & +28,95 & +10,53\\
+lv & 80,98 & 83,64 & +35,13 & +15,83\\
+nl & 69,49 & 78,60 & +12,75 & +8,19\\
 no & 92,44 & 96,97 & -0,24 & -0,48\\
 pl & 90,48 & 93,95 & -2,65 & -2,04\\
-pt & 88,13 & 95,69 & 0,19 & -0,60\\
-ro & 88,39 & 95,47 & 23,18 & 3,71\\
-ru & 90,49 & 93,80 & 40,87 & 13,05\\
-sl & 93,31 & 95,77 & 11,56 & 4,41\\
-sv & 92,43 & 93,31 & 3,88 & -0,47\\
-tr & 85,33 & 87,33 & 26,68 & 9,13\\
-zh & 78,30 & 92,08 & 24,97 & 5,07\\
+pt & 88,13 & 95,69 & +0,19 & -0,60\\
+ro & 88,39 & 95,47 & +23,18 & +3,71\\
+ru & 90,49 & 93,80 & +40,87 & +13,05\\
+sl & 93,31 & 95,77 & +11,56 & +4,41\\
+sv & 92,43 & 93,31 & +3,88 & -0,47\\
+tr & 85,33 & 87,33 & +26,68 & +9,13\\
+zh & 78,30 & 92,08 & +24,97 & +5,07\\
 \midrule
-Macro avg. & 85,37 & 90,87 & 8,06 & 1,83\\
+Macro avg. & 85,37 & 90,87 & +8,06 & +1,83\\
 \bottomrule
 \end{tabular}
-\caption{toto}
+\caption{Accuracy of the best system using a lexicon for words out of the training corpus (OOTC), and for words out of the training corpus that are present in the lexicon (OOTC in Lex.), as well as difference between the best system and the baseline without lexicon for these two subsets of words. \label{tbl:acc_oov}}
 \end{table}
 
 
@@ -433,6 +433,8 @@ morphology and words not present in the training data.
 
 The improvements are particularly high for the smaller datasets; in the $\vec{w}+\vec{c}$ setup, the three
 languages with the highest improvements when using a lexicon are those with smallest datasets.
+
+Table \ref{tbl:acc_oov} shows the accuracy of the best system for words not in the training data, and for whose that are present in the lexicon but not in the training data. 
 
 % Best performing lexicons often have a reduced tagset. It could be that fine-grained distinctions are made using
 % character-based embeddings, whereas lexical information is useful for disambiguating between coarse-grained
