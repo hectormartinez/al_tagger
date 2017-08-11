@@ -35,13 +35,6 @@
 \newcommand\hm[1]{\textcolor{blue}{#1}}
 \newcommand\bs[1]{\textcolor{red}{#1}}
 
-%%%%% DISCUSSION MODE
-%\newcommand\discussion[1]{#1}
-%\newcommand\final[1]{}
-%%%%% FINAL MODE
-\newcommand\discussion[1]{}
-\newcommand\final[1]{#1}
-
 \title{Improving neural tagging with lexical information}
 
 % Author information can be set in various styles:
@@ -59,24 +52,17 @@
   Neural part-of-speech tagging has achieved competitive results with the incorporation of character-based and
   pre-trained word embeddings. In this paper, we show that a state-of-the-art bi-LSTM tagger can benefit from using
   information from morphosyntactic lexicons as additional input. The tagger, trained on several dozen languages, shows a
-  consistent, \discussion{\hm{\textbf{HM what follows could be shortened:} average improvement of 2.6\% tagging accuracy
-      for systems without character-based embeddings, and an improvement of 0.6\% in the presence of character-based
-      embeddings, which indicates that morphosyntactic lexicons do indeed provide information that is not captured by
-      the embeddings themselves, both character-based and word-level.}  \bs{\textbf{BS: I agree. I suggest:} average
-      improvement when using lexical information, even when also using character-based embeddings, thus showing the
-      complementarity of the different sources of lexical information.}}\final{average improvement when using lexical
-    information, even when also using character-based embeddings, thus showing the complementarity of the different
-    sources of lexical information.} The improvements are particularly important for the smaller datasets.
+  consistent, average improvement when using lexical information, even when also using character-based embeddings, thus
+  showing the complementarity of the different sources of lexical information. The improvements are particularly
+  important for the smaller datasets.
 \end{abstract}
 
 
 \section{Introduction}
 
-Part-of-speech tagging is now a classic task in natural language processing, \discussion{\hm{\textbf{HM candidate for
-      deleletion/compression:} for which many systems have been developed or adapted for a large variety of
-    languages.}\bs{\textbf{BS: I suggest simple deletion}}} Its aim is to associate each ``word'' with a morphosyntactic
-tag, whose granularity can range from a simple morphosyntactic category, or part-of-speech (hereafter PoS), to finer
-categories enriched with morphological features (gender, number, case, tense, mood, person, etc.).
+Part-of-speech tagging is now a classic task in natural language processing. Its aim is to associate each ``word'' with
+a morphosyntactic tag, whose granularity can range from a simple morphosyntactic category, or part-of-speech (hereafter
+PoS), to finer categories enriched with morphological features (gender, number, case, tense, mood, person, etc.).
 
 The use of machine learning algorithms trained on manually annotated corpora has long become the standard way to develop
 PoS taggers. A large variety of algorithms have been used, such as (in approximative chronological order) bigram and
@@ -392,14 +378,12 @@ macro-averaged results, both on all languages and on languages for which Polyglo
 lexicon-enabled configurations perform significantly better than the baseline.\fi{}}\label{tbl:results}
 \end{table*}
 
-\discussion{\hm{\textbf{HM What about "We use the bi-LSTM system described in Section 2"?}}\bs{\textbf{We don't need to
-      reduce that much in fact. So I suggest we keep this paragraph as is}}} We use as a baseline the state-of-the-art
-bi-LSTM PoS tagger \texttt{bilty}, a freely available\footnote{https://github.com/bplank/bilstm-aux} and ``significantly
-refactored version of the code originally used'' by \citet{plank16}. We use its standard configuration, with one bi-LSTM
-layer, character-based embeddings size of 100, word embedding size of 64 (same as Polyglot embeddings), no multitask
-learning,\footnote{\citeauthor{plank16}'s (\citeyear{plank16}) secondary task---predicting the frequency class of each
-  word---results in better OOV scores but virtually identical overall scores when averaged over all tested
-  languages/corpora.} and 20 iterations for training.
+We use as a baseline the state-of-the-art bi-LSTM PoS tagger \texttt{bilty}, a freely
+available\footnote{https://github.com/bplank/bilstm-aux} and ``significantly refactored version of the code originally
+used'' by \citet{plank16}. We use its standard configuration, with one bi-LSTM layer, character-based embeddings size of
+100, word embedding size of 64 (same as Polyglot embeddings), no multitask learning,\footnote{\citeauthor{plank16}'s
+  (\citeyear{plank16}) secondary task---predicting the frequency class of each word---results in better OOV scores but
+  virtually identical overall scores when averaged over all tested languages/corpora.} and 20 iterations for training.
 
 We extended \texttt{bilty} for enabling integration of lexical morphosyntactic information, in the way described in the
 previous section.%\footnote{We also performed experiments in which the mapping between words and lexical labels was not
