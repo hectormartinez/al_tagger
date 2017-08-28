@@ -434,7 +434,7 @@ morphology and words not present in the training data.
 The improvements are particularly high for the smaller datasets; in the $\vec{w}+\vec{c}$ setup, the three
 languages with the highest improvements when using a lexicon are those with smallest datasets.
 
-Table \ref{tbl:acc_oov} shows the accuracy of the best system for words not in the training data, and for whose that are present in the lexicon but not in the training data. 
+Table \ref{tbl:acc_oov} shows the accuracy of the best system, compared with the baseline, for words not in the training data (OOTC), and for whose that are present in the lexicon but not in the training data (OOTC in Lex). \textcolor{blue}{We observe the improvements are much larger for the smaller datasets like Kazakh (kk) or Russian (ru). However, the improvement is smaller for words that are not in the training data but are present in the lexicon, which indicates that the contribution of the lexicon features to PoS prediction is not limited to the words that are covered by the lexicon but spreads throught the contexts by means of the bi-LSTM architecture. Moreover, we argue that the presence of the lexicon features aids compensate for character embeddings fit on smaller datasets, which are not necessarily more trustworthy. }
 
 % Best performing lexicons often have a reduced tagset. It could be that fine-grained distinctions are made using
 % character-based embeddings, whereas lexical information is useful for disambiguating between coarse-grained
